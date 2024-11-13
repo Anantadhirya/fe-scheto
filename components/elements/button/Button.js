@@ -1,5 +1,5 @@
 const getButtonClassName = ({ variant, size, className }) => {
-  const defaultClassName = "text-white rounded-[20px]";
+  const defaultClassName = "text-white rounded-[20px] text-nowrap outline-0";
   const variants = {
     primary: "bg-blue-200 hover:bg-blue-200/90",
     secondary: "bg-purple-200 hover:bg-purple-200/90",
