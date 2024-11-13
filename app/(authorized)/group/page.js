@@ -83,7 +83,7 @@ export default function Group() {
       {/* Top Row */}
       <div className="flex items-center justify-between gap-4 max-md:flex-col">
         {/* Search Bar */}
-        <div className="relative flex min-w-[200px] grow items-center">
+        <div className="relative flex min-w-[200px] grow items-center max-md:w-full">
           <input
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
@@ -95,9 +95,13 @@ export default function Group() {
           </div>
         </div>
         {/* Join and Create Buttons */}
-        <div className="flex gap-2 max-md:flex-col">
-          <Button className="min-w-[200px] max-md:w-full">Join Group</Button>
-          <Button className="min-w-[200px] max-md:w-full">Create Group</Button>
+        <div className="flex gap-2 max-md:w-full max-md:flex-col">
+          <Button className="min-w-[120px] px-4 max-md:w-full">
+            Join Group
+          </Button>
+          <Button className="min-w-[120px] px-4 max-md:w-full">
+            Create Group
+          </Button>
         </div>
       </div>
       {/* Group List */}
@@ -122,12 +126,12 @@ export default function Group() {
         </div>
       ) : (
         // Non-Empty Group
-        <div className="scroll-container mt-10 grid h-full grid-cols-3 content-start gap-10 overflow-auto pb-5 pr-5">
+        <div className="scroll-container mt-10 grid h-full grid-cols-1 content-start gap-10 overflow-auto pb-5 pr-5 md:grid-cols-2 lg:grid-cols-3">
           {filteredGroups.map((group, idx) => (
             <Link
               key={group.id + idx}
               href={`/group/${group.id}`}
-              className="flex h-[200px] flex-col items-center gap-2 rounded-[10px] bg-gray-100 p-5 text-blue-200"
+              className="flex h-[200px] flex-col items-center gap-2 overflow-hidden rounded-[10px] bg-gray-100 p-5 text-blue-200"
             >
               <div className="text-2xl font-bold">{group.name}</div>
               <div className="overflow-hidden text-lg [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [display:-webkit-box]">
