@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Scheto - Schedule Together
 
-## Getting Started
+**Scheto** is a shared scheduler app that helps teams coordinate and manage their schedules efficiently. It simplifies scheduling with shared calendars, enabling you to coordinate events and manage plans seamlessly with friends, family, and colleagues.
 
-First, run the development server:
+## 👤 Group Members
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Daniel Anantadhirya Adyawisesa Linan (22/492989/TK/53975)
+- Shafa Aura Yogadiasa (22/496508/TK/54406)
+- Muhammad Muqtada Alhaddad (22/500341/TK/54841)
+- Wafi Afdi Alfaruqhi (22/503393/TK/55000)
+- Adinda Putri Romadhon (22/505508/TK/55321)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ⚙️ Development Setup
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- Ensure you have Node.js version `20.12` or higher installed.
+- Clone this project and open it with your preferred code editor.
+- Install required dependencies:
+  ```bash
+  npm install
+  ```
+- Run the development server:
+  ```bash
+  npm run dev
+  ```
+- Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔗 Links
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- GitHub Repository
+  - Frontend: [https://github.com/Anantadhirya/fe-scheto](https://github.com/Anantadhirya/fe-scheto)
+  - Backend: [https://github.com/Anantadhirya/be-scheto](https://github.com/Anantadhirya/be-scheto)
+- Deployment:
+- Presentation video:
+- Presentation file:
