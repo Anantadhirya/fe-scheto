@@ -11,3 +11,17 @@ body {
   color: var(--foreground);
   background: var(--background);
 }
+
+.scroll-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #c1bbbb;
+  border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
