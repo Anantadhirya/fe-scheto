@@ -1,5 +1,20 @@
+const getInputClassName = ({ variant, size, className }) => {
+  const defaultClassName =
+    "placeholder:text-foreground/50 rounded-[20px] border-[3px]  text-lg outline-0 disabled:cursor-not-allowed disabled:opacity-50";
+  const variants = {
+    default: "border-blue-200",
+  };
+  const sizes = {
+    sm: "px-4 py-2",
+    default: "px-4 py-3 h-[60px]",
+  };
+  return `${defaultClassName} ${variants[variant]} ${sizes[size]} ${className}`;
+};
+
 export const Input = ({
   className,
+  variant = "default",
+  size = "default",
   type,
   value,
   onChange,
@@ -7,7 +22,7 @@ export const Input = ({
   ...props
 }) => (
   <input
-    className={`placeholder:text-foreground/50 h-[60px] rounded-[20px] border-[3px] border-blue-200 px-4 py-3 text-lg outline-0 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+    className={getInputClassName({ variant, size, className })}
     type={type}
     value={value}
     onChange={onChange}

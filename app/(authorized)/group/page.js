@@ -120,7 +120,7 @@ export default function Group() {
               <BsPersonFill />
             </div>
             <div>Join a group with a code</div>
-            <Input placeholder="Enter join code" className="h-fit !py-1" />
+            <Input placeholder="Enter join code" size="sm" />
             <Button>Join Group</Button>
           </div>
         </div>
