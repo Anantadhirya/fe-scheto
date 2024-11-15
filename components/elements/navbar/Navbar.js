@@ -13,6 +13,7 @@ import { BiLogOut } from "react-icons/bi";
 import { IoMdHome } from "react-icons/io";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useOnClickOutside } from "@/components/hooks";
+import { twMerge } from "tailwind-merge";
 
 export function Navbar({ children }) {
   const routes = [
@@ -44,11 +45,14 @@ export function Navbar({ children }) {
       </div>
       <nav
         ref={navbarRef}
-        className={`flex min-h-screen min-w-[200px] shrink-0 flex-col items-end gap-[2vh] bg-blue-100 pb-[7vh] pt-[10px] transition-transform duration-300 max-md:fixed max-md:w-[60%] md:w-[8%] md:pt-[max(5px,2vh)] ${hide ? "max-md:translate-x-[-100%]" : "max-md:translate-x-0"}`}
+        className={twMerge(
+          "flex min-h-screen min-w-[200px] shrink-0 flex-col items-end gap-[2vh] bg-blue-100 pb-[7vh] pt-[10px] transition-transform duration-300 max-md:fixed max-md:w-[60%] md:w-[8%] md:pt-[max(5px,2vh)]",
+          hide ? "max-md:translate-x-[-100%]" : "max-md:translate-x-0",
+        )}
       >
         <button
           onClick={() => setHide(!hide)}
-          className="mb-4 mb-[2vh] h-6 self-start px-5 text-lg text-blue-200 md:hidden"
+          className="mb-4 h-6 self-start px-5 text-lg text-blue-200 md:hidden"
         >
           <RxHamburgerMenu />
         </button>
@@ -62,7 +66,11 @@ export function Navbar({ children }) {
             <Link
               key={route.name}
               href={route.href}
-              className={`flex items-center justify-center gap-2 rounded-l-full py-[max(5px,1vh)] text-lg outline-0 max-md:w-[95%] md:w-[87%] md:text-[3vw] ${idx === 0 ? "pt-0 max-md:hidden" : ""} ${active ? "bg-blue-200 text-white" : "text-blue-200"}`}
+              className={twMerge(
+                "flex items-center justify-center gap-2 rounded-l-full py-[max(5px,1vh)] text-lg outline-0 max-md:w-[95%] md:w-[87%] md:text-[3vw]",
+                idx === 0 ? "pt-0 max-md:hidden" : "",
+                active ? "bg-blue-200 text-white" : "text-blue-200",
+              )}
               onClick={() => setHide(true)}
             >
               {route.icon}
