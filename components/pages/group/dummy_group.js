@@ -54,9 +54,11 @@ export const groups = [
       id: "ADS234",
       owner: "Lorem",
       members: [
-        { name: "Lorem ipsum" },
-        { name: "Lorem ipsum" },
-        { name: "Lorem ipsum" },
+        ...Array(20)
+          .fill()
+          .map((_) => ({
+            name: "Lorem ipsum",
+          })),
       ],
     })),
 ];

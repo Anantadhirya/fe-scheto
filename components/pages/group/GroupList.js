@@ -16,7 +16,7 @@ export function GroupList({ groups }) {
           </div>
           <div className="grow" />
           <div className="flex justify-center gap-[2px]">
-            {group.members.map((member, idx) => (
+            {group.members.slice(0, 5).map((member, idx) => (
               <div
                 key={member.name + idx}
                 className="relative aspect-[1/1] w-8 overflow-hidden rounded-full"

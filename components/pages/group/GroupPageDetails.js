@@ -5,6 +5,7 @@ import { Button } from "@/components/elements/button";
 import Image from "next/image";
 
 export function GroupPageDetails({ group, setPage }) {
+  // Description Edit
   const [description, setDescription] = useState(group.description);
   const [edit, setEdit] = useState(false);
   const descriptionEditRef = useRef();
@@ -15,8 +16,12 @@ export function GroupPageDetails({ group, setPage }) {
   }, [edit]);
   const maxDescLength = 250;
   const displayDescLength = description.length >= maxDescLength - 50;
+
+  // Member List
+  const displayedMembers = 6;
+  const [showFullMembers, setShowFullMembers] = useState(false);
   return (
-    <div className="flex flex-col">
+    <div className="flex grow flex-col">
       {/* Group Name and Invite Code */}
       <GroupHeader group={group} setPage={setPage} />
       {/* Description */}
@@ -54,24 +59,43 @@ export function GroupPageDetails({ group, setPage }) {
           </Button>
         </div>
         <div className="xs:grid-cols-2 max-xs:grid-cols-1 grid w-full gap-x-1 gap-y-12">
-          {group.members.map((member, idx) => (
-            <div key={member.name + idx} className="flex items-center gap-5">
-              <div className="relative aspect-square w-[60px] flex-none overflow-hidden rounded-[20px]">
-                <Image
-                  src={member.image || "/default_profile.webp"}
-                  alt=""
-                  fill
-                />
-              </div>
-              <div className="flex w-full min-w-0 flex-col text-base">
-                <div className="truncate text-nowrap font-medium text-blue-200">
-                  {member.name}
+          {group.members
+            .slice(0, showFullMembers ? undefined : displayedMembers)
+            .map((member, idx) => (
+              <div key={member.name + idx} className="flex items-center gap-5">
+                <div className="relative aspect-square w-[60px] flex-none overflow-hidden rounded-[20px]">
+                  <Image
+                    src={member.image || "/default_profile.webp"}
+                    alt=""
+                    fill
+                  />
                 </div>
-                <div className="text-black/60">Member</div>
+                <div className="flex w-full min-w-0 flex-col text-base">
+                  <div className="truncate text-nowrap font-medium text-blue-200">
+                    {member.name}
+                  </div>
+                  <div className="text-black/60">{member.role || "Member"}</div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
+        {group.members.length > displayedMembers && (
+          <div className="flex w-full justify-center">
+            <button
+              className="text-nowrap p-0 text-lg outline-0"
+              onClick={() => setShowFullMembers(!showFullMembers)}
+            >
+              {showFullMembers
+                ? "Show less members"
+                : `Show all members (${group.members.length - displayedMembers} more)`}
+            </button>
+          </div>
+        )}
+      </div>
+      {/* Leave Group Button */}
+      <div className="grow" />
+      <div className="py-2 pb-5 pl-14 pr-8">
+        <Button variant="destructive">Leave Group</Button>
       </div>
     </div>
   );
