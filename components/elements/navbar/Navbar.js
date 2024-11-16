@@ -46,7 +46,7 @@ export function Navbar({ children }) {
       <nav
         ref={navbarRef}
         className={twMerge(
-          "z-[9999] flex min-h-screen min-w-[200px] shrink-0 flex-col items-end gap-[2vh] bg-blue-100 pb-[7vh] pt-[10px] transition-transform duration-300 max-md:fixed max-md:w-[60%] md:w-[8%] md:pt-[max(5px,2vh)]",
+          "z-[9999] flex min-h-screen min-w-[200px] shrink-0 flex-col items-end gap-[2vh] bg-blue-100 pb-[7vh] pt-[10px] transition-transform duration-300 max-md:fixed max-md:w-[60%] md:w-[8%] md:pt-[max(5px,2vh)] md:shadow-xl",
           hide ? "max-md:translate-x-[-100%]" : "max-md:translate-x-0",
         )}
       >
