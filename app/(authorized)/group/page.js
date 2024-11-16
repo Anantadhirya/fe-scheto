@@ -1,75 +1,10 @@
 "use client";
 import { Button } from "@/components/elements/button";
-import { Input } from "@/components/elements/input";
 import { GroupEmpty, GroupList } from "@/components/pages/group";
-import Image from "next/image";
-import Link from "next/link";
+import { groups } from "@/components/pages/group/dummy_group";
 import { useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
-import { BsPersonFill, BsX } from "react-icons/bs";
-
-export const groups = [
-  {
-    name: "FIND IT",
-    description:
-      "Future Innovations and Discovery IT, a national level competition in the field of Information Technology organized by KMTETI FT UGM.",
-    id: "1",
-    owner: "Alexandra Adeline",
-    members: [
-      { name: "Alexandra Adeline" },
-      { name: "Aaron Smith" },
-      { name: "Marcelino S." },
-      { name: "Abigail Christy" },
-    ],
-  },
-  {
-    name: "PAW Project",
-    description:
-      "Project to fulfill the final assignment mark for the DTETI FT UGM Web Application Development course",
-    id: "2",
-    owner: "Lorem",
-    members: [
-      { name: "Lorem ipsum" },
-      { name: "Lorem ipsum" },
-      { name: "Lorem ipsum" },
-      { name: "Lorem ipsum" },
-      { name: "Lorem ipsum" },
-    ],
-  },
-  {
-    name: "PIMNAS",
-    description:
-      "Scientific activity competition organized by the Directorate General of Learning and Student Affairs, Ministry of Education",
-    id: "3",
-    owner: "Lorem",
-    members: [{ name: "Lorem ipsum" }, { name: "Lorem ipsum" }],
-  },
-  {
-    name: "BEM KMFT",
-    description:
-      "UGM Faculty of Engineering Student Executive Board (BEM FT), an executive body and movement that coordinates all creative forces within KMFT UGM.",
-    id: "4",
-    owner: "Lorem",
-    members: [
-      { name: "Lorem ipsum" },
-      { name: "Lorem ipsum" },
-      { name: "Lorem ipsum" },
-    ],
-  },
-  ...Array(7)
-    .fill()
-    .map((_) => ({
-      name: "Lorem Ipsum",
-      description: "Lorem Ipsum",
-      id: "5",
-      owner: "Lorem",
-      members: [
-        { name: "Lorem ipsum" },
-        { name: "Lorem ipsum" },
-        { name: "Lorem ipsum" },
-      ],
-    })),
-];
+import { BsX } from "react-icons/bs";
 
 export default function Group() {
   const [searchText, setSearchText] = useState("");
