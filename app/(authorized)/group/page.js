@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/elements/button";
 import { Input } from "@/components/elements/input";
+import { GroupEmpty, GroupList } from "@/components/pages/group";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -69,7 +70,6 @@ export const groups = [
       ],
     })),
 ];
-console.log(groups);
 
 export default function Group() {
   const [searchText, setSearchText] = useState("");
@@ -114,63 +114,9 @@ export default function Group() {
       </div>
       {/* Group List */}
       {filteredGroups.length === 0 ? (
-        // Empty Group
-        <div className="flex grow flex-col items-center justify-center gap-5 p-5 pb-16">
-          {/* Text */}
-          <div className="text-nowrap text-center text-lg font-semibold text-red-100">
-            {searchText === ""
-              ? "You have not joined any groups."
-              : "You don't have any group discoverable."}
-            <br />
-            Try Join with a code or create one.
-          </div>
-          {/* Modal */}
-          <div className="flex flex-col items-center gap-7 rounded-[20px] bg-blue-100 px-5 py-10 text-center outline outline-1 outline-blue-200/70">
-            <div className="text-[78px] text-blue-200">
-              <BsPersonFill />
-            </div>
-            <div className="text-base font-semibold text-blue-200">
-              Join a group with a code
-            </div>
-            <Input
-              placeholder="Enter join code"
-              size="sm"
-              className="w-[293px] max-w-[80vw]"
-            />
-            <Button className="w-[186px]">Join Group</Button>
-          </div>
-        </div>
+        <GroupEmpty type={groups.length === 0 ? "not-joined" : "not-found"} />
       ) : (
-        // Non-Empty Group
-        <div className="grid grid-cols-1 content-start gap-x-11 gap-y-12 px-14 pb-10 md:grid-cols-2 lg:grid-cols-3">
-          {filteredGroups.map((group, idx) => (
-            <Link
-              key={group.id + idx}
-              href={`/group/${group.id}`}
-              className="flex h-[200px] flex-col items-center gap-2 overflow-hidden rounded-[10px] bg-blue-100 p-5 text-blue-200 shadow-md"
-            >
-              <div className="text-2xl font-bold">{group.name}</div>
-              <div className="overflow-hidden text-lg [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [display:-webkit-box]">
-                {group.description}
-              </div>
-              <div className="grow" />
-              <div className="flex justify-center gap-[2px]">
-                {group.members.map((member, idx) => (
-                  <div
-                    key={member.name + idx}
-                    className="relative aspect-[1/1] w-8 overflow-hidden rounded-full"
-                  >
-                    <Image
-                      src={member.image || "/default_profile.webp"}
-                      alt=""
-                      fill
-                    />
-                  </div>
-                ))}
-              </div>
-            </Link>
-          ))}
-        </div>
+        <GroupList groups={filteredGroups} />
       )}
     </main>
   );
