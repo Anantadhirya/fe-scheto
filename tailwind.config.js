@@ -6,6 +6,11 @@ module.exports = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    extend: {
+      screens: {
+        xs: "420px",
+      },
+    },
     colors: {
       background: "var(--background)",
       foreground: "var(--foreground)",
