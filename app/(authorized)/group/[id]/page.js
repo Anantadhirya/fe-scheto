@@ -5,7 +5,7 @@ import { GroupPageAdd } from "@/components/pages/group/GroupPageAdd";
 import { GroupPageCalendar } from "@/components/pages/group/GroupPageCalendar";
 import { GroupPageDetails } from "@/components/pages/group/GroupPageDetails";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, use } from "react";
 import { BiChevronLeft } from "react-icons/bi";
 
 const getGroup = (id) => {
@@ -13,13 +13,13 @@ const getGroup = (id) => {
 };
 
 export default function GroupPage({ params }) {
-  const { id } = params;
+  const { id } = use(params);
   const group = getGroup(id);
   const [page, setPage] = useState("calendar");
   return (
     <main className="flex w-full max-md:flex-col">
       {/* Column 1: Page Content */}
-      <div className="flex grow flex-col">
+      <div className="flex flex-none flex-col max-md:w-full md:w-[75%]">
         {/* Back Button */}
         <div className="relative z-30 flex justify-between px-10 py-6 shadow-md">
           {page === "calendar" ? (
@@ -56,7 +56,7 @@ export default function GroupPage({ params }) {
         {page === "add" && <GroupPageAdd group={group} setPage={setPage} />}
       </div>
       {/* Column 2: Calendar and Events */}
-      <div className="border-blue-200 max-md:w-full max-md:border-t-[1px] md:w-[25%] md:border-l-[1px]"></div>
+      <div className="flex-none border-blue-200 max-md:w-full max-md:border-t-[1px] md:w-[25%] md:border-l-[1px]"></div>
     </main>
   );
 }
