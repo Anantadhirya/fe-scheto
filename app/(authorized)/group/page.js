@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
-import { BsPersonFill } from "react-icons/bs";
+import { BsPersonFill, BsX } from "react-icons/bs";
 
 export const groups = [
   {
@@ -79,20 +79,28 @@ export default function Group() {
       .every((word) => group.name.toLowerCase().includes(word.toLowerCase())),
   );
   return (
-    <main className="flex h-screen w-full flex-col overflow-auto px-14 pt-14">
+    <main className="scroll-container flex h-screen w-full flex-col overflow-auto">
       {/* Top Row */}
-      <div className="flex items-center justify-between gap-4 max-md:flex-col">
+      <div className="sticky top-0 z-10 flex items-center justify-between gap-4 bg-gradient-to-b from-white from-80% to-white/0 px-14 pb-10 pt-14 max-md:flex-col">
         {/* Search Bar */}
         <div className="relative flex min-w-[200px] grow items-center max-md:w-full">
           <input
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             placeholder="Search"
-            className="w-full rounded-[30px] border-[2px] border-blue-200 px-4 py-2 pr-14 outline-0"
+            className="w-full rounded-[30px] border-[2px] border-blue-200 px-14 py-2 outline-0"
           />
-          <div className="absolute right-[3%] text-[24px] text-blue-200">
+          <div className="absolute left-5 text-[24px] text-blue-200">
             <BiSearchAlt />
           </div>
+          {searchText && (
+            <button
+              className="clear-button absolute right-5 text-[24px] text-blue-200"
+              onClick={() => setSearchText("")}
+            >
+              <BsX />
+            </button>
+          )}
         </div>
         {/* Join and Create Buttons */}
         <div className="flex gap-2 max-md:w-full max-md:flex-col">
@@ -107,31 +115,39 @@ export default function Group() {
       {/* Group List */}
       {filteredGroups.length === 0 ? (
         // Empty Group
-        <div className="flex grow flex-col items-center justify-center gap-5 p-5">
-          <div className="text-nowrap text-center text-blue-200/80">
+        <div className="flex grow flex-col items-center justify-center gap-5 p-5 pb-16">
+          {/* Text */}
+          <div className="text-nowrap text-center text-lg font-semibold text-red-100">
             {searchText === ""
               ? "You have not joined any groups."
               : "You don't have any group discoverable."}
             <br />
             Try Join with a code or create one.
           </div>
-          <div className="flex flex-col items-center gap-4 rounded-[20px] bg-gray-100 px-4 py-6 text-center outline outline-blue-200/70">
+          {/* Modal */}
+          <div className="flex flex-col items-center gap-7 rounded-[20px] bg-blue-100 px-5 py-10 text-center outline outline-1 outline-blue-200/70">
             <div className="text-[78px] text-blue-200">
               <BsPersonFill />
             </div>
-            <div>Join a group with a code</div>
-            <Input placeholder="Enter join code" size="sm" />
-            <Button>Join Group</Button>
+            <div className="text-base font-semibold text-blue-200">
+              Join a group with a code
+            </div>
+            <Input
+              placeholder="Enter join code"
+              size="sm"
+              className="w-[293px] max-w-[80vw]"
+            />
+            <Button className="w-[186px]">Join Group</Button>
           </div>
         </div>
       ) : (
         // Non-Empty Group
-        <div className="scroll-container mt-10 grid h-full grid-cols-1 content-start gap-10 overflow-auto pb-5 pr-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 content-start gap-x-11 gap-y-12 px-14 pb-10 md:grid-cols-2 lg:grid-cols-3">
           {filteredGroups.map((group, idx) => (
             <Link
               key={group.id + idx}
               href={`/group/${group.id}`}
-              className="flex h-[200px] flex-col items-center gap-2 overflow-hidden rounded-[10px] bg-gray-100 p-5 text-blue-200"
+              className="flex h-[200px] flex-col items-center gap-2 overflow-hidden rounded-[10px] bg-blue-100 p-5 text-blue-200 shadow-md"
             >
               <div className="text-2xl font-bold">{group.name}</div>
               <div className="overflow-hidden text-lg [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [display:-webkit-box]">
