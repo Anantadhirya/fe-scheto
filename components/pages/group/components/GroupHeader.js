@@ -1,7 +1,12 @@
-import { BsFiles, BsInfoCircle } from "react-icons/bs";
+"use client";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { BsCheck2, BsFiles, BsInfoCircle } from "react-icons/bs";
 import { twMerge } from "tailwind-merge";
 
 export function GroupHeader({ group, setPage, showIcon = false }) {
+  const [isCopying, setIsCopying] = useState(false);
+  const copyAnimationDuration = 1500;
   return (
     <div
       className={twMerge(
@@ -11,7 +16,7 @@ export function GroupHeader({ group, setPage, showIcon = false }) {
     >
       {/* Group Name */}
       <button
-        className="flex min-w-0 items-center gap-2 p-2"
+        className="flex min-w-0 items-center gap-2 p-2 outline-0"
         onClick={() => setPage("details")}
       >
         <div className="truncate text-nowrap">{group.name}</div>
@@ -22,10 +27,19 @@ export function GroupHeader({ group, setPage, showIcon = false }) {
         )}
       </button>
       {/* Invite Code */}
-      <button className="flex items-center gap-2 p-2">
+      <button
+        className="flex items-center gap-2 p-2 outline-0"
+        onClick={() => {
+          if (isCopying) return;
+          setIsCopying(true);
+          navigator.clipboard.writeText(group.id);
+          toast.success("Group code copied!");
+          setTimeout(() => setIsCopying(false), copyAnimationDuration);
+        }}
+      >
         <span>#{group.id}</span>
         <span className="text-xl">
-          <BsFiles />
+          {!isCopying ? <BsFiles /> : <BsCheck2 />}
         </span>
       </button>
     </div>

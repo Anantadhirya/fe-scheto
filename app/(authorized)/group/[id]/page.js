@@ -21,7 +21,7 @@ export default function GroupPage({ params }) {
       {/* Column 1: Page Content */}
       <div className="flex flex-none flex-col max-md:w-full md:w-[75%]">
         {/* Back Button */}
-        <div className="relative z-30 flex justify-between px-10 py-6 shadow-md">
+        <div className="relative z-30 flex items-center justify-between px-10 py-6 shadow-md">
           {page === "calendar" ? (
             <>
               <Link href="/group" className="flex items-center text-blue-200">
@@ -35,7 +35,7 @@ export default function GroupPage({ params }) {
           ) : (
             <>
               <button
-                className="flex items-center text-blue-200"
+                className="flex items-center text-blue-200 outline-0"
                 onClick={() => setPage("calendar")}
               >
                 <span className="text-[50px]">
