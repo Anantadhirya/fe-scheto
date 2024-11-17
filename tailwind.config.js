@@ -16,6 +16,7 @@ module.exports = {
       foreground: "var(--foreground)",
       black: "#000000",
       white: "#FFFFFF",
+      transparent: "transparent",
       "blue-100": "#EEEDFE",
       "blue-200": "#6C63FF",
       "blue-300": "#3C3699",
