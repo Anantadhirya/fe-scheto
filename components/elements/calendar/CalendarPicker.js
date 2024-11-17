@@ -18,7 +18,6 @@ export function CalendarDayPicker({
     <DayPicker
       mode={mode != "week" ? mode : undefined}
       showOutsideDays={showOutsideDays}
-      startMonth={new Date()}
       selected={selected}
       onSelect={onSelect}
       modifiers={
