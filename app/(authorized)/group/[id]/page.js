@@ -1,9 +1,11 @@
 "use client";
 import { Button } from "@/components/elements/button";
+import { CalendarDayPicker } from "@/components/elements/calendar";
 import { groups } from "@/components/pages/group/dummy_group";
 import { GroupPageAdd } from "@/components/pages/group/GroupPageAdd";
 import { GroupPageCalendar } from "@/components/pages/group/GroupPageCalendar";
 import { GroupPageDetails } from "@/components/pages/group/GroupPageDetails";
+import { endOfWeek, startOfWeek } from "date-fns";
 import Link from "next/link";
 import { useState, use } from "react";
 import { BiChevronLeft } from "react-icons/bi";
@@ -16,6 +18,10 @@ export default function GroupPage({ params }) {
   const { id } = use(params);
   const group = getGroup(id);
   const [page, setPage] = useState("calendar");
+  const [selectedWeek, setSelectedWeek] = useState({
+    from: startOfWeek(new Date()),
+    to: endOfWeek(new Date()),
+  });
   return (
     <main className="flex w-full max-md:flex-col">
       {/* Column 1: Page Content */}
@@ -56,7 +62,14 @@ export default function GroupPage({ params }) {
         {page === "add" && <GroupPageAdd group={group} setPage={setPage} />}
       </div>
       {/* Column 2: Calendar and Events */}
-      <div className="flex-none border-blue-200 max-md:w-full max-md:border-t-[1px] md:w-[25%] md:border-l-[1px]"></div>
+      <div className="flex flex-none flex-col items-center overflow-hidden border-blue-200 p-5 pt-20 max-md:w-full max-md:border-t-[1px] md:w-[25%] md:border-l-[1px]">
+        <CalendarDayPicker
+          mode="week"
+          selected={selectedWeek}
+          onSelect={setSelectedWeek}
+          className="w-full max-md:mx-5 max-md:max-w-[350px] md:min-w-[180px] md:max-w-[300px]"
+        />
+      </div>
     </main>
   );
 }
