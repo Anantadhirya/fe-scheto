@@ -62,3 +62,90 @@ export const groups = [
       ],
     })),
 ];
+
+export const schedules = [
+  {
+    is_user_owned: true,
+    start_time: new Date(2024, 10, 17, 13, 0, 0),
+    end_time: new Date(2024, 10, 17, 15, 0, 0),
+  },
+  {
+    is_user_owned: true,
+    start_time: new Date(2024, 10, 17, 14, 0, 0),
+    end_time: new Date(2024, 10, 17, 18, 30, 0),
+  },
+  {
+    is_user_owned: true,
+    start_time: new Date(2024, 10, 18, 7, 0, 0),
+    end_time: new Date(2024, 10, 18, 12, 0, 0),
+  },
+  {
+    is_user_owned: true,
+    start_time: new Date(2024, 10, 18, 9, 0, 0),
+    end_time: new Date(2024, 10, 18, 11, 0, 0),
+  },
+  {
+    is_user_owned: true,
+    start_time: new Date(2024, 10, 18, 10, 0, 0),
+    end_time: new Date(2024, 10, 18, 15, 0, 0),
+  },
+  {
+    is_user_owned: true,
+    start_time: new Date(2024, 10, 19, 9, 0, 0),
+    end_time: new Date(2024, 10, 19, 12, 0, 0),
+  },
+  {
+    is_user_owned: false,
+    title: "Meeting 1",
+    start_time: new Date(2024, 10, 19, 13, 0, 0),
+    end_time: new Date(2024, 10, 19, 15, 30, 0),
+  },
+  {
+    is_user_owned: true,
+    start_time: new Date(2024, 10, 21, 13, 0, 0),
+    end_time: new Date(2024, 10, 21, 15, 30, 0),
+  },
+  {
+    is_user_owned: true,
+    start_time: new Date(2024, 10, 24, 7, 0, 0),
+    end_time: new Date(2024, 10, 24, 15, 30, 0),
+  },
+  {
+    is_user_owned: true,
+    start_time: new Date(2024, 10, 26, 18, 0, 0),
+    end_time: new Date(2024, 10, 26, 23, 30, 0),
+  },
+  {
+    is_user_owned: false,
+    title: "Meeting 2",
+    start_time: new Date(2024, 10, 27, 9, 0, 0),
+    end_time: new Date(2024, 10, 27, 12, 30, 0),
+  },
+  {
+    is_user_owned: true,
+    start_time: new Date(2024, 10, 27, 23, 0, 0),
+    end_time: new Date(2024, 10, 28, 3, 30, 0),
+  },
+  {
+    is_user_owned: true,
+    start_time: new Date(2024, 10, 30, 23, 0, 0),
+    end_time: new Date(2024, 11, 1, 1, 0, 0),
+  },
+  {
+    is_user_owned: true,
+    start_time: new Date(2024, 11, 2, 23, 0, 0),
+    end_time: new Date(2024, 11, 5, 3, 30, 0),
+  },
+  {
+    is_user_owned: false,
+    title: "Meeting 3",
+    start_time: new Date(2024, 11, 5, 20, 0, 0),
+    end_time: new Date(2024, 11, 6, 6, 30, 0),
+  },
+  {
+    is_user_owned: false,
+    title: "Meeting 4",
+    start_time: new Date(2024, 11, 6, 20, 0, 0),
+    end_time: new Date(2024, 11, 9, 6, 30, 0),
+  },
+];

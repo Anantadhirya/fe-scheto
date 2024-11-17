@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/elements/button";
 import { CalendarDayPicker } from "@/components/elements/calendar";
-import { groups } from "@/components/pages/group/dummy_group";
+import { groups, schedules } from "@/components/pages/group/dummy_group";
 import { GroupPageAdd } from "@/components/pages/group/GroupPageAdd";
 import { GroupPageCalendar } from "@/components/pages/group/GroupPageCalendar";
 import { GroupPageDetails } from "@/components/pages/group/GroupPageDetails";
@@ -54,7 +54,12 @@ export default function GroupPage({ params }) {
         </div>
         {/* Content */}
         {page === "calendar" && (
-          <GroupPageCalendar group={group} setPage={setPage} />
+          <GroupPageCalendar
+            group={group}
+            setPage={setPage}
+            schedules={schedules}
+            start_date={selectedWeek.from}
+          />
         )}
         {page === "details" && (
           <GroupPageDetails group={group} setPage={setPage} />
