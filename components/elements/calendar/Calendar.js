@@ -1,3 +1,4 @@
+import { MinHeap } from "@/components/utils";
 import {
   addDays,
   areIntervalsOverlapping,
@@ -12,7 +13,7 @@ import {
   startOfDay,
   startOfWeek,
 } from "date-fns";
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function Calendar({ schedules, start_date }) {
@@ -20,8 +21,8 @@ export function Calendar({ schedules, start_date }) {
     const sign = number >= 0 ? "+" : "-";
     return `${sign}${number}`;
   };
-  const getDayPos = (day, reverse = false) => {
-    const ret = (day * 100) / 7;
+  const getDayPos = (day, col = 0, max_col = 1, reverse = false) => {
+    const ret = day * (100 / 7) + (col / max_col) * (100 / 7);
     return `${reverse ? 100 - ret : ret}%`;
   };
   const getHourPos = (hour, reverse = false) => {
@@ -34,19 +35,79 @@ export function Calendar({ schedules, start_date }) {
     const hourStart = getHours(start_time) + getMinutes(start_time) / 60;
     const hourEnd = getHours(end_time) + getMinutes(end_time) / 60;
     return {
-      left: getDayPos(day),
-      right: getDayPos(day + 1, true),
+      left: getDayPos(day, schedule.column || 0, schedule.max_column || 1),
+      right: getDayPos(
+        day,
+        (schedule.column || 0) + 1,
+        schedule.max_column || 1,
+        true,
+      ),
       top: getHourPos(hourStart),
       bottom: getHourPos(hourEnd, true),
     };
   };
-  const isWithinCalendar = (schedule) => {
-    const { start_time, end_time } = schedule;
-    return areIntervalsOverlapping(
-      { start: start_time, end: end_time },
-      { start: startOfWeek(start_date), end: endOfWeek(start_date) },
-    );
-  };
+  const displayedSchedules = useMemo(() => {
+    const isWithinCalendar = (schedule) => {
+      const { start_time, end_time } = schedule;
+      return areIntervalsOverlapping(
+        { start: start_time, end: end_time },
+        { start: startOfWeek(start_date), end: endOfWeek(start_date) },
+      );
+    };
+    const getScheduleInWeek = (schedules) => {
+      return schedules.filter(isWithinCalendar);
+    };
+    const getOverlappingScheduleCol = (schedules) => {
+      const overlapping = new MinHeap();
+      const available = new MinHeap();
+      schedules.sort((a, b) => a.start_time - b.start_time);
+      for (let i = 0, indexes = [], mx = 0; i <= schedules.length; i++) {
+        if (i < schedules.length && schedules[i].is_user_owned) continue;
+        while (
+          !overlapping.empty() &&
+          (i === schedules.length ||
+            overlapping.top()[0] <= schedules[i].start_time)
+        ) {
+          available.push(overlapping.top()[1]);
+          overlapping.pop();
+        }
+        if (overlapping.empty()) {
+          indexes.forEach((index) => {
+            schedules[index] = { ...schedules[index], max_column: mx };
+          });
+          indexes = [];
+          available.heap = [];
+          mx = 0;
+        }
+        if (i === schedules.length) break;
+        indexes.push(i);
+        if (available.empty()) available.push(mx++);
+        schedules[i] = { ...schedules[i], column: available.top() };
+        overlapping.push([schedules[i].end_time, available.pop()]);
+      }
+      return schedules;
+    };
+    const splitByDay = (schedules) => {
+      return schedules.flatMap((schedule) => {
+        const day_schedules = eachDayOfInterval({
+          start: schedule.start_time,
+          end: schedule.end_time,
+        }).map((day) => ({
+          ...schedule,
+          actual_start_time: schedule.start_time,
+          actual_end_time: schedule.end_time,
+          start_time: startOfDay(day),
+          end_time: endOfDay(day),
+        }));
+        day_schedules[0].start_time = schedule.start_time;
+        day_schedules[0].actual_start = true;
+        day_schedules[day_schedules.length - 1].end_time = schedule.end_time;
+        day_schedules[day_schedules.length - 1].actual_end = true;
+        return day_schedules.filter(isWithinCalendar);
+      });
+    };
+    return splitByDay(getOverlappingScheduleCol(getScheduleInWeek(schedules)));
+  }, [schedules, start_date]);
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
@@ -103,55 +164,43 @@ export function Calendar({ schedules, start_date }) {
               </Fragment>
             ))}
           {/* Schedules */}
-          {schedules.filter(isWithinCalendar).map((schedule, idx) => {
-            const day_schedules = eachDayOfInterval({
-              start: schedule.start_time,
-              end: schedule.end_time,
-            }).map((day) => ({
-              start_time: startOfDay(day),
-              end_time: endOfDay(day),
-            }));
-            day_schedules[0].start_time = schedule.start_time;
-            day_schedules[0].actual_start = true;
-            day_schedules[day_schedules.length - 1].end_time =
-              schedule.end_time;
-            day_schedules[day_schedules.length - 1].actual_end = true;
-            return day_schedules
-              .filter(isWithinCalendar)
-              .map((day_schedule, idx) => (
-                <div
-                  key={idx}
-                  className={twMerge(
-                    "absolute flex flex-col overflow-hidden p-2 font-semibold",
-                    schedule.is_user_owned
-                      ? "bg-orange-100/60"
-                      : "bg-green-100/50 outline outline-1 -outline-offset-1 outline-blue-200",
-                    day_schedule.actual_start && "rounded-t-[10px]",
-                    day_schedule.actual_end && "rounded-b-[10px]",
-                  )}
-                  style={getStylePos(day_schedule)}
-                >
-                  {!schedule.is_user_owned && (
-                    <>
-                      <span className="flex-none truncate text-base">
-                        {schedule.title}
-                      </span>
-                      <span className="truncate text-wrap text-xs">
-                        {format(
-                          schedule.start_time,
-                          day_schedules.length > 1 ? "MMM d, HH:mm" : "HH:mm",
-                        )}
-                        &nbsp;-&nbsp;
-                        {format(
-                          schedule.end_time,
-                          day_schedules.length > 1 ? "MMM d, HH:mm" : "HH:mm",
-                        )}
-                      </span>
-                    </>
-                  )}
-                </div>
-              ));
-          })}
+          {displayedSchedules.map((schedule, idx) => (
+            <div
+              key={idx}
+              className={twMerge(
+                "absolute flex flex-col overflow-hidden p-2 font-semibold",
+                schedule.is_user_owned
+                  ? "bg-orange-100/60"
+                  : "z-20 bg-green-100/50 outline outline-1 -outline-offset-1 outline-blue-200",
+                schedule.actual_start && "rounded-t-[10px]",
+                schedule.actual_end && "rounded-b-[10px]",
+              )}
+              style={getStylePos(schedule)}
+            >
+              {!schedule.is_user_owned && (
+                <>
+                  <span className="flex-none truncate text-base">
+                    {schedule.title}
+                  </span>
+                  <span className="truncate text-wrap text-xs">
+                    {format(
+                      schedule.actual_start_time,
+                      schedule.actual_start && schedule.actual_end
+                        ? "HH:mm"
+                        : "MMM d, HH:mm",
+                    )}
+                    &nbsp;-&nbsp;
+                    {format(
+                      schedule.actual_end_time,
+                      schedule.actual_start && schedule.actual_end
+                        ? "HH:mm"
+                        : "MMM d, HH:mm",
+                    )}
+                  </span>
+                </>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>
