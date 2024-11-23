@@ -1,4 +1,14 @@
+"use client";
 import { Button } from "@/components/elements/button";
+import { CalendarDayPicker } from "@/components/elements/calendar";
+import {
+  Popover,
+  PopoverClose,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/elements/popover";
+import { format } from "date-fns";
+import { useState } from "react";
 import {
   BsCalendar2Date,
   BsClock,
@@ -7,6 +17,7 @@ import {
 } from "react-icons/bs";
 
 export function GroupPageAdd() {
+  const [selectedDate, setSelectedDate] = useState();
   return (
     <div className="scroll-container h-0 grow overflow-auto p-10 max-md:h-fit">
       <form className="flex flex-col gap-8 px-16 py-9 shadow-md">
@@ -18,9 +29,30 @@ export function GroupPageAdd() {
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-6">
             <BsCalendar2Date className="text-[30px] text-blue-200" />
-            <div className="w-full select-none rounded-[10px] px-3 py-2 text-base text-blue-200 outline outline-2 outline-blue-200">
-              Select the date
-            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <div className="w-full select-none rounded-[10px] px-3 py-2 text-base text-blue-200 outline outline-2 outline-blue-200">
+                  {selectedDate
+                    ? selectedDate.from === selectedDate.to
+                      ? format(selectedDate.from, "d MMMM yyyy")
+                      : `${format(selectedDate.from, "d MMMM yyyy")} - ${format(selectedDate.to, "d MMMM yyyy")}`
+                    : "Select the date"}
+                </div>
+              </PopoverTrigger>
+              <PopoverContent
+                align="start"
+                className="flex w-fit flex-col items-center gap-3"
+              >
+                <CalendarDayPicker
+                  mode="range"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                />
+                <PopoverClose asChild>
+                  <Button>Close</Button>
+                </PopoverClose>
+              </PopoverContent>
+            </Popover>
           </div>
           <div className="flex items-center gap-6">
             <BsStopwatch className="text-[30px] text-blue-200" />
