@@ -66,6 +66,33 @@ export const groups = [
 export const schedules = [
   {
     is_user_owned: true,
+    start_time: new Date(2024, 10, 1, 1, 0, 0),
+    end_time: new Date(2024, 10, 1, 3, 0, 0),
+    repeat: "MONTHLY",
+  },
+  {
+    is_user_owned: false,
+    title: "Monthly Meeting",
+    start_time: new Date(2024, 10, 2, 9, 0, 0),
+    end_time: new Date(2024, 10, 2, 12, 0, 0),
+    repeat: "MONTHLY",
+  },
+  {
+    is_user_owned: false,
+    title: "Weekly Meeting",
+    start_time: new Date(2024, 10, 17, 9, 0, 0),
+    end_time: new Date(2024, 10, 17, 11, 0, 0),
+    repeat: "WEEKLY",
+  },
+  {
+    is_user_owned: false,
+    title: "Daily Meeting",
+    start_time: new Date(2024, 10, 21, 2, 0, 0),
+    end_time: new Date(2024, 10, 21, 4, 0, 0),
+    repeat: "DAILY",
+  },
+  {
+    is_user_owned: true,
     start_time: new Date(2024, 10, 17, 13, 0, 0),
     end_time: new Date(2024, 10, 17, 15, 0, 0),
   },
@@ -93,6 +120,7 @@ export const schedules = [
     is_user_owned: true,
     start_time: new Date(2024, 10, 19, 9, 0, 0),
     end_time: new Date(2024, 10, 19, 12, 0, 0),
+    repeat: "WEEKLY",
   },
   {
     is_user_owned: false,
@@ -104,6 +132,8 @@ export const schedules = [
     is_user_owned: true,
     start_time: new Date(2024, 10, 21, 13, 0, 0),
     end_time: new Date(2024, 10, 21, 15, 30, 0),
+    repeat: "DAILY",
+    repeat_until: new Date(2024, 11, 30, 15, 30, 0),
   },
   {
     is_user_owned: true,
