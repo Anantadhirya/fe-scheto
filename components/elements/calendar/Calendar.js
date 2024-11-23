@@ -28,7 +28,7 @@ import {
 import { Fragment, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
-export function Calendar({ schedules, start_date }) {
+export function Calendar({ schedules, start_date, group }) {
   const formatNumberWithSign = (number) => {
     const sign = number >= 0 ? "+" : "-";
     return `${sign}${number}`;
@@ -135,7 +135,8 @@ export function Calendar({ schedules, start_date }) {
       const available = new MinHeap();
       schedules.sort((a, b) => a.start_time - b.start_time);
       for (let i = 0, indexes = [], mx = 0; i <= schedules.length; i++) {
-        if (i < schedules.length && schedules[i].is_user_owned) continue;
+        if (i < schedules.length && group && schedules[i].is_user_owned)
+          continue;
         while (
           !overlapping.empty() &&
           (i === schedules.length ||
@@ -181,7 +182,7 @@ export function Calendar({ schedules, start_date }) {
       });
     };
     return splitByDay(getOverlappingScheduleCol(getScheduleInWeek(schedules)));
-  }, [schedules, start_date]);
+  }, [group, schedules, start_date]);
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
@@ -243,15 +244,20 @@ export function Calendar({ schedules, start_date }) {
               key={idx}
               className={twMerge(
                 "absolute flex flex-col overflow-hidden p-2 font-semibold",
-                schedule.is_user_owned
-                  ? "bg-orange-100/60"
-                  : "z-20 bg-green-100/50 outline outline-1 -outline-offset-1 outline-blue-200",
+                group &&
+                  (schedule.is_user_owned
+                    ? "bg-orange-100/60"
+                    : "z-20 bg-green-100/50"),
+                !group &&
+                  (schedule.is_private ? "bg-orange-100" : "bg-green-50"),
+                (!group || !schedule.is_user_owned) &&
+                  "outline outline-1 -outline-offset-1 outline-blue-200",
                 schedule.actual_start && "rounded-t-[10px]",
                 schedule.actual_end && "rounded-b-[10px]",
               )}
               style={getStylePos(schedule)}
             >
-              {!schedule.is_user_owned && (
+              {(!group || !schedule.is_user_owned) && (
                 <>
                   <span className="flex-none truncate text-base">
                     {schedule.title}
