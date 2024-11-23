@@ -7,6 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/elements/popover";
+import { Select } from "@/components/elements/select";
 import { format } from "date-fns";
 import { useState } from "react";
 import {
@@ -16,7 +17,7 @@ import {
   BsStopwatch,
 } from "react-icons/bs";
 
-export function GroupPageAdd() {
+export function GroupPageAdd({ group }) {
   const [selectedDate, setSelectedDate] = useState();
   return (
     <div className="scroll-container h-0 grow overflow-auto p-10 max-md:h-fit">
@@ -31,7 +32,7 @@ export function GroupPageAdd() {
             <BsCalendar2Date className="text-[30px] text-blue-200" />
             <Popover>
               <PopoverTrigger asChild>
-                <div className="w-full select-none rounded-[10px] px-3 py-2 text-base text-blue-200 outline outline-2 outline-blue-200">
+                <div className="w-full cursor-pointer select-none rounded-[10px] px-3 py-2 text-base text-blue-200 outline outline-2 outline-blue-200">
                   {selectedDate
                     ? selectedDate.from === selectedDate.to
                       ? format(selectedDate.from, "d MMMM yyyy")
@@ -45,6 +46,7 @@ export function GroupPageAdd() {
               >
                 <CalendarDayPicker
                   mode="range"
+                  disabled={{ before: new Date() }}
                   selected={selectedDate}
                   onSelect={setSelectedDate}
                 />
@@ -56,15 +58,34 @@ export function GroupPageAdd() {
           </div>
           <div className="flex items-center gap-6">
             <BsStopwatch className="text-[30px] text-blue-200" />
-            <div className="w-full select-none rounded-[10px] px-3 py-2 text-base text-blue-200 outline outline-2 outline-blue-200">
-              Choose the duration of your meeting
-            </div>
+            <Select
+              placeholder="Choose the duration of the meeting"
+              className="w-0 grow"
+              options={Array(48)
+                .fill()
+                .map((_, idx) => ({
+                  value: (idx + 1) / 2,
+                  label:
+                    idx === 0
+                      ? "30 minutes"
+                      : idx % 2 == 0
+                        ? `${idx / 2} hour${idx > 2 ? "s" : ""} 30 minutes`
+                        : `${(idx + 1) / 2} hour${idx > 2 ? "s" : ""}`,
+                }))}
+            />
           </div>
           <div className="flex items-center gap-6">
             <BsPeopleFill className="text-[30px] text-blue-200" />
-            <div className="w-full select-none rounded-[10px] px-3 py-2 text-base text-blue-200 outline outline-2 outline-blue-200">
-              <input className="outline-0" />
-            </div>
+            <Select
+              placeholder="Choose members for the meeting"
+              className="w-0 grow"
+              isMulti
+              allowSelectAll
+              options={group.members.map((member, idx) => ({
+                value: idx,
+                label: member.name,
+              }))}
+            />
           </div>
           <div className="flex gap-6">
             <BsClock className="text-[30px] text-blue-200" />
