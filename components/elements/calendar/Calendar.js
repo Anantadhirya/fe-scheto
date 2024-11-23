@@ -67,6 +67,7 @@ export function Calendar({ schedules, start_date }) {
       );
     };
     const getScheduleInWeek = (schedules) => {
+      // Filter Schedules for Each Week and Handle Repeating Schedules
       const schedulesNoRepeat = schedules
         .filter((schedule) => !schedule.repeat || schedule.repeat === "NONE")
         .filter(isWithinCalendar);
@@ -129,7 +130,7 @@ export function Calendar({ schedules, start_date }) {
       return [...schedulesNoRepeat, ...schedulesRepeat];
     };
     const getOverlappingScheduleCol = (schedules) => {
-      console.log(schedules);
+      // Set Column and Max Columns for each schedules
       const overlapping = new MinHeap();
       const available = new MinHeap();
       schedules.sort((a, b) => a.start_time - b.start_time);
@@ -160,6 +161,7 @@ export function Calendar({ schedules, start_date }) {
       return schedules;
     };
     const splitByDay = (schedules) => {
+      // Split Schedules that doesn't start and end at the same day to daily schedule object
       return schedules.flatMap((schedule) => {
         const day_schedules = eachDayOfInterval({
           start: schedule.start_time,
