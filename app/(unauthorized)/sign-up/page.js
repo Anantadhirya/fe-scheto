@@ -1,13 +1,13 @@
 export default function SignUp() {
   return (
-    <div className="flex h-screen items-stretch justify-center bg-primary overflow-hidden">
+    <div className="bg-primary flex h-screen items-stretch justify-center overflow-hidden">
       {/* Left Section */}
-      <div className="flex-1 bg-purple-500 text-white flex flex-col justify-center items-center p-10">
-      <h1 className="text-3xl font-bold text-white text-center mb-6 mt-12">
-        Your Ultimate Solution for Effortless Group Scheduling!
-      </h1>
-        <p className="text-lg text-white text-center mb-4">
-          Let's make meeting coordination smooth, simple, and stress-free
+      <div className="bg-purple-500 flex flex-1 flex-col items-center justify-center p-10 text-white">
+        <h1 className="mb-6 mt-12 text-center text-3xl font-bold text-white">
+          Your Ultimate Solution for Effortless Group Scheduling!
+        </h1>
+        <p className="mb-4 text-center text-lg text-white">
+          Let&apos;s make meeting coordination smooth, simple, and stress-free
         </p>
         <img
           src="/images/meeting-illustration.png"
@@ -17,18 +17,18 @@ export default function SignUp() {
       </div>
 
       {/* Right Section */}
-      <div className="flex-1 bg-white rounded-tl-[30px]  rounded-bl-[30px] rounded-tr-[0px] shadow-lg flex flex-col justify-center items-center p-10">
+      <div className="flex flex-1 flex-col items-center justify-center rounded-bl-[30px] rounded-tl-[30px] rounded-tr-[0px] bg-white p-10 shadow-lg">
         <div className="w-full max-w-sm">
-          <h2 className="text-3xl font-bold text-primary mb-6 text-center">
+          <h2 className="text-primary mb-6 text-center text-3xl font-bold">
             Create Account
           </h2>
           <form className="space-y-4">
             {/* First Name */}
-            <div className="flex items-center border-2 border-primary rounded-2xl p-3">
+            <div className="border-primary flex items-center rounded-2xl border-2 p-3">
               <img
                 src="/images/user-icon.png"
                 alt="User Icon"
-                className="h-5 w-5 mr-3 text-primary"
+                className="text-primary mr-3 h-5 w-5"
               />
               <input
                 type="text"
@@ -38,11 +38,11 @@ export default function SignUp() {
             </div>
 
             {/* Last Name */}
-            <div className="flex items-center border-2 border-primary rounded-2xl p-3">
+            <div className="border-primary flex items-center rounded-2xl border-2 p-3">
               <img
                 src="/images/user-icon.png"
                 alt="User Icon"
-                className="h-5 w-5 mr-3 text-primary"
+                className="text-primary mr-3 h-5 w-5"
               />
               <input
                 type="text"
@@ -52,11 +52,11 @@ export default function SignUp() {
             </div>
 
             {/* Email */}
-            <div className="flex items-center border-2 border-primary rounded-2xl p-3">
+            <div className="border-primary flex items-center rounded-2xl border-2 p-3">
               <img
                 src="/images/email-icon.png"
                 alt="Email Icon"
-                className="h-5 w-5 mr-3 text-primary"
+                className="text-primary mr-3 h-5 w-5"
               />
               <input
                 type="email"
@@ -66,11 +66,11 @@ export default function SignUp() {
             </div>
 
             {/* Password */}
-            <div className="flex items-center border-2 border-primary rounded-2xl p-3">
+            <div className="border-primary flex items-center rounded-2xl border-2 p-3">
               <img
                 src="/images/password-icon.png"
                 alt="Password Icon"
-                className="h-5 w-5 mr-3 text-primary"
+                className="text-primary mr-3 h-5 w-5"
               />
               <input
                 type="password"
@@ -80,11 +80,11 @@ export default function SignUp() {
             </div>
 
             {/* Confirm Password */}
-            <div className="flex items-center border-2 border-primary rounded-2xl p-3">
+            <div className="border-primary flex items-center rounded-2xl border-2 p-3">
               <img
                 src="/images/password-icon.png"
                 alt="Password Icon"
-                className="h-5 w-5 mr-3 text-primary"
+                className="text-primary mr-3 h-5 w-5"
               />
               <input
                 type="password"
@@ -94,12 +94,12 @@ export default function SignUp() {
             </div>
 
             {/* Submit */}
-            <button className="bg-primary text-white w-full py-3 px-6 font-bold rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <button className="bg-primary w-full rounded-2xl px-6 py-3 font-bold text-white shadow-lg transition-shadow duration-300 hover:shadow-xl">
               Create
             </button>
           </form>
           <p className="mt-6 text-center text-sm text-black">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <a href="/sign-in" className="text-primary font-bold underline">
               Log In
             </a>
