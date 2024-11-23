@@ -4,6 +4,7 @@ import { DayPicker, rangeIncludesDate } from "react-day-picker";
 import { twMerge } from "tailwind-merge";
 import { BsCaretLeftFill, BsCaretRightFill } from "react-icons/bs";
 import { endOfWeek, startOfWeek } from "date-fns";
+import { useEffect, useState } from "react";
 
 export function CalendarDayPicker({
   className = "",
@@ -14,12 +15,16 @@ export function CalendarDayPicker({
   onSelect,
   ...props
 }) {
+  const [month, setMonth] = useState(new Date());
+  useEffect(() => setMonth(selected.from ?? selected), [selected]);
   return (
     <DayPicker
       mode={mode != "week" ? mode : undefined}
       showOutsideDays={showOutsideDays}
       selected={selected}
       onSelect={onSelect}
+      month={month}
+      onMonthChange={setMonth}
       modifiers={
         mode != "week"
           ? undefined
