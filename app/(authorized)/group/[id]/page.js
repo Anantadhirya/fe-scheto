@@ -67,7 +67,7 @@ export default function GroupPage({ params }) {
       {page === "details" && (
         <GroupPageDetails group={group} setPage={setPage} />
       )}
-      {page === "add" && <GroupPageAdd group={group} setPage={setPage} />}
+      {page === "add" && <GroupPageAdd group={group} schedules={schedules} />}
     </CalendarSidebar>
   );
 }
