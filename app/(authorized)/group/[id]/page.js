@@ -1,10 +1,12 @@
 "use client";
 import { Button } from "@/components/elements/button";
 import { CalendarSidebar } from "@/components/layout/CalendarSidebar";
+import {
+  GroupPageAdd,
+  GroupPageCalendar,
+  GroupPageDetails,
+} from "@/components/pages/group";
 import { groups, schedules } from "@/components/pages/group/dummy_group";
-import { GroupPageAdd } from "@/components/pages/group/GroupPageAdd";
-import { GroupPageCalendar } from "@/components/pages/group/GroupPageCalendar";
-import { GroupPageDetails } from "@/components/pages/group/GroupPageDetails";
 import { endOfWeek, startOfWeek } from "date-fns";
 import Link from "next/link";
 import { useState, use } from "react";
