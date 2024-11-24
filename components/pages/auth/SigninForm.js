@@ -69,7 +69,7 @@ function SigninForm() {
                 type="password"
                 placeholder="Password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChageFunc={(e) => setPassword(e.target.value)}
             />
 
             {/* Submit */}
