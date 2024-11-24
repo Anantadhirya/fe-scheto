@@ -1,6 +1,11 @@
 "use client";
 import { Button } from "@/components/elements/button";
-import { GroupEmpty, GroupList } from "@/components/pages/group";
+import {
+  CreateGroupModal,
+  GroupEmpty,
+  GroupList,
+  JoinGroupModal,
+} from "@/components/pages/group";
 import { groups } from "@/components/pages/group/dummy_group";
 import { useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
@@ -13,6 +18,16 @@ export default function Group() {
       .split(" ")
       .every((word) => group.name.toLowerCase().includes(word.toLowerCase())),
   );
+  const [joinModalOpen, setJoinModalOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const handleJoinGroup = (code) => {
+    // TODO: Integrate Join Group
+    console.log("Join group with invite code: ", code);
+  };
+  const handleCreateGroup = (name) => {
+    // TODO: Integrate Create Group
+    console.log("Create group with name: ", name);
+  };
   return (
     <main className="scroll-container flex h-screen w-full flex-col overflow-auto">
       {/* Top Row */}
@@ -39,20 +54,39 @@ export default function Group() {
         </div>
         {/* Join and Create Buttons */}
         <div className="flex gap-2 max-md:w-full max-md:flex-col">
-          <Button className="min-w-[120px] px-4 max-md:w-full">
+          <Button
+            className="min-w-[120px] px-4 max-md:w-full"
+            onClick={() => setJoinModalOpen(true)}
+          >
             Join Group
           </Button>
-          <Button className="min-w-[120px] px-4 max-md:w-full">
+          <Button
+            className="min-w-[120px] px-4 max-md:w-full"
+            onClick={() => setCreateModalOpen(true)}
+          >
             Create Group
           </Button>
         </div>
       </div>
       {/* Group List */}
       {filteredGroups.length === 0 ? (
-        <GroupEmpty type={groups.length === 0 ? "not-joined" : "not-found"} />
+        <GroupEmpty
+          type={groups.length === 0 ? "not-joined" : "not-found"}
+          onJoin={handleJoinGroup}
+        />
       ) : (
         <GroupList groups={filteredGroups} />
       )}
+      <JoinGroupModal
+        open={joinModalOpen}
+        setOpen={setJoinModalOpen}
+        onJoin={handleJoinGroup}
+      />
+      <CreateGroupModal
+        open={createModalOpen}
+        setOpen={setCreateModalOpen}
+        onCreate={handleCreateGroup}
+      />
     </main>
   );
 }

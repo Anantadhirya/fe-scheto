@@ -6,10 +6,10 @@ export const groups = [
     id: "ABC123",
     owner: "Alexandra Adeline",
     members: [
-      { name: "Alexandra Adeline" },
-      { name: "Aaron Smith" },
-      { name: "Marcelino S." },
-      { name: "Abigail Christy" },
+      { name: "Alexandra Adeline", id_user: 1 },
+      { name: "Aaron Smith", id_user: 2 },
+      { name: "Marcelino S.", id_user: 3 },
+      { name: "Abigail Christy", id_user: 4 },
     ],
   },
   {
@@ -19,11 +19,11 @@ export const groups = [
     id: "DEF123",
     owner: "Lorem",
     members: [
-      { name: "Lorem ipsum" },
-      { name: "Lorem ipsum" },
-      { name: "Lorem ipsum" },
-      { name: "Lorem ipsum" },
-      { name: "Lorem ipsum" },
+      { name: "Lorem ipsum", id_user: 1 },
+      { name: "Lorem ipsum", id_user: 2 },
+      { name: "Lorem ipsum", id_user: 3 },
+      { name: "Lorem ipsum", id_user: 4 },
+      { name: "Lorem ipsum", id_user: 5 },
     ],
   },
   {
@@ -32,7 +32,10 @@ export const groups = [
       "Scientific activity competition organized by the Directorate General of Learning and Student Affairs, Ministry of Education",
     id: "ASD312",
     owner: "Lorem",
-    members: [{ name: "Lorem ipsum" }, { name: "Lorem ipsum" }],
+    members: [
+      { name: "Lorem ipsum", id_user: 1 },
+      { name: "Lorem ipsum", id_user: 2 },
+    ],
   },
   {
     name: "BEM KMFT",
@@ -41,9 +44,9 @@ export const groups = [
     id: "DEF213",
     owner: "Lorem",
     members: [
-      { name: "Lorem ipsum" },
-      { name: "Lorem ipsum" },
-      { name: "Lorem ipsum" },
+      { name: "Lorem ipsum", id_user: 1 },
+      { name: "Lorem ipsum", id_user: 2 },
+      { name: "Lorem ipsum", id_user: 3 },
     ],
   },
   ...Array(7)
@@ -56,8 +59,9 @@ export const groups = [
       members: [
         ...Array(20)
           .fill()
-          .map((_) => ({
+          .map((_, idx) => ({
             name: "Lorem ipsum",
+            id_user: idx,
           })),
       ],
     })),
@@ -66,6 +70,7 @@ export const groups = [
 export const schedules = [
   {
     is_user_owned: true,
+    id_creator: 1,
     start_time: new Date(2024, 10, 1, 1, 0, 0),
     end_time: new Date(2024, 10, 1, 3, 0, 0),
     repeat: "MONTHLY",
@@ -93,31 +98,37 @@ export const schedules = [
   },
   {
     is_user_owned: true,
+    id_creator: 1,
     start_time: new Date(2024, 10, 17, 13, 0, 0),
     end_time: new Date(2024, 10, 17, 15, 0, 0),
   },
   {
     is_user_owned: true,
+    id_creator: 2,
     start_time: new Date(2024, 10, 17, 14, 0, 0),
     end_time: new Date(2024, 10, 17, 18, 30, 0),
   },
   {
     is_user_owned: true,
+    id_creator: 1,
     start_time: new Date(2024, 10, 18, 7, 0, 0),
     end_time: new Date(2024, 10, 18, 12, 0, 0),
   },
   {
     is_user_owned: true,
+    id_creator: 2,
     start_time: new Date(2024, 10, 18, 9, 0, 0),
     end_time: new Date(2024, 10, 18, 11, 0, 0),
   },
   {
     is_user_owned: true,
+    id_creator: 3,
     start_time: new Date(2024, 10, 18, 10, 0, 0),
     end_time: new Date(2024, 10, 18, 15, 0, 0),
   },
   {
     is_user_owned: true,
+    id_creator: 1,
     start_time: new Date(2024, 10, 19, 9, 0, 0),
     end_time: new Date(2024, 10, 19, 12, 0, 0),
     repeat: "WEEKLY",
@@ -130,6 +141,7 @@ export const schedules = [
   },
   {
     is_user_owned: true,
+    id_creator: 2,
     start_time: new Date(2024, 10, 21, 13, 0, 0),
     end_time: new Date(2024, 10, 21, 15, 30, 0),
     repeat: "DAILY",
@@ -137,16 +149,19 @@ export const schedules = [
   },
   {
     is_user_owned: true,
+    id_creator: 2,
     start_time: new Date(2024, 10, 24, 7, 0, 0),
     end_time: new Date(2024, 10, 24, 15, 30, 0),
   },
   {
     is_user_owned: true,
+    id_creator: 1,
     start_time: new Date(2024, 10, 26, 18, 0, 0),
     end_time: new Date(2024, 10, 26, 23, 30, 0),
   },
   {
     is_user_owned: true,
+    id_creator: 2,
     start_time: new Date(2024, 10, 27, 8, 0, 0),
     end_time: new Date(2024, 10, 27, 9, 30, 0),
   },
@@ -164,16 +179,19 @@ export const schedules = [
   },
   {
     is_user_owned: true,
+    id_creator: 1,
     start_time: new Date(2024, 10, 27, 23, 0, 0),
     end_time: new Date(2024, 10, 28, 3, 30, 0),
   },
   {
     is_user_owned: true,
+    id_creator: 1,
     start_time: new Date(2024, 10, 30, 23, 0, 0),
     end_time: new Date(2024, 11, 1, 1, 0, 0),
   },
   {
     is_user_owned: true,
+    id_creator: 2,
     start_time: new Date(2024, 11, 2, 23, 0, 0),
     end_time: new Date(2024, 11, 5, 3, 30, 0),
   },

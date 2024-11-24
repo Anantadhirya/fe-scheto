@@ -1,8 +1,11 @@
+"use client";
 import { Button } from "@/components/elements/button";
 import { Input } from "@/components/elements/input";
+import { useState } from "react";
 import { BsPersonFill } from "react-icons/bs";
 
-export function GroupEmpty({ type }) {
+export function GroupEmpty({ type, onJoin }) {
+  const [input, setInput] = useState("");
   return (
     <div className="flex grow flex-col items-center justify-center gap-5 p-5 pb-16">
       {/* Text */}
@@ -23,10 +26,14 @@ export function GroupEmpty({ type }) {
         </div>
         <Input
           placeholder="Enter join code"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
           size="sm"
           className="w-[293px] max-w-[80vw]"
         />
-        <Button className="w-[186px]">Join Group</Button>
+        <Button className="w-[186px]" onClick={() => onJoin(input)}>
+          Join Group
+        </Button>
       </div>
     </div>
   );
