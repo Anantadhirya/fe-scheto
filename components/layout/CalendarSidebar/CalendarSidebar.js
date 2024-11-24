@@ -1,7 +1,7 @@
 "use client";
 import { CalendarDayPicker } from "@/components/elements/calendar";
 import { Timeline } from "@/components/elements/timeline";
-import { getUpcomingSchedules } from "@/components/utils/getUpcomingSchedules";
+import { getUpcomingSchedules } from "@/components/utils";
 import { twMerge } from "tailwind-merge";
 
 export function CalendarSidebar({
