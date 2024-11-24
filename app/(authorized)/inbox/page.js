@@ -49,24 +49,6 @@ export default function Inbox() {
     },
 
     {
-      id: 5,
-      title: "Group Announcement",
-      description:
-        "Group KKN Bangka Belitung has added you to the team for the upcoming strategy session. The session will be held on Thursday, 13:00-15:00.",
-      time: "1 day ago",
-      isHighlighted: false,
-      isNew: false,
-    },
-    {
-      id: 6,
-      title: "Schedule Change",
-      description:
-        "Important Update: The meeting with the Hackathon Team has been rescheduled to Saturday at 10:30. Please update your calendar.",
-      time: "1 day ago",
-      isHighlighted: false,
-      isNew: false,
-    },
-    {
       id: 6,
       title: "Group Announcement",
       description:
@@ -77,6 +59,24 @@ export default function Inbox() {
     },
     {
       id: 7,
+      title: "Schedule Change",
+      description:
+        "Important Update: The meeting with the Hackathon Team has been rescheduled to Saturday at 10:30. Please update your calendar.",
+      time: "1 day ago",
+      isHighlighted: false,
+      isNew: false,
+    },
+    {
+      id: 8,
+      title: "Group Announcement",
+      description:
+        "Group KKN Bangka Belitung has added you to the team for the upcoming strategy session. The session will be held on Thursday, 13:00-15:00.",
+      time: "1 day ago",
+      isHighlighted: false,
+      isNew: false,
+    },
+    {
+      id: 9,
       title: "Schedule Change",
       description:
         "Important Update: The meeting with the Hackathon Team has been rescheduled to Saturday at 10:30. Please update your calendar.",
