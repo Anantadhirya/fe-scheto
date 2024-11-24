@@ -17,10 +17,11 @@ import {
   BsStopwatch,
 } from "react-icons/bs";
 
-export function HomePageAdd() {
+export function HomePageAdd({AddSchedule}) {
   // Date Selector
   const [selectedDate, setSelectedDate] = useState();
   const [dateOpen, setDateOpen] = useState(false);
+  const [title, setTitle] = useState('')
 
   // Time Selector
   const [selectedStart, setSelectedStart] = useState();
@@ -73,12 +74,26 @@ export function HomePageAdd() {
   const [description, setDescription] = useState("");
   const descriptionMaxLength = 250;
   const displayDescLength = description.length >= descriptionMaxLength - 50;
+
+  const onSubmitAdd = (e) => {
+    e.preventDefault();
+    AddSchedule.mutate({
+      description : description,
+      title : title,
+      startDate : selectedStart.value,
+      endDate : selectedEnd.value,
+      recurrence : repeat_options[selectedRepeat].value,
+      is_private : selectedPrivate
+    })
+  }
   return (
     <div className="scroll-container h-0 grow overflow-auto max-md:h-fit md:p-10">
-      <form className="flex flex-col gap-8 px-16 py-9 shadow-md">
+      <form className="flex flex-col gap-8 px-16 py-9 shadow-md" onSubmit={onSubmitAdd}>
         <input
           placeholder="TITLE"
           className="text-3xl font-semibold text-blue-200 outline-0 placeholder:text-blue-200/70"
+          onChange={(e) => setTitle(e.target.value)}
+          value={title}
         />
         <div className="-mx-5 h-[5px] bg-blue-200" />
         <div className="flex flex-col gap-6">
@@ -170,7 +185,7 @@ export function HomePageAdd() {
             </div>
           </div>
         </div>
-        <Button type="button" className="w-fit self-center">
+        <Button type="submit" className="w-fit self-center">
           Create
         </Button>
       </form>
