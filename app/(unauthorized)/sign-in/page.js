@@ -4,9 +4,9 @@ import IconInput from "@/components/elements/input";
 
 export default function SignIn() {
   return (
-    <div className="flex h-screen items-stretch justify-center bg-primary overflow-hidden">
+    <div className="bg-primary flex h-screen items-stretch justify-center overflow-hidden">
       {/* Left Section */}
-      <div className="flex-1 bg-purple-500 text-white flex flex-col justify-center items-start p-10">
+      <div className="bg-purple-500 flex flex-1 flex-col items-start justify-center p-10 text-white">
         {/* Pesawat dan Garis */}
         <div className="flex items-left mb-8">
           <img
@@ -31,12 +31,12 @@ export default function SignIn() {
       </div>
 
       {/* Right Section */}
-      <div className="flex-1 bg-white rounded-tl-[30px] rounded-bl-[30px] shadow-lg flex flex-col justify-center items-center p-10">
+      <div className="flex flex-1 flex-col items-center justify-center rounded-bl-[30px] rounded-tl-[30px] bg-white p-10 shadow-lg">
         <div className="w-full max-w-sm">
           <h2 className="text-5xl font-bold text-primary mb-4 text-center">
             Welcome Back
           </h2>
-          <p className="text-center text-primary mb-8">
+          <p className="text-primary mb-8 text-center">
             Sign in to continue using Scheto
           </p>
           <form className="space-y-6">

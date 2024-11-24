@@ -6,16 +6,16 @@ module.exports = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: { 
+    extend: {
       borderWidth: {
-        "3": "3px",
-        "5": "5px", 
-        "6": "6px",
+        3: "3px",
+        5: "5px",
+        6: "6px",
       },
       textShadow: {
-      DEFAULT: "2px 2px 4px rgba(108, 99, 255, 0.5)", 
-      lg: "3px 3px 6px rgba(108, 99, 255, 0.7)", 
-    },
+        DEFAULT: "2px 2px 4px rgba(108, 99, 255, 0.5)",
+        lg: "3px 3px 6px rgba(108, 99, 255, 0.7)",
+      },
       screens: {
         xs: "420px",
       },
@@ -36,10 +36,11 @@ module.exports = {
       "gray-200": "#616161",
       "gray-300": "#333333",
       "orange-100": "#FF6F61",
+      "green-50": "#99E9CB",
       "green-100": "#32D296",
       "red-100": "#EF0F0F",
       primary: "#6C63FF",
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 };
