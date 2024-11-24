@@ -1,47 +1,55 @@
+'use client'
+import { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; 
+import toast from "react-hot-toast";
+
 import InboxList from "@/components/elements/inbox/InboxList"; // Import InboxList
+
+import { onError } from "@/components/query/errorHandler";
+import { GetUserInbox } from "@/components/query/inboxUser";
 
 export default function Inbox() {
   const notifications = [
     {
-      id: 1,
+      _id: 1,
       title: "Event Reminder",
-      description:
+      message:
         "Don't forget! You have an upcoming meeting with Project Group B tomorrow at 14:00.",
       time: "5 hours ago",
       isHighlighted: false,
       isNew: true,
     },
     {
-      id: 2,
+      _id: 2,
       title: "Schedule Change",
-      description:
+      message:
         "Important Update: The meeting with the Marketing Team has been rescheduled to Friday at 10:30. Please update your calendar.",
       time: "7 hours ago",
       isHighlighted: false,
       isNew: true,
     },
     {
-      id: 3,
+      _id: 3,
       title: "Group Announcement",
-      description:
+      message:
         "Group FindIT! has added you to the team for the upcoming strategy session. The session will be held on Thursday, 13:00-15:00.",
       time: "1 day ago",
       isHighlighted: false,
       isNew: false,
     },
     {
-      id: 4,
+      _id: 4,
       title: "Group Announcement",
-      description:
+      message:
         "Group KKN Bangka Belitung has added you to the team for the upcoming strategy session. The session will be held on Thursday, 13:00-15:00.",
       time: "1 day ago",
       isHighlighted: false,
       isNew: false,
     },
     {
-      id: 5,
+      _id: 5,
       title: "Schedule Change",
-      description:
+      message:
         "Important Update: The meeting with the Hackathon Team has been rescheduled to Saturday at 10:30. Please update your calendar.",
       time: "1 day ago",
       isHighlighted: false,
@@ -49,42 +57,61 @@ export default function Inbox() {
     },
 
     {
-      id: 6,
+      _id: 6,
       title: "Group Announcement",
-      description:
+      message:
         "Group KKN Bangka Belitung has added you to the team for the upcoming strategy session. The session will be held on Thursday, 13:00-15:00.",
       time: "1 day ago",
       isHighlighted: false,
       isNew: false,
     },
     {
-      id: 7,
+      _id: 7,
       title: "Schedule Change",
-      description:
+      message:
         "Important Update: The meeting with the Hackathon Team has been rescheduled to Saturday at 10:30. Please update your calendar.",
       time: "1 day ago",
       isHighlighted: false,
       isNew: false,
     },
     {
-      id: 8,
+      _id: 8,
       title: "Group Announcement",
-      description:
+      message:
         "Group KKN Bangka Belitung has added you to the team for the upcoming strategy session. The session will be held on Thursday, 13:00-15:00.",
       time: "1 day ago",
       isHighlighted: false,
       isNew: false,
     },
     {
-      id: 9,
+      _id: 9,
       title: "Schedule Change",
-      description:
+      message:
         "Important Update: The meeting with the Hackathon Team has been rescheduled to Saturday at 10:30. Please update your calendar.",
       time: "1 day ago",
       isHighlighted: false,
       isNew: false,
     },
   ];
+
+  const GetAllInboxQuery = useQuery({
+    queryKey: ['once'],
+    queryFn: (props) => {
+      return GetUserInbox()
+    },
+    refetchOnWindowFocus : false,
+    retry : 2,
+  })
+
+  const GetInbox = () => {
+    if(GetAllInboxQuery.isLoading) {
+      return []
+    } else if (GetAllInboxQuery.isError) {
+      return []
+    } else {
+      return [...GetAllInboxQuery.data?.inbox]
+    }
+  }
 
   return (
     <main className="flex flex-col h-screen w-full bg-white">
@@ -95,7 +122,7 @@ export default function Inbox() {
 
       {/* Scrollable List */}
       <div className="flex-1 overflow-y-auto p-4">
-        <InboxList notifications={notifications} />
+        <InboxList notifications={GetInbox()} />
       </div>
     </main>
   );
