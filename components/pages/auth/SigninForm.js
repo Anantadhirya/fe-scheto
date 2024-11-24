@@ -7,6 +7,9 @@ import toast from 'react-hot-toast';
 import { onError } from '@/components/query/errorHandler';
 import { apiLogin, apiVerify } from '@/lib/apiRoutes';
 
+import Button1 from "@/components/elements/button1";
+import { InputWithIcon } from "@/components/elements/input";
+
 function SigninForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -19,13 +22,13 @@ function SigninForm() {
         try {
             toast.loading("checking account")
             await axios.post(apiLogin, {
-                login_detail : email,
-                password : password
+                login_detail: email,
+                password: password
             }, {
-                withCredentials : true
+                withCredentials: true
             })
             toast.dismiss()
-            toast.success("account is verified", { id : toastLogin})
+            toast.success("account is verified", { id: toastLogin })
             router.push('/')
         } catch (error) {
             onError(error, toastLogin)
@@ -36,7 +39,7 @@ function SigninForm() {
         try {
             //throw new Error("Telah terjadi error")
             await axios.get(apiVerify, {
-                withCredentials : true
+                withCredentials: true
             })
             router.push('/')
         } catch (error) {
@@ -50,36 +53,24 @@ function SigninForm() {
     return (
         <form className="space-y-4" onSubmit={LoginSubmit}>
             {/* Email */}
-            <div className="border-primary mb-4 flex items-center rounded-2xl border-2 p-3">
-                <img
-                    src="/images/email-icon.png"
-                    alt="Email Icon"
-                    className="text-primary mr-3 h-5 w-5"
-                />
-                <input
-                    type="email"
-                    placeholder="Email"
-                    className="w-full border-none focus:outline-none"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-            </div>
+            <InputWithIcon
+                iconSrc="/images/email-icon.png"
+                altText="Email Icon"
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChageFunc={(e) => setEmail(e.target.value)}
+            />
 
             {/* Password */}
-            <div className="border-primary mb-4 flex items-center rounded-2xl border-2 p-3">
-                <img
-                    src="/images/password-icon.png"
-                    alt="Password Icon"
-                    className="text-primary mr-3 h-5 w-5"
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    className="w-full border-none focus:outline-none"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-            </div>
+            <InputWithIcon
+                iconSrc="/images/password-icon.png"
+                altText="Password Icon"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
 
             {/* Submit */}
             <button className="bg-primary mb-6 w-full rounded-2xl px-6 py-3 font-bold text-white shadow-lg transition-shadow duration-300 hover:shadow-xl">

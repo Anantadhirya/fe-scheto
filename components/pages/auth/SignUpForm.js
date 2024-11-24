@@ -7,14 +7,17 @@ import toast from 'react-hot-toast';
 import { onError } from '@/components/query/errorHandler';
 import { apiLogin, apiRegister, apiVerify } from '@/lib/apiRoutes';
 
+import Button1 from "@/components/elements/button1";
+import { InputWithIcon } from "@/components/elements/input";
+
 function SignUpForm() {
     const [registerForm, SetRegisterForm] = useState({
-        username : "",
-        firstName : "",
-        lastName : "",
-        email : "",
-        password : "",
-        confirmPassword : ""
+        username: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: ""
     })
     const router = useRouter();
     const toastRegister = 'registerToast'
@@ -23,7 +26,7 @@ function SignUpForm() {
         SetRegisterForm((old) => {
             return {
                 ...old,
-                [key] : value
+                [key]: value
             }
         })
     }
@@ -31,21 +34,21 @@ function SignUpForm() {
     async function RegisterSubmit(e) {
         e.preventDefault();
         try {
-            if(registerForm.confirmPassword != registerForm.password) {
+            if (registerForm.confirmPassword != registerForm.password) {
                 throw new Error("Confirm your password again")
             }
-            if(registerForm.username.trim().length == 0 || registerForm.email.trim().length == 0 || registerForm.firstName.trim().length == 0 || registerForm.password.trim().length == 0) {
+            if (registerForm.username.trim().length == 0 || registerForm.email.trim().length == 0 || registerForm.firstName.trim().length == 0 || registerForm.password.trim().length == 0) {
                 throw new Error("Fill out all of the form")
             }
             toast.loading("Registering account")
             const response = await axios.post(apiRegister, {
-                firstName : registerForm.firstName,
-                lastName : registerForm.lastName,
-                email : registerForm.email,
-                password : registerForm.password,
-                username : registerForm.username
+                firstName: registerForm.firstName,
+                lastName: registerForm.lastName,
+                email: registerForm.email,
+                password: registerForm.password,
+                username: registerForm.username
             }, {
-                withCredentials : true
+                withCredentials: true
             })
             toast.dismiss()
             toast.success(response.data.message || "Process is successful")
@@ -57,108 +60,68 @@ function SignUpForm() {
 
     return (
         <form className="space-y-4" onSubmit={RegisterSubmit}>
-            {/* First Name */}
-            <div className="border-primary flex items-center rounded-2xl border-2 p-3">
-                <img
-                    src="/images/user-icon.png"
-                    alt="User Icon"
-                    className="text-primary mr-3 h-5 w-5"
-                />
-                <input
-                    type="text"
-                    placeholder="Username"
-                    
-                    value={registerForm.username}
-                    onChange={(e) => onChangeForm('username', e.target.value)}
-                    className="w-full border-none focus:outline-none"
-                />
-            </div>
+            {/* username */}
+            <InputWithIcon
+                type="text"
+                placeholder="Username"
+                iconSrc="/images/user-icon.png"
+                altText="User Icon"
+                value={registerForm.username}
+                onChageFunc={(e) => onChangeForm('username', e.target.value)}
+            />
 
             {/* First Name */}
-            <div className="border-primary flex items-center rounded-2xl border-2 p-3">
-                <img
-                    src="/images/user-icon.png"
-                    alt="User Icon"
-                    className="text-primary mr-3 h-5 w-5"
-                />
-                <input
-                    type="text"
-                    placeholder="First name"
-                    
-                    value={registerForm.firstName}
-                    onChange={(e) => onChangeForm('firstName', e.target.value)}
-                    className="w-full border-none focus:outline-none"
-                />
-            </div>
+            <InputWithIcon
+                type="text"
+                placeholder="First name"
+                iconSrc="/images/user-icon.png"
+                altText="User Icon"
+                onChageFunc={(e) => onChangeForm('firstName', e.target.value)}
+                className="w-full border-none focus:outline-none"
+            />
 
             {/* Last Name */}
-            <div className="border-primary flex items-center rounded-2xl border-2 p-3">
-                <img
-                    src="/images/user-icon.png"
-                    alt="User Icon"
-                    className="text-primary mr-3 h-5 w-5"
-                />
-                <input
-                    type="text"
-                    placeholder="Last name"
-                    value={registerForm.lastName}
-                    onChange={(e) => onChangeForm('lastName', e.target.value)}
-                    className="w-full border-none focus:outline-none"
-                />
-            </div>
+            <InputWithIcon
+                type="text"
+                placeholder="Last name"
+                iconSrc="/images/user-icon.png"
+                altText="User Icon"
+                value={registerForm.lastName}
+                onChageFunc={(e) => onChangeForm('lastName', e.target.value)}
+            />
 
             {/* Email */}
-            <div className="border-primary flex items-center rounded-2xl border-2 p-3">
-                <img
-                    src="/images/email-icon.png"
-                    alt="Email Icon"
-                    className="text-primary mr-3 h-5 w-5"
-                />
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={registerForm.email}
-                    onChange={(e) => onChangeForm('email', e.target.value)}
-                    className="w-full border-none focus:outline-none"
-                />
-            </div>
+            <InputWithIcon
+                type="email"
+                placeholder="Email"
+                iconSrc="/images/email-icon.png"
+                altText="Email Icon"
+                value={registerForm.email}
+                onChageFunc={(e) => onChangeForm('email', e.target.value)}
+            />
 
             {/* Password */}
-            <div className="border-primary flex items-center rounded-2xl border-2 p-3">
-                <img
-                    src="/images/password-icon.png"
-                    alt="Password Icon"
-                    className="text-primary mr-3 h-5 w-5"
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={registerForm.password}
-                    onChange={(e) => onChangeForm('password', e.target.value)}
-                    className="w-full border-none focus:outline-none"
-                />
-            </div>
+            <InputWithIcon
+                type="password"
+                placeholder="Password"
+                iconSrc="/images/password-icon.png"
+                altText="Password Icon"
+                value={registerForm.password}
+                onChageFunc={(e) => onChangeForm('password', e.target.value)}
+            />
 
             {/* Confirm Password */}
-            <div className="border-primary flex items-center rounded-2xl border-2 p-3">
-                <img
-                    src="/images/password-icon.png"
-                    alt="Password Icon"
-                    className="text-primary mr-3 h-5 w-5"
-                />
-                <input
-                    type="password"
-                    value={registerForm.confirmPassword}
-                    onChange={(e) => onChangeForm('confirmPassword', e.target.value)}
-                    placeholder="Confirm Password"
-                    className="w-full border-none focus:outline-none"
-                />
-            </div>
+            <InputWithIcon
+                type="password"
+                placeholder="Confirm Password"
+                iconSrc="/images/password-icon.png"
+                altText="Password Icon"
+                value={registerForm.confirmPassword}
+                onChageFunc={(e) => onChangeForm('confirmPassword', e.target.value)}
+            />
 
             {/* Submit */}
-            <button className="bg-primary w-full rounded-2xl px-6 py-3 font-bold text-white shadow-lg transition-shadow duration-300 hover:shadow-xl">
-                Create
-            </button>
+            <Button1>Create</Button1>
         </form>
     )
 }
