@@ -12,6 +12,11 @@ export function Timeline({ schedules, className = "" }) {
         className,
       )}
     >
+      {schedules.length === 0 && (
+        <div className="col-span-3 self-start text-blue-200">
+          No upcoming events
+        </div>
+      )}
       {schedules.map((schedule, idx) => (
         <Fragment key={idx}>
           {/* Timeline: Circle */}
