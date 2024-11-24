@@ -9,6 +9,7 @@ import {
 import { Select, SelectTime } from "@/components/elements/select";
 import { format, isAfter } from "date-fns";
 import { useEffect, useMemo, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import {
   BsArrowClockwise,
   BsCalendar2Date,
@@ -113,6 +114,27 @@ export function HomePageAdd({ type = "add", editingSchedule }) {
   const [description, setDescription] = useState("");
   const descriptionMaxLength = 250;
   const displayDescLength = description.length >= descriptionMaxLength - 50;
+
+  const handleSubmit = () => {
+    if (!title) return toast.error("Please enter a schedule title");
+    if (!selectedDate) return toast.error("Please select the date");
+    if (!selectedTime?.from) return toast.error("Please select the start time");
+    if (!selectedTime?.to) return toast.error("Please select the end time");
+    const data = {
+      is_user_owned: true,
+      title: title,
+      description: description,
+      start_time: selectedTime.from,
+      end_time: selectedTime.to,
+      is_private: selectedPrivate,
+      schedule_type: repeat_options[selectedRepeat].value,
+    };
+
+    // TODO: Integrate edit & create individual schedule
+    if (type === "edit") console.log("Editing schedule: ", data);
+    else if (type === "add") console.log("Creating schedule: ", data);
+  };
+
   return (
     <div className="scroll-container h-0 grow overflow-auto max-md:h-fit md:p-10">
       <form className="flex flex-col gap-8 px-16 py-9 shadow-md">
@@ -212,7 +234,11 @@ export function HomePageAdd({ type = "add", editingSchedule }) {
             </div>
           </div>
         </div>
-        <Button type="button" className="w-fit self-center">
+        <Button
+          type="button"
+          className="w-fit self-center"
+          onClick={handleSubmit}
+        >
           {type === "edit" ? "Save Changes" : "Create"}
         </Button>
       </form>
