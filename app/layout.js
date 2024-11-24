@@ -1,6 +1,8 @@
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import ReactQueryProvider from "@/components/context/ReactQuery";
+
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -17,8 +19,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={roboto.className}>
-        <Toaster />
-        {children}
+        <ReactQueryProvider>+
+          <Toaster />
+          {children}
+        </ReactQueryProvider>
+        
       </body>
     </html>
   );
