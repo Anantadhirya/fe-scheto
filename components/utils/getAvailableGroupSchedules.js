@@ -31,7 +31,6 @@ export const getAvailableGroupSchedules = (
       member_schedules[schedule.id_creator].push(schedule);
     }
   });
-  console.log(member_schedules);
 
   // Handle individual member overlapping schedules
   const add = [];

@@ -11,6 +11,7 @@ import { Select } from "@/components/elements/select";
 import { getAvailableGroupSchedules } from "@/components/utils";
 import { addDays, format, isSameDay, startOfDay } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 import {
   BsCalendar2Date,
   BsCheckCircle,
@@ -22,6 +23,7 @@ import {
 import { twMerge } from "tailwind-merge";
 
 export function GroupPageAdd({ group, schedules }) {
+  const [title, setTitle] = useState("");
   const [selectedDate, setSelectedDate] = useState();
   const [selectedDuration, setSelectedDuration] = useState();
   const [selectedMembers, setSelectedMembers] = useState([]);
@@ -47,12 +49,37 @@ export function GroupPageAdd({ group, schedules }) {
     [schedules, selectedDate, selectedDuration, selectedMembers],
   );
   useEffect(() => setSelectedSchedule(), [availableSchedules]);
+  const handleCreateSchedule = () => {
+    if (!title) return toast.error("Please enter a schedule title");
+    if (!selectedDate)
+      return toast.error("Please select a date for the meeting");
+    if (!selectedDuration)
+      return toast.error("Please select a duration for the meeting");
+    if (selectedMembers.length === 0)
+      return toast.error("Please select members for the meeting");
+    if (selectedSchedule === undefined)
+      return toast.error("Please select a schedule from the list");
+    const data = {
+      is_user_owned: false,
+      group_data: {
+        member_joining: selectedMembers.map((member) => member.value),
+      },
+      title: title,
+      start_time: availableSchedules[selectedSchedule].start_time,
+      end_time: availableSchedules[selectedSchedule].end_time,
+    };
+
+    // TODO: Integrate create group schedule
+    console.log(data);
+  };
   return (
     <div className="scroll-container h-0 grow overflow-auto max-md:h-fit md:p-10">
       <form className="flex flex-col gap-8 py-9 shadow-md max-md:px-8 md:px-16">
         <input
           placeholder="TITLE"
           className="text-3xl font-semibold text-blue-200 outline-0 placeholder:text-blue-200/70"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
         <div className="-mx-5 h-[5px] bg-blue-200" />
         <div className="flex flex-col gap-6">
@@ -158,7 +185,11 @@ export function GroupPageAdd({ group, schedules }) {
             </div>
           </div>
         </div>
-        <Button type="button" className="w-fit self-center">
+        <Button
+          type="button"
+          className="w-fit self-center"
+          onClick={handleCreateSchedule}
+        >
           Create
         </Button>
       </form>
