@@ -36,7 +36,7 @@ export function CalendarSidebar({
           <div className="sticky top-0 z-20 w-full bg-gradient-to-b from-white from-70% to-white/0 pb-4 text-2xl font-extrabold text-blue-200">
             Upcoming Events
           </div>
-          <Timeline schedules={getUpcomingSchedules(schedules, 10)} />
+          <Timeline schedules={getUpcomingSchedules(schedules, 5)} />
           <div className="sticky bottom-0 min-h-3 bg-gradient-to-t from-white to-white/0"></div>
         </div>
       </div>

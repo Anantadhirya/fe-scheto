@@ -48,7 +48,7 @@ export const Select = forwardRef(
           valueContainer: () => "py-2 flex gap-1",
           input: () => "outline-0",
           menu: () =>
-            "mt-1.5 bg-white rounded-md outline outline-2 outline-blue-200 overflow-hidden",
+            "mt-1.5 bg-white rounded-md outline outline-2 outline-blue-200 overflow-hidden !z-50 text-blue-200",
           menuList: () => "scroll-container",
           option: () =>
             "py-1 px-3 !cursor-pointer hover:bg-blue-200 hover:text-white",
