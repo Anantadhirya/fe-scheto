@@ -1,7 +1,11 @@
 "use client";
 import { Button } from "@/components/elements/button";
 import { CalendarSidebar } from "@/components/layout/CalendarSidebar";
-import { HomePageCalendar, HomePageList } from "@/components/pages/home";
+import {
+  HomePageAdd,
+  HomePageCalendar,
+  HomePageList,
+} from "@/components/pages/home";
 import { schedules } from "@/components/pages/home/dummy_home";
 import { addWeeks, endOfWeek, format, startOfWeek } from "date-fns";
 import { useState } from "react";
@@ -126,6 +130,7 @@ export default function Home() {
         />
       )}
       {page === "list" && <HomePageList schedules={schedules} />}
+      {page === "add" && <HomePageAdd />}
     </CalendarSidebar>
   );
 }
