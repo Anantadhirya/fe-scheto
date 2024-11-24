@@ -10,29 +10,29 @@ async function EnsureUser() {
     const response = await fetch(apiVerify, {
       credentials: "include",
       method: "GET",
-      headers: { Cookie : cookies().toString()}
+      headers: { Cookie: (await cookies()).toString() },
     });
-    //console.log("COOKIES",cookies().toString())
     return {
-      data : await response.json(),
-      status : response.status,
-      ok : response.ok,
-      isError : false
-    }
+      data: await response.json(),
+      status: response.status,
+      ok: response.ok,
+      isError: false,
+    };
   } catch (error) {
     return {
-      status : null,
-      isError : true,
-      error : error,
-      ok : false
-    }
+      status: null,
+      isError: true,
+      error,
+      ok: false,
+    };
   }
 } 
 
-export default function NavbarLayout({ children }) {
-  const isUser = EnsureUser();
-  if(!isUser.ok){
-    redirect("/sign-in", "replace")
+export default async function NavbarLayout({ children }) {
+  const isUser = await EnsureUser();
+  if(isUser.ok == false) {
+    redirect('sign-in', 'replace')
   }
+  
   return <Navbar>{children}</Navbar>;
 }
