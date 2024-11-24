@@ -15,8 +15,17 @@ import {
 } from "date-fns";
 import { Fragment, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
+import { Popover, PopoverContent, PopoverTrigger } from "../popover";
+import {
+  BsArrowClockwise,
+  BsCalendarDate,
+  BsLock,
+  BsPersonFill,
+  BsStopwatch,
+} from "react-icons/bs";
+import { Button } from "../button";
 
-export function Calendar({ schedules, start_date, group }) {
+export function Calendar({ schedules, start_date, isGroup, group }) {
   const formatNumberWithSign = (number) => {
     const sign = number >= 0 ? "+" : "-";
     return `${sign}${number}`;
@@ -66,7 +75,7 @@ export function Calendar({ schedules, start_date, group }) {
       const available = new MinHeap();
       schedules.sort((a, b) => a.start_time - b.start_time);
       for (let i = 0, indexes = [], mx = 0; i <= schedules.length; i++) {
-        if (i < schedules.length && group && schedules[i].is_user_owned)
+        if (i < schedules.length && isGroup && schedules[i].is_user_owned)
           continue;
         while (
           !overlapping.empty() &&
@@ -113,7 +122,7 @@ export function Calendar({ schedules, start_date, group }) {
       });
     };
     return splitByDay(getOverlappingScheduleCol(getScheduleInWeek(schedules)));
-  }, [group, schedules, start_date]);
+  }, [isGroup, schedules, start_date]);
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
@@ -171,46 +180,121 @@ export function Calendar({ schedules, start_date, group }) {
             ))}
           {/* Schedules */}
           {displayedSchedules.map((schedule, idx) => (
-            <div
-              key={idx}
-              className={twMerge(
-                "absolute flex flex-col overflow-hidden p-2 font-semibold",
-                group &&
-                  (schedule.is_user_owned
-                    ? "bg-orange-100/60"
-                    : "z-20 bg-green-100/50"),
-                !group &&
-                  (schedule.is_private ? "bg-orange-100" : "bg-green-50"),
-                (!group || !schedule.is_user_owned) &&
-                  "outline outline-1 -outline-offset-1 outline-blue-200",
-                schedule.actual_start && "rounded-t-[10px]",
-                schedule.actual_end && "rounded-b-[10px]",
-              )}
-              style={getStylePos(schedule)}
-            >
-              {(!group || !schedule.is_user_owned) && (
-                <>
-                  <span className="flex-none truncate text-base">
-                    {schedule.title}
+            <Popover key={idx}>
+              <PopoverTrigger asChild>
+                <button
+                  className={twMerge(
+                    "absolute flex flex-col overflow-hidden p-2 font-semibold",
+                    isGroup &&
+                      (schedule.is_user_owned
+                        ? "bg-orange-100/60 hover:bg-orange-100/80"
+                        : "z-20 bg-green-100/50 hover:bg-green-100/80"),
+                    !isGroup &&
+                      (schedule.is_private
+                        ? "bg-orange-100 hover:bg-orange-100/90"
+                        : "bg-green-50 hover:bg-green-50/90"),
+                    (!isGroup || !schedule.is_user_owned) &&
+                      "outline outline-1 -outline-offset-1 outline-blue-200",
+                    schedule.actual_start && "rounded-t-[10px]",
+                    schedule.actual_end && "rounded-b-[10px]",
+                  )}
+                  style={getStylePos(schedule)}
+                >
+                  {(!isGroup || !schedule.is_user_owned) && (
+                    <>
+                      <span className="flex-none truncate text-base">
+                        {schedule.title}
+                      </span>
+                      <span className="truncate text-wrap text-xs">
+                        {format(
+                          schedule.actual_start_time,
+                          schedule.actual_start && schedule.actual_end
+                            ? "HH:mm"
+                            : "MMM d, HH:mm",
+                        )}
+                        &nbsp;-&nbsp;
+                        {format(
+                          schedule.actual_end_time,
+                          schedule.actual_start && schedule.actual_end
+                            ? "HH:mm"
+                            : "MMM d, HH:mm",
+                        )}
+                      </span>
+                    </>
+                  )}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent
+                side="bottom"
+                align="start"
+                className={twMerge(
+                  "flex flex-col gap-2 outline-1",
+                  isGroup &&
+                    (schedule.is_user_owned
+                      ? "bg-orange-100"
+                      : "z-20 bg-green-50"),
+                  !isGroup &&
+                    (schedule.is_private ? "bg-orange-100" : "bg-green-50"),
+                )}
+              >
+                <div className="font-semibold">
+                  {isGroup && schedule.is_user_owned && schedule.is_private
+                    ? "Private schedule"
+                    : schedule.title}
+                </div>
+                <div className="h-[1px] w-full bg-foreground" />
+                <div className="flex items-center gap-2 text-xs font-medium">
+                  <BsCalendarDate className="flex-none text-xl" />
+                  <span>
+                    {format(schedule.actual_start_time, "EEEE, d MMMM yyyy")}
                   </span>
-                  <span className="truncate text-wrap text-xs">
-                    {format(
-                      schedule.actual_start_time,
-                      schedule.actual_start && schedule.actual_end
-                        ? "HH:mm"
-                        : "MMM d, HH:mm",
-                    )}
-                    &nbsp;-&nbsp;
-                    {format(
-                      schedule.actual_end_time,
-                      schedule.actual_start && schedule.actual_end
-                        ? "HH:mm"
-                        : "MMM d, HH:mm",
-                    )}
+                </div>
+                <div className="flex items-center gap-2 text-xs font-medium">
+                  <BsStopwatch className="flex-none text-xl" />
+                  <span>
+                    {`${format(schedule.actual_start_time, "HH:mm")} - ${format(schedule.actual_end_time, "HH:mm")}`}
                   </span>
-                </>
-              )}
-            </div>
+                </div>
+                {!isGroup && (
+                  <>
+                    <div className="flex items-center gap-2 text-xs font-medium">
+                      <BsArrowClockwise className="flex-none text-xl" />
+                      <span>
+                        {!schedule.repeat || schedule.repeat === "NONE"
+                          ? "Does not repeat"
+                          : `Repeats ${schedule.repeat.toLowerCase()}`}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs font-medium">
+                      <BsLock className="flex-none text-xl" />
+                      <span>{schedule.is_private ? "Private" : "Public"}</span>
+                    </div>
+                  </>
+                )}
+                {isGroup && schedule.is_user_owned && (
+                  <div className="flex items-center gap-2 text-xs font-medium">
+                    <BsPersonFill className="flex-none text-xl" />
+                    <span>
+                      {group?.members?.find(
+                        (member) => member.id_user === schedule.id_creator,
+                      )?.name ?? ""}
+                    </span>
+                  </div>
+                )}
+                <div className="flex gap-2 self-end">
+                  {!isGroup && (
+                    <Button variant="black" size="sm" className="w-fit text-xs">
+                      Edit
+                    </Button>
+                  )}
+                  {(!isGroup || !schedule.is_user_owned) && (
+                    <Button variant="black" size="sm" className="w-fit text-xs">
+                      Delete
+                    </Button>
+                  )}
+                </div>
+              </PopoverContent>
+            </Popover>
           ))}
         </div>
       </div>
