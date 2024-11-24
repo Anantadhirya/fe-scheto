@@ -7,7 +7,12 @@ export function GroupPageCalendar({ group, setPage, schedules, start_date }) {
       {/* Group Name and Invite Code */}
       <GroupHeader group={group} setPage={setPage} showIcon />
       {/* Calendar */}
-      <Calendar schedules={schedules} start_date={start_date} group />
+      <Calendar
+        schedules={schedules}
+        start_date={start_date}
+        isGroup
+        group={group}
+      />
     </div>
   );
 }

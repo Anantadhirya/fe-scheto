@@ -7,6 +7,7 @@ const getButtonClassName = tv({
       primary: "bg-blue-200 hover:bg-blue-200/90",
       secondary: "bg-purple-200 hover:bg-purple-200/90",
       destructive: "bg-red-100 hover:bg-red-100/90",
+      black: "bg-black hover:bg-black/90",
     },
     size: {
       sm: "px-4 py-1",

@@ -9,6 +9,7 @@ import {
 import { Select, SelectTime } from "@/components/elements/select";
 import { format, isAfter } from "date-fns";
 import { useEffect, useMemo, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import {
   BsArrowClockwise,
   BsCalendar2Date,
@@ -17,11 +18,38 @@ import {
   BsStopwatch,
 } from "react-icons/bs";
 
-export function HomePageAdd({AddSchedule}) {
+export function HomePageAdd({ type = "add", editingSchedule, AddSchedule}) {
+  // Set initial value for editing
+  useEffect(() => {
+    if (type != "edit") return;
+    // TODO: Change the editingSchedule to pass id instead of the entire object (to handle repeat schedules)
+    setTitle(editingSchedule.title);
+    setSelectedDate(editingSchedule.actual_start_time);
+    setSelectedStart({
+      value: editingSchedule.actual_start_time,
+      label: format(editingSchedule.actual_start_time, "HH:mm"),
+    });
+    setSelectedEnd({
+      value: editingSchedule.actual_end_time,
+      label: format(editingSchedule.actual_end_time, "HH:mm"),
+    });
+    setSelectedRepeat(
+      editingSchedule.repeat
+        ? repeat_options.findIndex(
+            (option) => option.value === editingSchedule.repeat,
+          )
+        : 0,
+    );
+    setSelectedPrivate(editingSchedule.is_private);
+    setDescription(editingSchedule.description || "");
+  }, []);
+
+  // Title
+  const [title, setTitle] = useState("");
+
   // Date Selector
   const [selectedDate, setSelectedDate] = useState();
   const [dateOpen, setDateOpen] = useState(false);
-  const [title, setTitle] = useState('')
 
   // Time Selector
   const [selectedStart, setSelectedStart] = useState();
@@ -41,25 +69,37 @@ export function HomePageAdd({AddSchedule}) {
   }, [selectedTime]);
 
   // Repeat Selector
+  const getRepeatLabel = (repeat, start_time) => {
+    switch (repeat) {
+      case "DAILY":
+        return start_time
+          ? `Repeats daily at ${format(start_time, "HH:mm")}`
+          : "Repeats daily";
+      case "WEEKLY":
+        return start_time
+          ? `Repeats weekly on ${format(start_time, "EEEE")}`
+          : "Repeats weekly";
+      case "MONTHLY":
+        return start_time
+          ? `Repeats monthly on the ${format(start_time, "do")}`
+          : "Repeats monthly";
+      default:
+        return "Does not repeat";
+    }
+  };
   const repeat_options = useMemo(
     () => [
-      { label: "Does not repeat", value: "NONE" },
+      { label: getRepeatLabel("NONE"), value: "NONE" },
       {
-        label: selectedTime?.from
-          ? `Repeats daily at ${format(selectedTime.from, "HH:mm")}`
-          : "Repeats daily",
+        label: getRepeatLabel("DAILY", selectedTime?.from),
         value: "DAILY",
       },
       {
-        label: selectedDate
-          ? `Repeats weekly on ${format(selectedDate, "EEEE")}`
-          : "Repeats weekly",
+        label: getRepeatLabel("WEEKLY", selectedDate),
         value: "WEEKLY",
       },
       {
-        label: selectedDate
-          ? `Repeats monthly on the ${format(selectedDate, "do")}`
-          : "Repeats monthly",
+        label: getRepeatLabel("MONTHLY", selectedDate),
         value: "MONTHLY",
       },
     ],
@@ -86,14 +126,45 @@ export function HomePageAdd({AddSchedule}) {
       is_private : selectedPrivate
     })
   }
+
+  const handleSubmit = () => {
+    if (!title) return toast.error("Please enter a schedule title");
+    if (!selectedDate) return toast.error("Please select the date");
+    if (!selectedTime?.from) return toast.error("Please select the start time");
+    if (!selectedTime?.to) return toast.error("Please select the end time");
+    const data = {
+      is_user_owned: true,
+      title: title,
+      description: description,
+      start_time: selectedTime.from,
+      end_time: selectedTime.to,
+      is_private: selectedPrivate,
+      schedule_type: repeat_options[selectedRepeat].value,
+    };
+
+    // TODO: Integrate edit & create individual schedule
+    if (type === "edit") console.log("Editing schedule: ", data);
+    else if (type === "add") {
+      console.log("Creating schedule: ", data);
+      AddSchedule.mutate({
+        description : description,
+        title : title,
+        startDate : selectedStart.value,
+        endDate : selectedEnd.value,
+        recurrence : repeat_options[selectedRepeat].value,
+        is_private : selectedPrivate
+      })
+    }
+  };
+
   return (
     <div className="scroll-container h-0 grow overflow-auto max-md:h-fit md:p-10">
-      <form className="flex flex-col gap-8 px-16 py-9 shadow-md" onSubmit={onSubmitAdd}>
+      <form className="flex flex-col gap-8 px-16 py-9 shadow-md">
         <input
           placeholder="TITLE"
-          className="text-3xl font-semibold text-blue-200 outline-0 placeholder:text-blue-200/70"
-          onChange={(e) => setTitle(e.target.value)}
           value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="text-3xl font-semibold text-blue-200 outline-0 placeholder:text-blue-200/70"
         />
         <div className="-mx-5 h-[5px] bg-blue-200" />
         <div className="flex flex-col gap-6">
@@ -185,8 +256,12 @@ export function HomePageAdd({AddSchedule}) {
             </div>
           </div>
         </div>
-        <Button type="submit" className="w-fit self-center">
-          Create
+        <Button
+          type="button"
+          className="w-fit self-center"
+          onClick={handleSubmit}
+        >
+          {type === "edit" ? "Save Changes" : "Create"}
         </Button>
       </form>
     </div>
