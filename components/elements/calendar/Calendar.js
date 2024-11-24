@@ -25,7 +25,7 @@ import {
 } from "react-icons/bs";
 import { Button } from "../button";
 
-export function Calendar({ schedules, start_date, isGroup, group }) {
+export function Calendar({ schedules, start_date, isGroup, group, onEdit }) {
   const formatNumberWithSign = (number) => {
     const sign = number >= 0 ? "+" : "-";
     return `${sign}${number}`;
@@ -283,7 +283,12 @@ export function Calendar({ schedules, start_date, isGroup, group }) {
                 )}
                 <div className="flex gap-2 self-end">
                   {!isGroup && (
-                    <Button variant="black" size="sm" className="w-fit text-xs">
+                    <Button
+                      variant="black"
+                      size="sm"
+                      className="w-fit text-xs"
+                      onClick={() => onEdit(schedule)}
+                    >
                       Edit
                     </Button>
                   )}

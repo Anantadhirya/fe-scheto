@@ -19,6 +19,7 @@ export default function Home() {
     from: startOfWeek(new Date()),
     to: endOfWeek(new Date()),
   });
+  const [editingSchedule, setEditingSchedule] = useState();
   return (
     <CalendarSidebar
       selectedWeek={selectedWeek}
@@ -28,7 +29,7 @@ export default function Home() {
     >
       {/* Top Menu */}
       <div className="relative z-30 flex flex-none justify-between py-6 shadow-md max-lg:h-fit max-lg:flex-col-reverse max-lg:gap-2 max-md:px-[min(40px,7vw-16.4px)] md:px-10 lg:h-28 lg:items-center">
-        {page === "add" ? (
+        {page === "add" || page === "edit" ? (
           // Add Menu
           <button
             className="flex items-center text-blue-200 outline-0"
@@ -127,10 +128,17 @@ export default function Home() {
         <HomePageCalendar
           schedules={schedules}
           start_date={selectedWeek.from}
+          onEdit={(schedule) => {
+            setPage("edit");
+            setEditingSchedule(schedule);
+          }}
         />
       )}
       {page === "list" && <HomePageList schedules={schedules} />}
-      {page === "add" && <HomePageAdd />}
+      {page === "add" && <HomePageAdd type="add" />}
+      {page === "edit" && (
+        <HomePageAdd type="edit" editingSchedule={editingSchedule} />
+      )}
     </CalendarSidebar>
   );
 }
