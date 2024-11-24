@@ -26,7 +26,7 @@ export default function GroupPage({ params }) {
     <CalendarSidebar
       selectedWeek={selectedWeek}
       setSelectedWeek={setSelectedWeek}
-      schedules={schedules}
+      schedules={schedules.filter((schedule) => !schedule.is_user_owned)}
       className={page !== "calendar" ? "max-md:hidden" : ""}
     >
       {/* Back Button */}

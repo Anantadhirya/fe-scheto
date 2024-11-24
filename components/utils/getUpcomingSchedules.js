@@ -94,10 +94,7 @@ export const getUpcomingSchedules = (schedules, count = 5) => {
       );
     });
   return [...schedulesNoRepeat, ...schedulesRepeat]
-    .filter(
-      (schedule) =>
-        !schedule.is_user_owned && isAfter(schedule.start_time, new Date()),
-    )
+    .filter((schedule) => isAfter(schedule.start_time, new Date()))
     .sort((a, b) => a.start_time - b.start_time)
     .slice(0, count);
 };
