@@ -1,3 +1,10 @@
+import React from "react";
+import SigninForm from "@/components/pages/auth/SigninForm";
+
+export const metadata = {
+  title: "Sign in",
+};
+
 export default function SignIn() {
   return (
     <div className="bg-primary flex h-screen items-stretch justify-center overflow-hidden">
@@ -34,40 +41,7 @@ export default function SignIn() {
           <p className="text-primary mb-8 text-center">
             Sign in to continue using Scheto
           </p>
-          <form className="space-y-4">
-            {/* Email */}
-            <div className="border-primary mb-4 flex items-center rounded-2xl border-2 p-3">
-              <img
-                src="/images/email-icon.png"
-                alt="Email Icon"
-                className="text-primary mr-3 h-5 w-5"
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                className="w-full border-none focus:outline-none"
-              />
-            </div>
-
-            {/* Password */}
-            <div className="border-primary mb-4 flex items-center rounded-2xl border-2 p-3">
-              <img
-                src="/images/password-icon.png"
-                alt="Password Icon"
-                className="text-primary mr-3 h-5 w-5"
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                className="w-full border-none focus:outline-none"
-              />
-            </div>
-
-            {/* Submit */}
-            <button className="bg-primary mb-6 w-full rounded-2xl px-6 py-3 font-bold text-white shadow-lg transition-shadow duration-300 hover:shadow-xl">
-              Log In
-            </button>
-          </form>
+          <SigninForm />
           <p className="mt-6 text-center text-sm text-black">
             Doesn&apos;t have an account?{" "}
             <a href="/sign-up" className="text-primary font-bold underline">
