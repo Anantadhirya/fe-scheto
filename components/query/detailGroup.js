@@ -16,6 +16,20 @@ function ReformatGroupList(data) {
     })
 }
 
+function ReformatGroupDetail(data) {
+    data.name = data.group_name
+    data.id_leader.name = data.id_leader.username
+    data.members = data.member_id.map((value) => {
+        value.name = value.id_user.username
+        value.id_user = value.id_user._id
+        return value
+    })
+    data.members.push({
+        name : data.id_leader.name,
+        id_user : data.id_leader._id
+    })
+}
+
 export async function FetchGroupList(callback = (data) => {}) {
     try {
         const response = await axios.get(apiGroupList, {
@@ -59,6 +73,65 @@ export async function CreatingGroup(props) {
             withCredentials : true
         })
         //console.log("RESPONSE",response)
+        return {...response.data}
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export async function GetGroupDetail(props) {
+    try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_DOMAIN_BE}` + `/group/id/${props._id}/detail`, 
+        {
+            withCredentials : true
+        })
+        ReformatGroupDetail(response.data.group)
+        return {...response.data.group}
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export async function LeaveGroup(props) {
+    try {
+        const response = await axios.delete(`${process.env.NEXT_PUBLIC_DOMAIN_BE}` + `/group/leave/${props._id}`, 
+        {
+            withCredentials : true
+        })
+        return {...response.data}
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export async function UpdateDescription(props) {
+    try {
+        const response = await axios.patch(`${process.env.NEXT_PUBLIC_DOMAIN_BE}` + `/group/id/${props._id}/description`, 
+        {
+            description : props.description
+        },
+        {
+            withCredentials : true
+        })
+        return {...response.data}
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export async function RegenerateCode(props) {
+    try {
+        const response = await axios.patch(`${process.env.NEXT_PUBLIC_DOMAIN_BE}` + `/group/id/${props._id}/generate-code`,
+        {
+            empty : "EMPTY"
+        },
+        {
+            withCredentials : true
+        })
         return {...response.data}
     } catch (error) {
         console.log(error)

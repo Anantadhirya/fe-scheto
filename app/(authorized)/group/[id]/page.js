@@ -9,8 +9,14 @@ import {
 import { groups, schedules } from "@/components/pages/group/dummy_group";
 import { endOfWeek, startOfWeek } from "date-fns";
 import Link from "next/link";
-import { useState, use } from "react";
+import { useState, use, useLayoutEffect, useEffect, useMemo, } from "react";
+import { useRouter } from "next/navigation";
 import { BiChevronLeft } from "react-icons/bi";
+
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { GetGroupDetail } from "@/components/query/detailGroup";
+import { onError } from "@/components/query/errorHandler";
+import toast from "react-hot-toast";
 
 const getGroup = (id) => {
   return groups.find((group) => group.id === id);
@@ -20,11 +26,43 @@ export default function GroupPage({ params }) {
   const { id } = use(params);
   const group = getGroup(id);
   const [page, setPage] = useState("calendar");
+  const router = useRouter();
   const [selectedWeek, setSelectedWeek] = useState({
     from: startOfWeek(new Date()),
     to: endOfWeek(new Date()),
   });
-  return (
+
+  const FetchGroupDetailQuery = useQuery({
+    queryKey: ['detail'],
+    queryFn: (props) => {
+      return GetGroupDetail({_id : id})
+    },
+    refetchOnWindowFocus: false,
+    retry: 2,
+  })
+
+  useEffect(() => {
+    if(FetchGroupDetailQuery.isError) {
+      console.log("ERROR 401")
+      router.replace('/group')
+    }
+  }, [FetchGroupDetailQuery])
+
+  if(FetchGroupDetailQuery.isLoading) {
+    return (
+      <div className="w-full flex items-center justify-center">
+        Loading...
+      </div>  
+    )
+  }
+  else if(FetchGroupDetailQuery.isError) {
+    return (
+      <div className="w-full flex items-center justify-center">
+        401 Not Accessible
+      </div>  
+    )
+  }
+  else return (
     <CalendarSidebar
       selectedWeek={selectedWeek}
       setSelectedWeek={setSelectedWeek}
@@ -60,16 +98,16 @@ export default function GroupPage({ params }) {
       {/* Content */}
       {page === "calendar" && (
         <GroupPageCalendar
-          group={group}
+          group={FetchGroupDetailQuery.data}
           setPage={setPage}
           schedules={schedules}
           start_date={selectedWeek.from}
         />
       )}
       {page === "details" && (
-        <GroupPageDetails group={group} setPage={setPage} />
+        <GroupPageDetails group={FetchGroupDetailQuery.data} setPage={setPage} />
       )}
-      {page === "add" && <GroupPageAdd group={group} schedules={schedules} />}
+      {page === "add" && <GroupPageAdd group={FetchGroupDetailQuery.data} schedules={schedules} />}
     </CalendarSidebar>
   );
 }
