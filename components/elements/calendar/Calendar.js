@@ -1,27 +1,15 @@
-import { MinHeap } from "@/components/utils";
+import { getRepeatedSchedules, MinHeap } from "@/components/utils";
 import {
   addDays,
-  addMilliseconds,
   areIntervalsOverlapping,
   differenceInCalendarDays,
-  differenceInMilliseconds,
   eachDayOfInterval,
-  eachMonthOfInterval,
-  eachWeekOfInterval,
   endOfDay,
   endOfWeek,
   format,
-  getDate,
-  getDay,
   getHours,
   getMinutes,
-  getSeconds,
   isToday,
-  isWithinInterval,
-  max,
-  min,
-  set,
-  setDay,
   startOfDay,
   startOfWeek,
 } from "date-fns";
@@ -66,69 +54,12 @@ export function Calendar({ schedules, start_date, group }) {
         { start: startOfWeek(start_date), end: endOfWeek(start_date) },
       );
     };
-    const getScheduleInWeek = (schedules) => {
-      // Filter Schedules for Each Week and Handle Repeating Schedules
-      const schedulesNoRepeat = schedules
-        .filter((schedule) => !schedule.repeat || schedule.repeat === "NONE")
-        .filter(isWithinCalendar);
-      const schedulesRepeat = schedules
-        .filter((schedule) => schedule.repeat && schedule.repeat !== "NONE")
-        .flatMap((schedule) => {
-          const repeat_interval = {
-            start: max([startOfWeek(start_date), schedule.start_time]),
-            end: schedule.repeat_until
-              ? min([endOfWeek(start_date), schedule.repeat_until])
-              : endOfWeek(start_date),
-          };
-          const duration = differenceInMilliseconds(
-            schedule.end_time,
-            schedule.start_time,
-          );
-          const repeatedSchedules = (
-            schedule.repeat === "MONTHLY"
-              ? eachMonthOfInterval(repeat_interval).map((month) =>
-                  set(month, {
-                    date: getDate(schedule.start_time),
-                    hours: getHours(schedule.start_time),
-                    minutes: getMinutes(schedule.start_time),
-                    seconds: getSeconds(schedule.start_time),
-                  }),
-                )
-              : schedule.repeat === "WEEKLY"
-                ? eachWeekOfInterval(repeat_interval).map((week) =>
-                    setDay(
-                      set(week, {
-                        hours: getHours(schedule.start_time),
-                        minutes: getMinutes(schedule.start_time),
-                        seconds: getSeconds(schedule.start_time),
-                      }),
-                      getDay(schedule.start_time),
-                    ),
-                  )
-                : schedule.repeat === "DAILY"
-                  ? eachDayOfInterval(repeat_interval).map((day) =>
-                      set(day, {
-                        hours: getHours(schedule.start_time),
-                        minutes: getMinutes(schedule.start_time),
-                        seconds: getSeconds(schedule.start_time),
-                      }),
-                    )
-                  : []
-          ).map((start_time) => ({
-            ...schedule,
-            start_time,
-            end_time: addMilliseconds(start_time, duration),
-          }));
-          return repeatedSchedules
-            .filter(isWithinCalendar)
-            .filter(
-              (schedule) =>
-                isWithinInterval(schedule.start_time, repeat_interval) &&
-                isWithinInterval(schedule.end_time, repeat_interval),
-            );
-        });
-      return [...schedulesNoRepeat, ...schedulesRepeat];
-    };
+    const getScheduleInWeek = (schedules) =>
+      getRepeatedSchedules(
+        schedules,
+        startOfWeek(start_date),
+        endOfWeek(start_date),
+      );
     const getOverlappingScheduleCol = (schedules) => {
       // Set Column and Max Columns for each schedules
       const overlapping = new MinHeap();
