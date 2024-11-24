@@ -1,6 +1,6 @@
 import { Select } from "@/components/elements/select";
 import { Timeline } from "@/components/elements/timeline";
-import { getUpcomingSchedules } from "@/components/utils/getUpcomingSchedules";
+import { getUpcomingSchedules } from "@/components/utils";
 import { useMemo, useState } from "react";
 
 export function HomePageList({ schedules }) {

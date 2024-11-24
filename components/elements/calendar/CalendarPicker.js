@@ -16,7 +16,7 @@ export function CalendarDayPicker({
   ...props
 }) {
   const [month, setMonth] = useState(new Date());
-  useEffect(() => setMonth(selected.from ?? selected), [selected]);
+  useEffect(() => setMonth(selected?.from ?? selected), [selected]);
   return (
     <DayPicker
       mode={mode != "week" ? mode : undefined}

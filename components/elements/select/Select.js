@@ -41,10 +41,10 @@ export const Select = forwardRef(
         classNames={{
           container: () =>
             twMerge(
-              "w-full rounded-[10px] text-base text-blue-200 outline outline-2 outline-blue-200 cursor-pointer",
+              "w-full rounded-[10px] text-base text-blue-200 outline outline-2 outline-blue-200",
               className,
             ),
-          control: () => "px-3 rounded-[10px]",
+          control: () => "px-3 rounded-[10px] !cursor-pointer",
           valueContainer: () => "py-2 flex gap-1",
           input: () => "outline-0",
           menu: () =>

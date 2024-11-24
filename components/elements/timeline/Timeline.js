@@ -74,7 +74,7 @@ export function Timeline({ schedules, className = "" }) {
           </div>
           {/* Schedule Time */}
           <div className="self-start text-center font-medium text-blue-200">
-            {format(schedule.start_time, "hh:mm")}
+            {format(schedule.start_time, "HH:mm")}
           </div>
         </Fragment>
       ))}
