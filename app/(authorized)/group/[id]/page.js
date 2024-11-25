@@ -46,6 +46,11 @@ export default function GroupPage({ params }) {
     }
   }, [FetchGroupDetailQuery, router]);
 
+  const handleDelete = (schedule) => {
+    // TODO: Integrate group schedule deletion
+    console.log(`Delete group schedule with id ${schedule._id}`);
+  };
+
   if (FetchGroupDetailQuery.isLoading) {
     return (
       <div className="flex w-full items-center justify-center">Loading...</div>
@@ -97,6 +102,7 @@ export default function GroupPage({ params }) {
             setPage={setPage}
             schedules={schedules}
             start_date={selectedWeek.from}
+            onDelete={handleDelete}
           />
         )}
         {page === "details" && (
