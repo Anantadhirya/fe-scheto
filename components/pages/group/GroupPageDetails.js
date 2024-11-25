@@ -3,11 +3,19 @@ import { GroupHeader } from "./components";
 import { BsCheck2, BsPencilSquare } from "react-icons/bs";
 import { Button } from "@/components/elements/button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { LeaveGroup, UpdateDescription } from "@/components/query/detailGroup";
+import { onError } from "@/components/query/errorHandler";
+import toast from "react-hot-toast";
 
 export function GroupPageDetails({ group, setPage }) {
   // Description Edit
   const [description, setDescription] = useState(group.description);
   const [edit, setEdit] = useState(false);
+  const router = useRouter();
   const descriptionEditRef = useRef();
   useEffect(() => {
     if (edit) {
@@ -15,11 +23,60 @@ export function GroupPageDetails({ group, setPage }) {
     }
   }, [edit]);
   const maxDescLength = 250;
-  const displayDescLength = description.length >= maxDescLength - 50;
+  const displayDescLength = description?.length >= maxDescLength - 50;
 
   // Member List
   const displayedMembers = 6;
   const [showFullMembers, setShowFullMembers] = useState(false);
+
+  // mutate create group
+  const LeaveGroupQuery = useMutation({
+    mutationFn: (props) => {
+      toast.loading("Leaving group")
+      return LeaveGroup(props)
+    },
+    retry : 1,
+    onError : (error) => {
+      toast.dismiss()
+      onError(error)
+    },
+    onSuccess : (data) => {
+      toast.dismiss()
+      //console.log(data)
+      toast.success(data?.message)
+      router.replace('/group')
+    },
+  })
+
+  // mutate description
+  const UpdateDescriptionQuery = useMutation({
+    mutationFn: (props) => {
+      toast.loading("Updating description")
+      return UpdateDescription(props)
+    },
+    retry : 1,
+    onError : (error) => {
+      toast.dismiss()
+      setDescription(group?.description)
+      setEdit(false)
+      onError(error)
+    },
+    onSuccess : (data) => {
+      toast.dismiss()
+      //console.log(data)
+      setEdit(false)
+      group.description = description
+      toast.success(data?.message)
+    },
+  })
+
+  async function SaveNewDescription() {
+    if(edit) {
+      UpdateDescriptionQuery.mutate({_id : group._id, description : description})
+    } else {
+      setEdit(true)
+    }
+  }
   return (
     <div className="flex grow flex-col">
       {/* Group Name and Invite Code */}
@@ -40,11 +97,11 @@ export function GroupPageDetails({ group, setPage }) {
           )}
           {displayDescLength && (
             <div className="self-end text-sm">
-              {description.length}/{maxDescLength}
+              {description?.length}/{maxDescLength}
             </div>
           )}
         </div>
-        <button className="mt-[2px] text-2xl" onClick={() => setEdit(!edit)}>
+        <button className="mt-[2px] text-2xl" onClick={() => SaveNewDescription()}>
           {edit ? <BsCheck2 /> : <BsPencilSquare />}
         </button>
       </div>
@@ -95,7 +152,7 @@ export function GroupPageDetails({ group, setPage }) {
       {/* Leave Group Button */}
       <div className="grow" />
       <div className="py-2 pb-5 pl-14 pr-8">
-        <Button variant="destructive">Leave Group</Button>
+        <Button type="button" variant="destructive" onClick={(e) => LeaveGroupQuery.mutate({_id : group._id})}>Leave Group</Button>
       </div>
     </div>
   );

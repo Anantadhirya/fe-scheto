@@ -1,7 +1,11 @@
-"use client";
+'use client'
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; 
+import toast from "react-hot-toast";
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+
+import { FetchProfile } from "@/components/query/profileUser";
 
 export default function ProfilePage() {
   const pathname = usePathname();
@@ -17,13 +21,44 @@ export default function ProfilePage() {
     address: "Kalasan, Sleman, Daerah Istimewa Yogyakarta",
   });
 
+  const [profileChanged, setProfileChanged] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    gender: false,
+    phone: false,
+    address: false,
+  });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProfile((prevProfile) => ({
       ...prevProfile,
       [name]: value,
     }));
+    setProfileChanged((prev) => ({
+      ...prev,
+      [name] : true
+    }))
   };
+
+  const GetProfileQuery = useQuery({
+    queryKey: ['profile'],
+    queryFn: (props) => {
+      return FetchProfile((data) => {
+        setProfile({
+          firstName: data.firstName ?? "",
+          lastName: data.lastName ?? "",
+          email: data.email,
+          gender: data.gender ?? "other",
+          phone: data.phoneNumber ?? "",
+          address: data.address ?? "",
+        })
+      })
+    },
+    refetchOnWindowFocus : false,
+    retry : 2,
+  })
 
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-100">
@@ -85,9 +120,9 @@ export default function ProfilePage() {
                     value={profile.gender}
                     onChange={handleChange}
                   >
-                    <option value="Female">Female</option>
-                    <option value="Male">Male</option>
-                    <option value="Other">Other</option>
+                    <option value="female" className="capitalize">Female</option>
+                    <option value="male" className="capitalize">Male</option>
+                    <option value="other" className="capitalize">Other</option>
                   </select>
                 </div>
                 <div>

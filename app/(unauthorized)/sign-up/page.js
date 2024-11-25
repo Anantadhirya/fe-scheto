@@ -1,4 +1,9 @@
 import React from "react";
+import SignUpForm from "@/components/pages/auth/SignUpForm";
+
+export const metadata = {
+  title: "Sign up",
+};
 import Button1 from "@/components/elements/button1";
 import { InputWithIcon } from "@/components/elements/input";
 
@@ -26,50 +31,7 @@ export default function SignUp() {
           <h2 className="mb-6 text-center text-3xl font-bold text-primary">
             Create Account
           </h2>
-          <form className="space-y-4">
-            {/* First Name */}
-            <InputWithIcon
-              type="text"
-              placeholder="First name"
-              iconSrc="/images/user-icon.png"
-              altText="User Icon"
-            />
-
-            {/* Last Name */}
-            <InputWithIcon
-              type="text"
-              placeholder="Last name"
-              iconSrc="/images/user-icon.png"
-              altText="User Icon"
-            />
-
-            {/* Email */}
-            <InputWithIcon
-              type="email"
-              placeholder="Email"
-              iconSrc="/images/email-icon.png"
-              altText="Email Icon"
-            />
-
-            {/* Password */}
-            <InputWithIcon
-              type="password"
-              placeholder="Password"
-              iconSrc="/images/password-icon.png"
-              altText="Password Icon"
-            />
-
-            {/* Confirm Password */}
-            <InputWithIcon
-              type="password"
-              placeholder="Confirm Password"
-              iconSrc="/images/password-icon.png"
-              altText="Password Icon"
-            />
-
-            {/* Submit Button */}
-            <Button1>Create</Button1>
-          </form>
+          <SignUpForm />
           <p className="mt-6 text-center text-sm text-black">
             Already have an account?{" "}
             <a href="/sign-in" className="font-bold text-primary underline">

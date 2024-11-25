@@ -1,4 +1,9 @@
 import React from "react";
+import SigninForm from "@/components/pages/auth/SigninForm";
+
+export const metadata = {
+  title: "Sign in",
+};
 import Button1 from "@/components/elements/button1";
 import { InputWithIcon } from "@/components/elements/input";
 
@@ -38,26 +43,7 @@ export default function SignIn() {
           <p className="mb-8 text-center text-primary">
             Sign in to continue using Scheto
           </p>
-          <form className="space-y-6">
-            {/* Email Input */}
-            <InputWithIcon
-              iconSrc="/images/email-icon.png"
-              altText="Email Icon"
-              type="email"
-              placeholder="Email"
-            />
-
-            {/* Password Input */}
-            <InputWithIcon
-              iconSrc="/images/password-icon.png"
-              altText="Password Icon"
-              type="password"
-              placeholder="Password"
-            />
-
-            {/* Submit Button */}
-            <Button1>Log In</Button1>
-          </form>
+          <SigninForm />
           <p className="mt-6 text-center text-sm text-black">
             Doesn&apos;t have an account?{" "}
             <a href="/sign-up" className="font-bold text-primary underline">

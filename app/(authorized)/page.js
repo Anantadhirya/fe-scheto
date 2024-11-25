@@ -1,4 +1,5 @@
 "use client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; 
 import { Button } from "@/components/elements/button";
 import { CalendarSidebar } from "@/components/layout/CalendarSidebar";
 import {
@@ -7,11 +8,17 @@ import {
   HomePageList,
 } from "@/components/pages/home";
 import { schedules } from "@/components/pages/home/dummy_home";
-import { addWeeks, endOfWeek, format, startOfWeek } from "date-fns";
-import { useState } from "react";
+import { addWeeks, endOfWeek, format, startOfWeek, getMonth } from "date-fns";
+import { useEffect, useState } from "react";
 import { BiChevronLeft } from "react-icons/bi";
 import { BsCaretLeftFill, BsCaretRightFill } from "react-icons/bs";
 import { twMerge } from "tailwind-merge";
+import toast from "react-hot-toast";
+
+
+import { GetScheduleMonth, AddSchedule } from "@/components/query/kalenderPribadi";
+import { ReformatData } from "@/lib/apiUtils";
+import { onError } from "@/components/query/errorHandler";
 
 export default function Home() {
   const [page, setPage] = useState("calendar");
@@ -19,12 +26,67 @@ export default function Home() {
     from: startOfWeek(new Date()),
     to: endOfWeek(new Date()),
   });
+  const [selectedMonth, SetSelectedMonth] = useState(getMonth(selectedWeek.from) || getMonth(new Date()))
+
+  useEffect(() =>{
+    SetSelectedMonth(getMonth(selectedWeek.from))
+  }, [selectedWeek])
+
+  const GetAllScheduleWithinTheMonth = useQuery({
+    queryKey: [selectedMonth],
+    queryFn: (props) => {
+      return GetScheduleMonth({
+        ...props,
+        callback : (data) => {
+          ReformatData(data.schedules)
+          console.log(data)
+          return data.schedules
+        },
+      })
+    },
+    refetchOnWindowFocus : false,
+    retry : 2,
+  })
+
+  const GetScheduleData = () => {
+    if(GetAllScheduleWithinTheMonth.isLoading) {
+      return []
+    } else if (GetAllScheduleWithinTheMonth.isError) {
+      return []
+    } else {
+      return GetAllScheduleWithinTheMonth.data
+    }
+  }
+
+  const AddScheduleQuery = useMutation({
+    mutationFn: (props) => {
+      toast.loading("Processing schedule")
+      return AddSchedule({
+        props, 
+        callback : (data) => {
+          toast.dismiss()
+          toast.success(data.message)
+          return data.schedule
+        }
+    })
+    },
+    retry : 2,
+    onError : (error) => {
+      toast.dismiss()
+      onError(error)
+    },
+    onSuccess : (data) => {
+      GetAllScheduleWithinTheMonth.refetch();
+    },
+  })
+
+  
   const [editingSchedule, setEditingSchedule] = useState();
   return (
     <CalendarSidebar
       selectedWeek={selectedWeek}
       setSelectedWeek={setSelectedWeek}
-      schedules={schedules}
+      schedules={GetScheduleData()}
       className={page !== "calendar" ? "max-md:hidden" : ""}
     >
       {/* Top Menu */}
@@ -126,7 +188,7 @@ export default function Home() {
       {/* Content */}
       {page === "calendar" && (
         <HomePageCalendar
-          schedules={schedules}
+          schedules={GetScheduleData()}
           start_date={selectedWeek.from}
           onEdit={(schedule) => {
             setPage("edit");
@@ -134,8 +196,8 @@ export default function Home() {
           }}
         />
       )}
-      {page === "list" && <HomePageList schedules={schedules} />}
-      {page === "add" && <HomePageAdd type="add" />}
+      {page === "list" && <HomePageList schedules={GetScheduleData()} />}
+      {page === "add" && <HomePageAdd type="add" AddSchedule={AddScheduleQuery}/>}
       {page === "edit" && (
         <HomePageAdd type="edit" editingSchedule={editingSchedule} />
       )}
