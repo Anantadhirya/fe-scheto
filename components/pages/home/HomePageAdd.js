@@ -18,7 +18,12 @@ import {
   BsStopwatch,
 } from "react-icons/bs";
 
-export function HomePageAdd({ type = "add", editingSchedule, AddSchedule }) {
+export function HomePageAdd({
+  type = "add",
+  editingSchedule,
+  AddSchedule,
+  setPage,
+}) {
   // Title
   const [title, setTitle] = useState("");
 
@@ -115,18 +120,6 @@ export function HomePageAdd({ type = "add", editingSchedule, AddSchedule }) {
     setDescription(editingSchedule.description || "");
   }, [editingSchedule, repeat_options, type]);
 
-  const onSubmitAdd = (e) => {
-    e.preventDefault();
-    AddSchedule.mutate({
-      description: description,
-      title: title,
-      startDate: selectedStart.value,
-      endDate: selectedEnd.value,
-      recurrence: repeat_options[selectedRepeat].value,
-      is_private: selectedPrivate,
-    });
-  };
-
   const handleSubmit = () => {
     if (!title) return toast.error("Please enter a schedule title");
     if (!selectedDate) return toast.error("Please select the date");
@@ -155,6 +148,7 @@ export function HomePageAdd({ type = "add", editingSchedule, AddSchedule }) {
         is_private: selectedPrivate,
       });
     }
+    setPage("calendar");
   };
 
   return (
