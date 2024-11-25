@@ -1,5 +1,5 @@
-'use client'
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; 
+"use client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 import { useState } from "react";
@@ -38,12 +38,12 @@ export default function ProfilePage() {
     }));
     setProfileChanged((prev) => ({
       ...prev,
-      [name] : true
-    }))
+      [name]: true,
+    }));
   };
 
   const GetProfileQuery = useQuery({
-    queryKey: ['profile'],
+    queryKey: ["profile"],
     queryFn: (props) => {
       return FetchProfile((data) => {
         setProfile({
@@ -53,12 +53,12 @@ export default function ProfilePage() {
           gender: data.gender ?? "other",
           phone: data.phoneNumber ?? "",
           address: data.address ?? "",
-        })
-      })
+        });
+      });
     },
-    refetchOnWindowFocus : false,
-    retry : 2,
-  })
+    refetchOnWindowFocus: false,
+    retry: 2,
+  });
 
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-100">
@@ -120,9 +120,15 @@ export default function ProfilePage() {
                     value={profile.gender}
                     onChange={handleChange}
                   >
-                    <option value="female" className="capitalize">Female</option>
-                    <option value="male" className="capitalize">Male</option>
-                    <option value="other" className="capitalize">Other</option>
+                    <option value="female" className="capitalize">
+                      Female
+                    </option>
+                    <option value="male" className="capitalize">
+                      Male
+                    </option>
+                    <option value="other" className="capitalize">
+                      Other
+                    </option>
                   </select>
                 </div>
                 <div>

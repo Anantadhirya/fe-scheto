@@ -18,7 +18,7 @@ import {
   BsStopwatch,
 } from "react-icons/bs";
 
-export function HomePageAdd({ type = "add", editingSchedule, AddSchedule}) {
+export function HomePageAdd({ type = "add", editingSchedule, AddSchedule }) {
   // Set initial value for editing
   useEffect(() => {
     if (type != "edit") return;
@@ -118,14 +118,14 @@ export function HomePageAdd({ type = "add", editingSchedule, AddSchedule}) {
   const onSubmitAdd = (e) => {
     e.preventDefault();
     AddSchedule.mutate({
-      description : description,
-      title : title,
-      startDate : selectedStart.value,
-      endDate : selectedEnd.value,
-      recurrence : repeat_options[selectedRepeat].value,
-      is_private : selectedPrivate
-    })
-  }
+      description: description,
+      title: title,
+      startDate: selectedStart.value,
+      endDate: selectedEnd.value,
+      recurrence: repeat_options[selectedRepeat].value,
+      is_private: selectedPrivate,
+    });
+  };
 
   const handleSubmit = () => {
     if (!title) return toast.error("Please enter a schedule title");
@@ -147,13 +147,13 @@ export function HomePageAdd({ type = "add", editingSchedule, AddSchedule}) {
     else if (type === "add") {
       console.log("Creating schedule: ", data);
       AddSchedule.mutate({
-        description : description,
-        title : title,
-        startDate : selectedStart.value,
-        endDate : selectedEnd.value,
-        recurrence : repeat_options[selectedRepeat].value,
-        is_private : selectedPrivate
-      })
+        description: description,
+        title: title,
+        startDate: selectedStart.value,
+        endDate: selectedEnd.value,
+        recurrence: repeat_options[selectedRepeat].value,
+        is_private: selectedPrivate,
+      });
     }
   };
 

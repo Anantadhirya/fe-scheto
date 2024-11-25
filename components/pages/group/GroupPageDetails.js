@@ -5,7 +5,6 @@ import { Button } from "@/components/elements/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { LeaveGroup, UpdateDescription } from "@/components/query/detailGroup";
 import { onError } from "@/components/query/errorHandler";
@@ -32,49 +31,52 @@ export function GroupPageDetails({ group, setPage }) {
   // mutate create group
   const LeaveGroupQuery = useMutation({
     mutationFn: (props) => {
-      toast.loading("Leaving group")
-      return LeaveGroup(props)
+      toast.loading("Leaving group");
+      return LeaveGroup(props);
     },
-    retry : 1,
-    onError : (error) => {
-      toast.dismiss()
-      onError(error)
+    retry: 1,
+    onError: (error) => {
+      toast.dismiss();
+      onError(error);
     },
-    onSuccess : (data) => {
-      toast.dismiss()
+    onSuccess: (data) => {
+      toast.dismiss();
       //console.log(data)
-      toast.success(data?.message)
-      router.replace('/group')
+      toast.success(data?.message);
+      router.replace("/group");
     },
-  })
+  });
 
   // mutate description
   const UpdateDescriptionQuery = useMutation({
     mutationFn: (props) => {
-      toast.loading("Updating description")
-      return UpdateDescription(props)
+      toast.loading("Updating description");
+      return UpdateDescription(props);
     },
-    retry : 1,
-    onError : (error) => {
-      toast.dismiss()
-      setDescription(group?.description)
-      setEdit(false)
-      onError(error)
+    retry: 1,
+    onError: (error) => {
+      toast.dismiss();
+      setDescription(group?.description);
+      setEdit(false);
+      onError(error);
     },
-    onSuccess : (data) => {
-      toast.dismiss()
+    onSuccess: (data) => {
+      toast.dismiss();
       //console.log(data)
-      setEdit(false)
-      group.description = description
-      toast.success(data?.message)
+      setEdit(false);
+      group.description = description;
+      toast.success(data?.message);
     },
-  })
+  });
 
   async function SaveNewDescription() {
-    if(edit) {
-      UpdateDescriptionQuery.mutate({_id : group._id, description : description})
+    if (edit) {
+      UpdateDescriptionQuery.mutate({
+        _id: group._id,
+        description: description,
+      });
     } else {
-      setEdit(true)
+      setEdit(true);
     }
   }
   return (
@@ -101,7 +103,10 @@ export function GroupPageDetails({ group, setPage }) {
             </div>
           )}
         </div>
-        <button className="mt-[2px] text-2xl" onClick={() => SaveNewDescription()}>
+        <button
+          className="mt-[2px] text-2xl"
+          onClick={() => SaveNewDescription()}
+        >
           {edit ? <BsCheck2 /> : <BsPencilSquare />}
         </button>
       </div>
@@ -115,7 +120,7 @@ export function GroupPageDetails({ group, setPage }) {
             Add Member
           </Button>
         </div>
-        <div className="xs:grid-cols-2 max-xs:grid-cols-1 grid w-full gap-x-1 gap-y-12">
+        <div className="grid w-full gap-x-1 gap-y-12 max-xs:grid-cols-1 xs:grid-cols-2">
           {group.members
             .slice(0, showFullMembers ? undefined : displayedMembers)
             .map((member, idx) => (
@@ -152,7 +157,13 @@ export function GroupPageDetails({ group, setPage }) {
       {/* Leave Group Button */}
       <div className="grow" />
       <div className="py-2 pb-5 pl-14 pr-8">
-        <Button type="button" variant="destructive" onClick={(e) => LeaveGroupQuery.mutate({_id : group._id})}>Leave Group</Button>
+        <Button
+          type="button"
+          variant="destructive"
+          onClick={(e) => LeaveGroupQuery.mutate({ _id: group._id })}
+        >
+          Leave Group
+        </Button>
       </div>
     </div>
   );

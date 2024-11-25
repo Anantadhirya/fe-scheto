@@ -46,15 +46,19 @@ export function Navbar({ children }) {
 
   async function Logout() {
     try {
-      const response = await axios.patch(apiLogout, {}, {
-        withCredentials : true
-      })
-      toast.success(response.data?.message || "Process successful")
-      router.push('/sign-in')
+      const response = await axios.patch(
+        apiLogout,
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+      toast.success(response.data?.message || "Process successful");
+      router.push("/sign-in");
     } catch (error) {
-      onError(error)
-      if(error.status == 401) {
-        router.push('/sign-in')
+      onError(error);
+      if (error.status == 401) {
+        router.push("/sign-in");
       }
     }
   }
@@ -102,7 +106,11 @@ export function Navbar({ children }) {
           );
         })}
         <div className="h-[5vh] grow" />
-        <button type='button' className="flex w-full items-center justify-center gap-2 self-center text-blue-200 outline-0 md:w-[5vw] md:rounded-full" onClick={(e) => Logout()}>
+        <button
+          type="button"
+          className="flex w-full items-center justify-center gap-2 self-center text-blue-200 outline-0 md:w-[5vw] md:rounded-full"
+          onClick={(e) => Logout()}
+        >
           <div className="flex aspect-[1/1] w-8 items-center justify-center rounded-full bg-white pr-1 text-xl shadow-xl md:w-full md:pr-[5%] md:text-[2.7vw]">
             <BiLogOut />
           </div>

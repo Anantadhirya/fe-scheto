@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/elements/navbar";
 import { apiVerify } from "@/lib/apiRoutes";
 
-import { redirect} from "next/navigation";
+import { redirect } from "next/navigation";
 
 import { cookies, headers } from "next/headers";
 
@@ -26,13 +26,13 @@ async function EnsureUser() {
       ok: false,
     };
   }
-} 
+}
 
 export default async function NavbarLayout({ children }) {
   const isUser = await EnsureUser();
-  if(isUser.ok == false) {
-    redirect('sign-in', 'replace')
+  if (isUser.ok == false) {
+    redirect("sign-in", "replace");
   }
-  
+
   return <Navbar>{children}</Navbar>;
 }

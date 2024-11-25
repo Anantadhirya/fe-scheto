@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { BsCheck2, BsFiles, BsInfoCircle, } from "react-icons/bs";
+import { BsCheck2, BsFiles, BsInfoCircle } from "react-icons/bs";
 import { IoReloadCircle } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
 
@@ -12,27 +12,27 @@ import { onError } from "@/components/query/errorHandler";
 export function GroupHeader({ group, setPage, showIcon = false }) {
   const [isCopying, setIsCopying] = useState(false);
   const copyAnimationDuration = 1500;
-  const [inviteCode, SetInviteCode] = useState(group.invite_code)
+  const [inviteCode, SetInviteCode] = useState(group.invite_code);
 
   // mutate regenerate code
   const RegenerateCodeQuery = useMutation({
     mutationFn: (props) => {
-      toast.loading("Creating new code")
-      return RegenerateCode(props)
+      toast.loading("Creating new code");
+      return RegenerateCode(props);
     },
     retry: 1,
     onError: (error) => {
-      toast.dismiss()
-      onError(error)
+      toast.dismiss();
+      onError(error);
     },
     onSuccess: (data) => {
-      toast.dismiss()
+      toast.dismiss();
       //console.log(data)
-      SetInviteCode(data.newInvite)
-      group.invite_code = data.newInvite
-      toast.success(data?.message)
+      SetInviteCode(data.newInvite);
+      group.invite_code = data.newInvite;
+      toast.success(data?.message);
     },
-  })
+  });
 
   return (
     <div
@@ -69,17 +69,14 @@ export function GroupHeader({ group, setPage, showIcon = false }) {
           <span className="text-xl">
             {!isCopying ? <BsFiles /> : <BsCheck2 />}
           </span>
-
         </button>
-        <button className="flex items-center gap-2 p-2 outline-0"
+        <button
+          className="flex items-center gap-2 p-2 outline-0"
           onClick={(e) => RegenerateCodeQuery.mutate({ _id: group._id })}
         >
-          <span className="text-xl" >
-            {<IoReloadCircle />}
-          </span>
+          <span className="text-xl">{<IoReloadCircle />}</span>
         </button>
       </div>
-
     </div>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; 
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/elements/button";
 import { CalendarSidebar } from "@/components/layout/CalendarSidebar";
 import {
@@ -15,8 +15,10 @@ import { BsCaretLeftFill, BsCaretRightFill } from "react-icons/bs";
 import { twMerge } from "tailwind-merge";
 import toast from "react-hot-toast";
 
-
-import { GetScheduleMonth, AddSchedule } from "@/components/query/kalenderPribadi";
+import {
+  GetScheduleMonth,
+  AddSchedule,
+} from "@/components/query/kalenderPribadi";
 import { ReformatData } from "@/lib/apiUtils";
 import { onError } from "@/components/query/errorHandler";
 
@@ -26,61 +28,62 @@ export default function Home() {
     from: startOfWeek(new Date()),
     to: endOfWeek(new Date()),
   });
-  const [selectedMonth, SetSelectedMonth] = useState(getMonth(selectedWeek.from) || getMonth(new Date()))
+  const [selectedMonth, SetSelectedMonth] = useState(
+    getMonth(selectedWeek.from) || getMonth(new Date()),
+  );
 
-  useEffect(() =>{
-    SetSelectedMonth(getMonth(selectedWeek.from))
-  }, [selectedWeek])
+  useEffect(() => {
+    SetSelectedMonth(getMonth(selectedWeek.from));
+  }, [selectedWeek]);
 
   const GetAllScheduleWithinTheMonth = useQuery({
     queryKey: [selectedMonth],
     queryFn: (props) => {
       return GetScheduleMonth({
         ...props,
-        callback : (data) => {
-          ReformatData(data.schedules)
-          console.log(data)
-          return data.schedules
+        callback: (data) => {
+          ReformatData(data.schedules);
+          console.log(data);
+          return data.schedules;
         },
-      })
+      });
     },
-    refetchOnWindowFocus : false,
-    retry : 2,
-  })
+    refetchOnWindowFocus: false,
+    retry: 2,
+  });
 
   const GetScheduleData = () => {
-    if(GetAllScheduleWithinTheMonth.isLoading) {
-      return []
+    if (GetAllScheduleWithinTheMonth.isLoading) {
+      return [];
     } else if (GetAllScheduleWithinTheMonth.isError) {
-      return []
+      return [];
     } else {
-      return GetAllScheduleWithinTheMonth.data
+      return GetAllScheduleWithinTheMonth.data;
     }
-  }
+  };
 
   const AddScheduleQuery = useMutation({
     mutationFn: (props) => {
-      toast.loading("Processing schedule")
+      toast.loading("Processing schedule");
       return AddSchedule({
-        props, 
-        callback : (data) => {
-          toast.dismiss()
-          toast.success(data.message)
-          return data.schedule
-        }
-    })
+        props,
+        callback: (data) => {
+          toast.dismiss();
+          toast.success(data.message);
+          return data.schedule;
+        },
+      });
     },
-    retry : 2,
-    onError : (error) => {
-      toast.dismiss()
-      onError(error)
+    retry: 2,
+    onError: (error) => {
+      toast.dismiss();
+      onError(error);
     },
-    onSuccess : (data) => {
+    onSuccess: (data) => {
       GetAllScheduleWithinTheMonth.refetch();
     },
-  })
+  });
 
-  
   const [editingSchedule, setEditingSchedule] = useState();
   return (
     <CalendarSidebar
@@ -197,7 +200,9 @@ export default function Home() {
         />
       )}
       {page === "list" && <HomePageList schedules={GetScheduleData()} />}
-      {page === "add" && <HomePageAdd type="add" AddSchedule={AddScheduleQuery}/>}
+      {page === "add" && (
+        <HomePageAdd type="add" AddSchedule={AddScheduleQuery} />
+      )}
       {page === "edit" && (
         <HomePageAdd type="edit" editingSchedule={editingSchedule} />
       )}

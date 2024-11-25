@@ -12,7 +12,11 @@ import { BiSearchAlt } from "react-icons/bi";
 import { BsX } from "react-icons/bs";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { FetchGroupList, JoinGroup, CreatingGroup } from "@/components/query/detailGroup";
+import {
+  FetchGroupList,
+  JoinGroup,
+  CreatingGroup,
+} from "@/components/query/detailGroup";
 import { onError } from "@/components/query/errorHandler";
 import toast from "react-hot-toast";
 
@@ -24,75 +28,77 @@ export default function Group() {
 
   // fetch groups
   const FetchGroupsQuery = useQuery({
-    queryKey: ['groups'],
+    queryKey: ["groups"],
     queryFn: (props) => {
-      return FetchGroupList()
+      return FetchGroupList();
     },
     refetchOnWindowFocus: false,
     retry: 2,
-  })
+  });
 
   // mutate join
   const JoiningGroup = useMutation({
     mutationFn: (props) => {
-      toast.loading("Joining group")
-      return JoinGroup(props)
+      toast.loading("Joining group");
+      return JoinGroup(props);
     },
-    retry : 2,
-    onError : (error) => {
-      toast.dismiss()
-      onError(error)
+    retry: 2,
+    onError: (error) => {
+      toast.dismiss();
+      onError(error);
     },
-    onSuccess : (data) => {
-      toast.dismiss()
-      toast.success(data.message)
-      setJoinModalOpen(false)
+    onSuccess: (data) => {
+      toast.dismiss();
+      toast.success(data.message);
+      setJoinModalOpen(false);
       FetchGroupsQuery.refetch();
     },
-  })
+  });
 
   // mutate create group
   const CreateGroup = useMutation({
     mutationFn: (props) => {
-      toast.loading("Creating group")
-      return CreatingGroup(props)
+      toast.loading("Creating group");
+      return CreatingGroup(props);
     },
-    retry : 2,
-    onError : (error) => {
-      toast.dismiss()
-      onError(error)
+    retry: 2,
+    onError: (error) => {
+      toast.dismiss();
+      onError(error);
     },
-    onSuccess : (data) => {
-      toast.dismiss()
-      console.log(data)
-      toast.success("Group have been created")
-      setCreateModalOpen(false)
+    onSuccess: (data) => {
+      toast.dismiss();
+      console.log(data);
+      toast.success("Group have been created");
+      setCreateModalOpen(false);
       FetchGroupsQuery.refetch();
     },
-  })
+  });
 
   const filteredGroups = useMemo(() => {
     if (FetchGroupsQuery.isLoading) {
-      return []
+      return [];
     } else if (FetchGroupsQuery.isError) {
-      return []
+      return [];
     } else {
       return FetchGroupsQuery.data.filter((group) =>
         searchText
           .split(" ")
-          .every((word) => group.name.toLowerCase().includes(word.toLowerCase())),
+          .every((word) =>
+            group.name.toLowerCase().includes(word.toLowerCase()),
+          ),
       );
     }
-  }, [FetchGroupsQuery.data])
+  }, [FetchGroupsQuery.data]);
   const handleJoinGroup = (code) => {
     // TODO: Integrate Join Group
     console.log("Join group with invite code: ", code);
-    JoiningGroup.mutate({code : code})
+    JoiningGroup.mutate({ code: code });
   };
   const handleCreateGroup = (name) => {
     // TODO: Integrate Create Group
     console.log("Create group with name: ", name);
-    CreateGroup.mutate({name : name})
+    CreateGroup.mutate({ name: name });
   };
   return (
     <main className="scroll-container flex h-screen w-full flex-col overflow-auto">
@@ -135,20 +141,18 @@ export default function Group() {
         </div>
       </div>
       {/* Group List */}
-      {
-        FetchGroupsQuery.isLoading ?
-          <div className="w-full flex justify-center items-center">
-            Loading...
-          </div>
-          :
-          filteredGroups.length === 0 ? (
-            <GroupEmpty
-              type={groups.length === 0 ? "not-joined" : "not-found"}
-              onJoin={handleJoinGroup}
-            />
-          ) : (
-            <GroupList groups={filteredGroups} />
-          )}
+      {FetchGroupsQuery.isLoading ? (
+        <div className="flex w-full items-center justify-center">
+          Loading...
+        </div>
+      ) : filteredGroups.length === 0 ? (
+        <GroupEmpty
+          type={groups.length === 0 ? "not-joined" : "not-found"}
+          onJoin={handleJoinGroup}
+        />
+      ) : (
+        <GroupList groups={filteredGroups} />
+      )}
       <JoinGroupModal
         open={joinModalOpen}
         setOpen={setJoinModalOpen}
