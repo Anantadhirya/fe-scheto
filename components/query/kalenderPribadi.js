@@ -68,6 +68,7 @@ export async function DeleteSchedule({ props, callback = (data) => {} }) {
     return callback(response.data);
   } catch (error) {
     console.log(error)
+    throw error
   }
 }
 
@@ -92,5 +93,6 @@ export async function EditSchedule({ props, callback = (data) => {} }) {
     return callback(response.data);
   } catch (error) {
     console.log(error)
+    throw error
   }
 }

@@ -119,7 +119,7 @@ export function HomePageAdd({
     );
     setSelectedPrivate(editingSchedule.is_private);
     setDescription(editingSchedule.description || "");
-  }, [editingSchedule, repeat_options, type]);
+  }, []);
 
   const handleSubmit = () => {
     if (!title) return toast.error("Please enter a schedule title");
@@ -138,18 +138,27 @@ export function HomePageAdd({
 
     // TODO: Integrate edit & create individual schedule
     if (type === "edit") {
-      console.log("Editing schedule: ", editingSchedule)
+      console.log("Editing schedule: ", {
+        selectedTime,
+        selectedRepeat,
+        repeat_options
+      })
       EditSchedule.mutate({
         description : description,
         title : title,
-        startDate : selectedTime.from,
-        endDate : selectedTime.to,
+        start_date : selectedTime.from,
+        end_date : selectedTime.to,
         recurrence : repeat_options[selectedRepeat].value,
-        is_private : selectedPrivate
+        is_private : selectedPrivate,
+        _id : editingSchedule._id
       })
     }
     else if (type === "add") {
-      console.log("Creating schedule: ", data);
+      console.log("Creating schedule: ", {
+        selectedTime,
+        selectedRepeat,
+        repeat_options
+      });
       AddSchedule.mutate({
         description : description,
         title : title,
