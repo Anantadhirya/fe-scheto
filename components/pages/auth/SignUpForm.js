@@ -1,11 +1,11 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
 import { onError } from "@/components/query/errorHandler";
-import { apiRegister } from "@/lib/apiRoutes";
+import { apiRegister, apiVerify } from "@/lib/apiRoutes";
 
 import { InputWithIcon } from "@/components/elements/input";
 import { Button1 } from "@/components/elements/button1";
@@ -67,6 +67,20 @@ function SignUpForm() {
     }
   }
 
+  useEffect(() => {
+    async function VerifyUser() {
+      try {
+        //throw new Error("Telah terjadi error")
+        await axios.get(apiVerify, {
+          withCredentials: true,
+        });
+        router.push("/");
+      } catch (error) {
+        //console.log(er)
+      }
+    }
+    VerifyUser();
+  }, [router]);
   return (
     <form className="space-y-4" onSubmit={RegisterSubmit}>
       {/* username */}
