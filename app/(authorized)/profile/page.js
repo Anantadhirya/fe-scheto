@@ -6,6 +6,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { FetchProfile } from "@/components/query/profileUser";
+import Image from "next/image";
 
 export default function ProfilePage() {
   const pathname = usePathname();
@@ -65,11 +66,12 @@ export default function ProfilePage() {
       <div className="flex flex-grow items-start justify-center p-10">
         <div className="mx-auto w-full max-w-2xl rounded-lg bg-white p-6 shadow-lg">
           <div className="flex space-x-6">
-            <div className="h-28 w-28 bg-blue-200">
-              <img
-                src="/images/user-icon.png" //Profile picture goes here
+            <div className="relative h-28 w-28">
+              <Image
+                src="/default_profile.webp" //Profile picture goes here
                 alt="Profile"
-                className="h-full w-full items-center justify-center rounded-full object-cover"
+                className="rounded-full"
+                fill
               />
             </div>
             <div className="flex-grow">

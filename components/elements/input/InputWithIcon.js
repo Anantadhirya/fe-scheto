@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export const InputWithIcon = ({
   type,
   placeholder,
@@ -8,7 +10,9 @@ export const InputWithIcon = ({
 }) => {
   return (
     <div className="flex items-center rounded-2xl border-2 border-primary p-3">
-      <img src={iconSrc} alt={altText} className="mr-3 h-5 w-5 text-primary" />
+      <div className="relative mr-3 h-5 w-5 flex-none text-primary">
+        <Image src={iconSrc} alt={altText} fill />
+      </div>
       <input
         type={type}
         placeholder={placeholder}
