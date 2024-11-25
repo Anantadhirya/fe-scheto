@@ -200,7 +200,11 @@ export default function Home() {
       )}
       {page === "list" && <HomePageList schedules={GetScheduleData()} />}
       {page === "add" && (
-        <HomePageAdd type="add" AddSchedule={AddScheduleQuery} />
+        <HomePageAdd
+          type="add"
+          AddSchedule={AddScheduleQuery}
+          setPage={setPage}
+        />
       )}
       {page === "edit" && (
         <HomePageAdd type="edit" editingSchedule={editingSchedule} />

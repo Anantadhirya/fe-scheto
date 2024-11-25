@@ -1,4 +1,8 @@
-import { getRepeatedSchedules, MinHeap } from "@/components/utils";
+import {
+  getProperDateSchedules,
+  getRepeatedSchedules,
+  MinHeap,
+} from "@/components/utils";
 import {
   addDays,
   areIntervalsOverlapping,
@@ -121,7 +125,11 @@ export function Calendar({ schedules, start_date, isGroup, group, onEdit }) {
         return day_schedules.filter(isWithinCalendar);
       });
     };
-    return splitByDay(getOverlappingScheduleCol(getScheduleInWeek(schedules)));
+    return splitByDay(
+      getOverlappingScheduleCol(
+        getScheduleInWeek(getProperDateSchedules(schedules)),
+      ),
+    );
   }, [isGroup, schedules, start_date]);
   return (
     <div className="flex h-full flex-col">
