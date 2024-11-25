@@ -1,11 +1,8 @@
-'use client'
-import { useEffect, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; 
-import toast from "react-hot-toast";
+"use client";
+import { useQuery } from "@tanstack/react-query";
 
 import InboxList from "@/components/elements/inbox/InboxList"; // Import InboxList
 
-import { onError } from "@/components/query/errorHandler";
 import { GetUserInbox } from "@/components/query/inboxUser";
 
 export default function Inbox() {
@@ -95,29 +92,31 @@ export default function Inbox() {
   ];
 
   const GetAllInboxQuery = useQuery({
-    queryKey: ['once'],
+    queryKey: ["once"],
     queryFn: (props) => {
-      return GetUserInbox()
+      return GetUserInbox();
     },
-    refetchOnWindowFocus : false,
-    retry : 2,
-  })
+    refetchOnWindowFocus: false,
+    retry: 2,
+  });
 
   const GetInbox = () => {
-    if(GetAllInboxQuery.isLoading) {
-      return []
+    if (GetAllInboxQuery.isLoading) {
+      return [];
     } else if (GetAllInboxQuery.isError) {
-      return []
+      return [];
     } else {
-      return [...GetAllInboxQuery.data?.inbox]
+      return [...GetAllInboxQuery.data?.inbox];
     }
-  }
+  };
 
   return (
-    <main className="flex flex-col h-screen w-full bg-white">
+    <main className="flex h-screen w-full flex-col bg-white">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-white shadow-md p-4">
-        <h1 className="text-2xl font-bold text-primary flex-shrink-0 mr-4 pl-4">Inbox</h1>
+      <div className="sticky top-0 z-10 bg-white p-4 shadow-md">
+        <h1 className="mr-4 flex-shrink-0 pl-4 text-2xl font-bold text-primary">
+          Inbox
+        </h1>
       </div>
 
       {/* Scrollable List */}

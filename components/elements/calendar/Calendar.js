@@ -1,4 +1,8 @@
-import { getRepeatedSchedules, MinHeap } from "@/components/utils";
+import {
+  getProperDateSchedules,
+  getRepeatedSchedules,
+  MinHeap,
+} from "@/components/utils";
 import {
   addDays,
   areIntervalsOverlapping,
@@ -13,7 +17,7 @@ import {
   startOfDay,
   startOfWeek,
 } from "date-fns";
-import { Fragment, useMemo } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import {
@@ -24,8 +28,26 @@ import {
   BsStopwatch,
 } from "react-icons/bs";
 import { Button } from "../button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../dialog";
+import { Select } from "../select";
 
-export function Calendar({ schedules, start_date, isGroup, group, onEdit }) {
+export function Calendar({
+  schedules,
+  start_date,
+  isGroup,
+  group,
+  onEdit,
+  onDelete,
+}) {
   const formatNumberWithSign = (number) => {
     const sign = number >= 0 ? "+" : "-";
     return `${sign}${number}`;
@@ -121,8 +143,20 @@ export function Calendar({ schedules, start_date, isGroup, group, onEdit }) {
         return day_schedules.filter(isWithinCalendar);
       });
     };
-    return splitByDay(getOverlappingScheduleCol(getScheduleInWeek(schedules)));
+    return splitByDay(
+      getOverlappingScheduleCol(
+        getScheduleInWeek(getProperDateSchedules(schedules)),
+      ),
+    );
   }, [isGroup, schedules, start_date]);
+  const deleteOptions = [
+    { label: "All occurences of this schedule", value: "all" },
+    {
+      label: "This and following occurences of this schedule",
+      value: "following",
+    },
+  ];
+  const [selectedDelete, setSelectedDelete] = useState(deleteOptions[0]);
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
@@ -293,9 +327,57 @@ export function Calendar({ schedules, start_date, isGroup, group, onEdit }) {
                     </Button>
                   )}
                   {(!isGroup || !schedule.is_user_owned) && (
-                    <Button variant="black" size="sm" className="w-fit text-xs">
-                      Delete
-                    </Button>
+                    <Dialog
+                      onOpenChange={(open) => {
+                        if (open) setSelectedDelete(deleteOptions[0]);
+                      }}
+                    >
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="black"
+                          size="sm"
+                          className="w-fit text-xs"
+                        >
+                          Delete
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Delete Schedule</DialogTitle>
+                        </DialogHeader>
+                        {schedule.repeat && schedule.repeat !== "NONE" && (
+                          <>
+                            Delete repeating schedule:
+                            <Select
+                              options={deleteOptions}
+                              value={selectedDelete}
+                              onChange={setSelectedDelete}
+                              isSearchable={false}
+                              className="text-sm"
+                            />
+                          </>
+                        )}
+                        <DialogDescription>
+                          Are you sure you want to delete this schedule? This
+                          action cannot be undone.
+                        </DialogDescription>
+                        <DialogFooter>
+                          <DialogClose asChild>
+                            <Button>Cancel</Button>
+                          </DialogClose>
+                          <DialogClose asChild>
+                            <Button
+                              variant="destructive"
+                              onClick={() =>
+                                onDelete(schedule, selectedDelete.value)
+                              }
+                            >
+                              Confirm
+                            </Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   )}
                 </div>
               </PopoverContent>

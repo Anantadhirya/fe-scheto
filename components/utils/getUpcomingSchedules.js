@@ -22,8 +22,10 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
+import { getProperDateSchedules } from "./getProperDateSchedules";
 
 export const getUpcomingSchedules = (schedules, count = 5) => {
+  schedules = getProperDateSchedules(schedules);
   const schedulesNoRepeat = schedules.filter(
     (schedule) => !schedule.repeat || schedule.repeat === "NONE",
   );

@@ -8,7 +8,7 @@ export function Timeline({ schedules, className = "" }) {
   return (
     <div
       className={twMerge(
-        "grid grow grid-cols-[20px_1fr_70px] items-center gap-x-2 pr-2",
+        "grid grow grid-cols-[20px_1fr_70px] content-start items-center gap-x-2 pr-2",
         className,
       )}
     >

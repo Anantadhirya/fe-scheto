@@ -4,8 +4,6 @@ import SignUpForm from "@/components/pages/auth/SignUpForm";
 export const metadata = {
   title: "Sign up",
 };
-import Button1 from "@/components/elements/button1";
-import { InputWithIcon } from "@/components/elements/input";
 
 export default function SignUp() {
   return (

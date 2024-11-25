@@ -1,11 +1,11 @@
-'use client'
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; 
-import toast from "react-hot-toast";
+"use client";
+import { useQuery } from "@tanstack/react-query";
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { FetchProfile } from "@/components/query/profileUser";
+import Image from "next/image";
 
 export default function ProfilePage() {
   const pathname = usePathname();
@@ -38,12 +38,12 @@ export default function ProfilePage() {
     }));
     setProfileChanged((prev) => ({
       ...prev,
-      [name] : true
-    }))
+      [name]: true,
+    }));
   };
 
   const GetProfileQuery = useQuery({
-    queryKey: ['profile'],
+    queryKey: ["profile"],
     queryFn: (props) => {
       return FetchProfile((data) => {
         setProfile({
@@ -53,23 +53,24 @@ export default function ProfilePage() {
           gender: data.gender ?? "other",
           phone: data.phoneNumber ?? "",
           address: data.address ?? "",
-        })
-      })
+        });
+      });
     },
-    refetchOnWindowFocus : false,
-    retry : 2,
-  })
+    refetchOnWindowFocus: false,
+    retry: 2,
+  });
 
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-100">
       <div className="flex flex-grow items-start justify-center p-10">
         <div className="mx-auto w-full max-w-2xl rounded-lg bg-white p-6 shadow-lg">
           <div className="flex space-x-6">
-            <div className="h-28 w-28 bg-blue-200">
-              <img
-                src="/images/user-icon.png" //Profile picture goes here
+            <div className="relative h-28 w-28">
+              <Image
+                src="/default_profile.webp" //Profile picture goes here
                 alt="Profile"
-                className="h-full w-full items-center justify-center rounded-full object-cover"
+                className="rounded-full"
+                fill
               />
             </div>
             <div className="flex-grow">
@@ -120,9 +121,15 @@ export default function ProfilePage() {
                     value={profile.gender}
                     onChange={handleChange}
                   >
-                    <option value="female" className="capitalize">Female</option>
-                    <option value="male" className="capitalize">Male</option>
-                    <option value="other" className="capitalize">Other</option>
+                    <option value="female" className="capitalize">
+                      Female
+                    </option>
+                    <option value="male" className="capitalize">
+                      Male
+                    </option>
+                    <option value="other" className="capitalize">
+                      Other
+                    </option>
                   </select>
                 </div>
                 <div>

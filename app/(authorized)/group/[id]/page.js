@@ -9,16 +9,14 @@ import {
 import { groups, schedules } from "@/components/pages/group/dummy_group";
 import { endOfWeek, startOfWeek, getMonth } from "date-fns";
 import Link from "next/link";
-import { useState, use, useLayoutEffect, useEffect, useMemo, } from "react";
+import { useState, use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { BiChevronLeft } from "react-icons/bi";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { GetGroupDetail } from "@/components/query/detailGroup";
 import { GetScheduleMonth, AddGroupSchedule, DeleteGroupSchedule } from "@/components/query/groupCalendar";
 import { ReformatGroupSchedule, ReformatScheduleBaru } from "@/lib/apiUtils";
-import { onError } from "@/components/query/errorHandler";
-import toast from "react-hot-toast";
 
 const getGroup = (id) => {
   return groups.find((group) => group.id === id);
@@ -43,13 +41,13 @@ export default function GroupPage({ params }) {
   }, [selectedWeek])
 
   const FetchGroupDetailQuery = useQuery({
-    queryKey: ['detail'],
+    queryKey: ["detail"],
     queryFn: (props) => {
-      return GetGroupDetail({_id : id})
+      return GetGroupDetail({ _id: id });
     },
     refetchOnWindowFocus: false,
     retry: 2,
-  })
+  });
 
   const GetAllScheduleWithinTheMonth = useQuery({
     queryKey: [selectedMonth, id],
@@ -118,72 +116,83 @@ export default function GroupPage({ params }) {
 
 
   useEffect(() => {
-    if(FetchGroupDetailQuery.isError) {
-      console.log("ERROR 401")
-      router.replace('/group')
+    if (FetchGroupDetailQuery.isError) {
+      console.log("ERROR 401");
+      router.replace("/group");
     }
-  }, [FetchGroupDetailQuery])
+  }, [FetchGroupDetailQuery, router]);
 
-  if(FetchGroupDetailQuery.isLoading) {
+  const handleDelete = (schedule) => {
+    // TODO: Integrate group schedule deletion
+    console.log(`Delete group schedule with id ${schedule._id}`);
+  };
+
+  if (FetchGroupDetailQuery.isLoading) {
     return (
-      <div className="w-full flex items-center justify-center">
-        Loading...
-      </div>  
-    )
-  }
-  else if(FetchGroupDetailQuery.isError) {
+      <div className="flex w-full items-center justify-center">Loading...</div>
+    );
+  } else if (FetchGroupDetailQuery.isError) {
     return (
-      <div className="w-full flex items-center justify-center">
+      <div className="flex w-full items-center justify-center">
         401 Not Accessible
-      </div>  
-    )
-  }
-  else return (
-    <CalendarSidebar
-      selectedWeek={selectedWeek}
-      setSelectedWeek={setSelectedWeek}
-      schedules={groupSchedule.filter((schedule) => !schedule.is_user_owned)}
-      className={page !== "calendar" ? "max-md:hidden" : ""}
-    >
-      {/* Back Button */}
-      <div className="relative z-30 flex items-center justify-between px-10 py-6 shadow-md">
-        {page === "calendar" ? (
-          <>
-            <Link href="/group" className="flex items-center text-blue-200">
-              <span className="text-[50px]">
-                <BiChevronLeft />
-              </span>
-              <span className="text-2xl">Back</span>
-            </Link>
-            <Button onClick={() => setPage("add")}>Add Schedule</Button>
-          </>
-        ) : (
-          <>
-            <button
-              className="flex items-center text-blue-200 outline-0"
-              onClick={() => setPage("calendar")}
-            >
-              <span className="text-[50px]">
-                <BiChevronLeft />
-              </span>
-              <span className="text-2xl">Back</span>
-            </button>
-          </>
-        )}
       </div>
-      {/* Content */}
-      {page === "calendar" && (
-        <GroupPageCalendar
-          group={FetchGroupDetailQuery.data}
-          setPage={setPage}
-          schedules={groupSchedule}
-          start_date={selectedWeek.from}
-        />
-      )}
-      {page === "details" && (
-        <GroupPageDetails group={FetchGroupDetailQuery.data} setPage={setPage} />
-      )}
-      {page === "add" && <GroupPageAdd group={FetchGroupDetailQuery.data} schedules={groupSchedule} AddSchedule={AddScheduleQuery} />}
-    </CalendarSidebar>
-  );
+    );
+  } else
+    return (
+      <CalendarSidebar
+        selectedWeek={selectedWeek}
+        setSelectedWeek={setSelectedWeek}
+        schedules={groupSchedule.filter((schedule) => !schedule.is_user_owned)}
+        className={page !== "calendar" ? "max-md:hidden" : ""}
+      >
+        {/* Back Button */}
+        <div className="relative z-30 flex items-center justify-between px-10 py-6 shadow-md">
+          {page === "calendar" ? (
+            <>
+              <Link href="/group" className="flex items-center text-blue-200">
+                <span className="text-[50px]">
+                  <BiChevronLeft />
+                </span>
+                <span className="text-2xl">Back</span>
+              </Link>
+              <Button onClick={() => setPage("add")}>Add Schedule</Button>
+            </>
+          ) : (
+            <>
+              <button
+                className="flex items-center text-blue-200 outline-0"
+                onClick={() => setPage("calendar")}
+              >
+                <span className="text-[50px]">
+                  <BiChevronLeft />
+                </span>
+                <span className="text-2xl">Back</span>
+              </button>
+            </>
+          )}
+        </div>
+        {/* Content */}
+        {page === "calendar" && (
+          <GroupPageCalendar
+            group={FetchGroupDetailQuery.data}
+            setPage={setPage}
+            schedules={groupSchedule}
+            start_date={selectedWeek.from}
+            onDelete={handleDelete}
+          />
+        )}
+        {page === "details" && (
+          <GroupPageDetails
+            group={FetchGroupDetailQuery.data}
+            setPage={setPage}
+          />
+        )}
+        {page === "add" && (
+          <GroupPageAdd
+            group={FetchGroupDetailQuery.data}
+            schedules={groupSchedule} AddSchedule={AddScheduleQuery}
+          />
+        )}
+      </CalendarSidebar>
+    );
 }

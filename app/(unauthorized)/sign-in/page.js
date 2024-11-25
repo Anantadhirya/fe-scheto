@@ -4,8 +4,6 @@ import SigninForm from "@/components/pages/auth/SigninForm";
 export const metadata = {
   title: "Sign in",
 };
-import Button1 from "@/components/elements/button1";
-import { InputWithIcon } from "@/components/elements/input";
 
 export default function SignIn() {
   return (

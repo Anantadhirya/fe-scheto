@@ -18,32 +18,12 @@ import {
   BsStopwatch,
 } from "react-icons/bs";
 
-export function HomePageAdd({ type = "add", editingSchedule, AddSchedule}) {
-  // Set initial value for editing
-  useEffect(() => {
-    if (type != "edit") return;
-    // TODO: Change the editingSchedule to pass id instead of the entire object (to handle repeat schedules)
-    setTitle(editingSchedule.title);
-    setSelectedDate(editingSchedule.actual_start_time);
-    setSelectedStart({
-      value: editingSchedule.actual_start_time,
-      label: format(editingSchedule.actual_start_time, "HH:mm"),
-    });
-    setSelectedEnd({
-      value: editingSchedule.actual_end_time,
-      label: format(editingSchedule.actual_end_time, "HH:mm"),
-    });
-    setSelectedRepeat(
-      editingSchedule.repeat
-        ? repeat_options.findIndex(
-            (option) => option.value === editingSchedule.repeat,
-          )
-        : 0,
-    );
-    setSelectedPrivate(editingSchedule.is_private);
-    setDescription(editingSchedule.description || "");
-  }, []);
-
+export function HomePageAdd({
+  type = "add",
+  editingSchedule,
+  AddSchedule,
+  setPage,
+}) {
   // Title
   const [title, setTitle] = useState("");
 
@@ -115,17 +95,30 @@ export function HomePageAdd({ type = "add", editingSchedule, AddSchedule}) {
   const descriptionMaxLength = 250;
   const displayDescLength = description.length >= descriptionMaxLength - 50;
 
-  const onSubmitAdd = (e) => {
-    e.preventDefault();
-    AddSchedule.mutate({
-      description : description,
-      title : title,
-      startDate : selectedStart.value,
-      endDate : selectedEnd.value,
-      recurrence : repeat_options[selectedRepeat].value,
-      is_private : selectedPrivate
-    })
-  }
+  // Set initial value for editing
+  useEffect(() => {
+    if (type != "edit") return;
+    // TODO: Change the editingSchedule to pass id instead of the entire object (to handle repeat schedules)
+    setTitle(editingSchedule.title);
+    setSelectedDate(editingSchedule.actual_start_time);
+    setSelectedStart({
+      value: editingSchedule.actual_start_time,
+      label: format(editingSchedule.actual_start_time, "HH:mm"),
+    });
+    setSelectedEnd({
+      value: editingSchedule.actual_end_time,
+      label: format(editingSchedule.actual_end_time, "HH:mm"),
+    });
+    setSelectedRepeat(
+      editingSchedule.repeat
+        ? repeat_options.findIndex(
+            (option) => option.value === editingSchedule.repeat,
+          )
+        : 0,
+    );
+    setSelectedPrivate(editingSchedule.is_private);
+    setDescription(editingSchedule.description || "");
+  }, [editingSchedule, repeat_options, type]);
 
   const handleSubmit = () => {
     if (!title) return toast.error("Please enter a schedule title");
@@ -155,6 +148,7 @@ export function HomePageAdd({ type = "add", editingSchedule, AddSchedule}) {
         is_private : selectedPrivate
       })
     }
+    setPage("calendar");
   };
 
   return (
