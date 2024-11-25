@@ -83,6 +83,17 @@ export default function Home() {
     },
   });
 
+  const handleDelete = (schedule, type) => {
+    // TODO: Integrate individual schedule deletion
+    if (type === "all") {
+      console.log(`Delete all occurences of schedule with id ${schedule._id}`);
+    } else if (type === "following") {
+      console.log(
+        `Set the repeat_until of schedule with id ${schedule._id} to ${schedule.actual_start_time}`,
+      );
+    }
+  };
+
   const [editingSchedule, setEditingSchedule] = useState();
   return (
     <CalendarSidebar
@@ -196,6 +207,7 @@ export default function Home() {
             setPage("edit");
             setEditingSchedule(schedule);
           }}
+          onDelete={handleDelete}
         />
       )}
       {page === "list" && <HomePageList schedules={GetScheduleData()} />}
