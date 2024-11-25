@@ -100,6 +100,7 @@ function SignUpForm() {
         iconSrc="/images/user-icon.png"
         altText="User Icon"
         onChageFunc={(e) => onChangeForm("firstName", e.target.value)}
+        value={registerForm.firstName}
         className="w-full border-none focus:outline-none"
       />
 
