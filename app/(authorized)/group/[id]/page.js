@@ -13,10 +13,11 @@ import { useState, use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { BiChevronLeft } from "react-icons/bi";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { GetGroupDetail } from "@/components/query/detailGroup";
 import { GetScheduleMonth, AddGroupSchedule, DeleteGroupSchedule } from "@/components/query/groupCalendar";
 import { ReformatGroupSchedule, ReformatScheduleBaru } from "@/lib/apiUtils";
+import { onError } from "@/components/query/errorHandler";
 
 const getGroup = (id) => {
   return groups.find((group) => group.id === id);

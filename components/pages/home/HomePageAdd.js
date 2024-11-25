@@ -22,6 +22,7 @@ export function HomePageAdd({
   type = "add",
   editingSchedule,
   AddSchedule,
+  EditSchedule,
   setPage,
 }) {
   // Title
@@ -136,7 +137,17 @@ export function HomePageAdd({
     };
 
     // TODO: Integrate edit & create individual schedule
-    if (type === "edit") console.log("Editing schedule: ", data);
+    if (type === "edit") {
+      console.log("Editing schedule: ", editingSchedule)
+      EditSchedule.mutate({
+        description : description,
+        title : title,
+        startDate : selectedTime.from,
+        endDate : selectedTime.to,
+        recurrence : repeat_options[selectedRepeat].value,
+        is_private : selectedPrivate
+      })
+    }
     else if (type === "add") {
       console.log("Creating schedule: ", data);
       AddSchedule.mutate({

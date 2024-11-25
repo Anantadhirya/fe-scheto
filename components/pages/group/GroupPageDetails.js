@@ -116,9 +116,6 @@ export function GroupPageDetails({ group, setPage }) {
           <div className="text-nowrap text-2xl font-semibold text-blue-300">
             Group Member
           </div>
-          <Button className="justify-self-end px-9 py-2 text-base">
-            Add Member
-          </Button>
         </div>
         <div className="grid w-full gap-x-1 gap-y-12 max-xs:grid-cols-1 xs:grid-cols-2">
           {group.members
