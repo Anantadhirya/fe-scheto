@@ -276,7 +276,7 @@ export function Calendar({ schedules, start_date, isGroup, group, onEdit }) {
                     <BsPersonFill className="flex-none text-xl" />
                     <span>
                       {group?.members?.find(
-                        (member) => member.id_user === schedule.id_creator,
+                        (member) => member.id_user === schedule.id_creator?._id,
                       )?.name ?? ""}
                     </span>
                   </div>

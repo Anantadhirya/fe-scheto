@@ -70,7 +70,7 @@ export function Timeline({ schedules, className = "" }) {
           </div>
           {/* Schedule Group */}
           <div className="pb-3 text-base font-medium text-blue-200/70">
-            Group
+            {schedule.is_user_owned ? "Personal" : "Group"}
           </div>
           {/* Schedule Time */}
           <div className="self-start text-center font-medium text-blue-200">

@@ -149,8 +149,8 @@ export function HomePageAdd({ type = "add", editingSchedule, AddSchedule}) {
       AddSchedule.mutate({
         description : description,
         title : title,
-        startDate : selectedStart.value,
-        endDate : selectedEnd.value,
+        startDate : selectedTime.from,
+        endDate : selectedTime.to,
         recurrence : repeat_options[selectedRepeat].value,
         is_private : selectedPrivate
       })
