@@ -1,11 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
 
 import InboxList from "@/components/elements/inbox/InboxList"; // Import InboxList
 
-import { onError } from "@/components/query/errorHandler";
 import { GetUserInbox } from "@/components/query/inboxUser";
 
 export default function Inbox() {

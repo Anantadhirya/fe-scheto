@@ -1,11 +1,11 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
 import { onError } from "@/components/query/errorHandler";
-import { apiLogin, apiRegister, apiVerify } from "@/lib/apiRoutes";
+import { apiRegister } from "@/lib/apiRoutes";
 
 import { InputWithIcon } from "@/components/elements/input";
 import { Button1 } from "@/components/elements/button1";

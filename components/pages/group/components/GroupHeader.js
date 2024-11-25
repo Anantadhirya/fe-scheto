@@ -5,7 +5,7 @@ import { BsCheck2, BsFiles, BsInfoCircle } from "react-icons/bs";
 import { IoReloadCircle } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { RegenerateCode } from "@/components/query/detailGroup";
 import { onError } from "@/components/query/errorHandler";
 

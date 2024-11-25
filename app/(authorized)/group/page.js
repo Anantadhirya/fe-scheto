@@ -11,7 +11,7 @@ import { useMemo, useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import { BsX } from "react-icons/bs";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import {
   FetchGroupList,
   JoinGroup,

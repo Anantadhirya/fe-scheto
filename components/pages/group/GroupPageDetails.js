@@ -5,7 +5,7 @@ import { Button } from "@/components/elements/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { LeaveGroup, UpdateDescription } from "@/components/query/detailGroup";
 import { onError } from "@/components/query/errorHandler";
 import toast from "react-hot-toast";

@@ -1,5 +1,5 @@
 "use client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/elements/button";
 import { CalendarSidebar } from "@/components/layout/CalendarSidebar";
 import {
@@ -7,7 +7,6 @@ import {
   HomePageCalendar,
   HomePageList,
 } from "@/components/pages/home";
-import { schedules } from "@/components/pages/home/dummy_home";
 import { addWeeks, endOfWeek, format, startOfWeek, getMonth } from "date-fns";
 import { useEffect, useState } from "react";
 import { BiChevronLeft } from "react-icons/bi";

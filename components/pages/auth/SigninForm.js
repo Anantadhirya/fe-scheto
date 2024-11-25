@@ -1,13 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
 import { onError } from "@/components/query/errorHandler";
 import { apiLogin, apiVerify } from "@/lib/apiRoutes";
 
-import Button1 from "@/components/elements/button1";
 import { InputWithIcon } from "@/components/elements/input";
 
 function SigninForm() {

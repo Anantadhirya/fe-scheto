@@ -3,7 +3,7 @@ import { apiVerify } from "@/lib/apiRoutes";
 
 import { redirect } from "next/navigation";
 
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 
 async function EnsureUser() {
   try {

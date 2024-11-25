@@ -1,5 +1,4 @@
 import toast from "react-hot-toast";
-import axios from "axios";
 
 export async function onError(error, toastID = "defaultToast") {
   const toastOptions = {

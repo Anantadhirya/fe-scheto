@@ -9,14 +9,12 @@ import {
 import { groups, schedules } from "@/components/pages/group/dummy_group";
 import { endOfWeek, startOfWeek } from "date-fns";
 import Link from "next/link";
-import { useState, use, useLayoutEffect, useEffect, useMemo } from "react";
+import { useState, use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { BiChevronLeft } from "react-icons/bi";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { GetGroupDetail } from "@/components/query/detailGroup";
-import { onError } from "@/components/query/errorHandler";
-import toast from "react-hot-toast";
 
 const getGroup = (id) => {
   return groups.find((group) => group.id === id);
