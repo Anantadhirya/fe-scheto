@@ -19,31 +19,6 @@ import {
 } from "react-icons/bs";
 
 export function HomePageAdd({ type = "add", editingSchedule, AddSchedule }) {
-  // Set initial value for editing
-  useEffect(() => {
-    if (type != "edit") return;
-    // TODO: Change the editingSchedule to pass id instead of the entire object (to handle repeat schedules)
-    setTitle(editingSchedule.title);
-    setSelectedDate(editingSchedule.actual_start_time);
-    setSelectedStart({
-      value: editingSchedule.actual_start_time,
-      label: format(editingSchedule.actual_start_time, "HH:mm"),
-    });
-    setSelectedEnd({
-      value: editingSchedule.actual_end_time,
-      label: format(editingSchedule.actual_end_time, "HH:mm"),
-    });
-    setSelectedRepeat(
-      editingSchedule.repeat
-        ? repeat_options.findIndex(
-            (option) => option.value === editingSchedule.repeat,
-          )
-        : 0,
-    );
-    setSelectedPrivate(editingSchedule.is_private);
-    setDescription(editingSchedule.description || "");
-  }, [editingSchedule, repeat_options, type]);
-
   // Title
   const [title, setTitle] = useState("");
 
@@ -114,6 +89,31 @@ export function HomePageAdd({ type = "add", editingSchedule, AddSchedule }) {
   const [description, setDescription] = useState("");
   const descriptionMaxLength = 250;
   const displayDescLength = description.length >= descriptionMaxLength - 50;
+
+  // Set initial value for editing
+  useEffect(() => {
+    if (type != "edit") return;
+    // TODO: Change the editingSchedule to pass id instead of the entire object (to handle repeat schedules)
+    setTitle(editingSchedule.title);
+    setSelectedDate(editingSchedule.actual_start_time);
+    setSelectedStart({
+      value: editingSchedule.actual_start_time,
+      label: format(editingSchedule.actual_start_time, "HH:mm"),
+    });
+    setSelectedEnd({
+      value: editingSchedule.actual_end_time,
+      label: format(editingSchedule.actual_end_time, "HH:mm"),
+    });
+    setSelectedRepeat(
+      editingSchedule.repeat
+        ? repeat_options.findIndex(
+            (option) => option.value === editingSchedule.repeat,
+          )
+        : 0,
+    );
+    setSelectedPrivate(editingSchedule.is_private);
+    setDescription(editingSchedule.description || "");
+  }, [editingSchedule, repeat_options, type]);
 
   const onSubmitAdd = (e) => {
     e.preventDefault();
