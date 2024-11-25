@@ -39,21 +39,20 @@ function SigninForm() {
     }
   }
 
-  async function VerifyUser() {
-    try {
-      //throw new Error("Telah terjadi error")
-      await axios.get(apiVerify, {
-        withCredentials: true,
-      });
-      router.push("/");
-    } catch (error) {
-      //console.log(er)
-    }
-  }
-
   useEffect(() => {
+    async function VerifyUser() {
+      try {
+        //throw new Error("Telah terjadi error")
+        await axios.get(apiVerify, {
+          withCredentials: true,
+        });
+        router.push("/");
+      } catch (error) {
+        //console.log(er)
+      }
+    }
     VerifyUser();
-  }, []);
+  }, [router]);
   return (
     <form className="space-y-4" onSubmit={LoginSubmit}>
       {/* Email */}

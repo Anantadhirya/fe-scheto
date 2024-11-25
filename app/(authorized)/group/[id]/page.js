@@ -46,7 +46,7 @@ export default function GroupPage({ params }) {
       console.log("ERROR 401");
       router.replace("/group");
     }
-  }, [FetchGroupDetailQuery]);
+  }, [FetchGroupDetailQuery, router]);
 
   if (FetchGroupDetailQuery.isLoading) {
     return (

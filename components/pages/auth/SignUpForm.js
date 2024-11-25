@@ -7,8 +7,8 @@ import toast from "react-hot-toast";
 import { onError } from "@/components/query/errorHandler";
 import { apiLogin, apiRegister, apiVerify } from "@/lib/apiRoutes";
 
-import Button1 from "@/components/elements/button1";
 import { InputWithIcon } from "@/components/elements/input";
+import { Button1 } from "@/components/elements/button1";
 
 function SignUpForm() {
   const [registerForm, SetRegisterForm] = useState({

@@ -42,7 +42,7 @@ export function HomePageAdd({ type = "add", editingSchedule, AddSchedule }) {
     );
     setSelectedPrivate(editingSchedule.is_private);
     setDescription(editingSchedule.description || "");
-  }, []);
+  }, [editingSchedule, repeat_options, type]);
 
   // Title
   const [title, setTitle] = useState("");

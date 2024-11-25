@@ -89,7 +89,12 @@ export default function Group() {
           ),
       );
     }
-  }, [FetchGroupsQuery.data]);
+  }, [
+    FetchGroupsQuery.data,
+    FetchGroupsQuery.isError,
+    FetchGroupsQuery.isLoading,
+    searchText,
+  ]);
   const handleJoinGroup = (code) => {
     // TODO: Integrate Join Group
     console.log("Join group with invite code: ", code);
