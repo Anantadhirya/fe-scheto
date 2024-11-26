@@ -103,6 +103,15 @@ export default function ProfilePage() {
       try {
         toast.loading("Updating image");
         const response = await axios.post("/api/upload", formPost)
+        await axios.patch(
+          apiProfileDetail,
+          {
+            profile_image_url : response.data.url
+          },
+          {
+            withCredentials: true,
+          },
+        );
         toast.dismiss()
         toast.success("image berhasil diupload")
         handleChange('profile_image_url', response.data.url)
