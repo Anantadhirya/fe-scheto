@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -18,7 +18,7 @@ import { twMerge } from "tailwind-merge";
 
 import axios from "axios";
 import { onError } from "@/components/query/errorHandler";
-import { apiLogout } from "@/lib/apiRoutes";
+import { apiLogout, apiVerify } from "@/lib/apiRoutes";
 import toast from "react-hot-toast";
 import {
   Dialog,
@@ -50,6 +50,7 @@ export function Navbar({ children }) {
   ];
   const pathname = usePathname();
   const [hide, setHide] = useState(true);
+  const [isLoading, SetIsLoading] = useState(true)
   const navbarRef = useRef();
   useOnClickOutside(navbarRef, () => setHide(true));
 
@@ -73,7 +74,28 @@ export function Navbar({ children }) {
       }
     }
   }
-  return (
+
+  async function EnsureUser() {
+    try {
+      const response = await axios.get(apiVerify, {
+        withCredentials : true
+      })
+      SetIsLoading(false)
+    } catch (error) {
+      onError(error)
+      router.replace("/sign-in")
+    }
+  }
+
+  useLayoutEffect(() => {
+    EnsureUser()
+  }, [])
+  if(isLoading) {
+    return <div className="flex justify-center items-center w-full h-screen">
+      Loading...
+    </div>
+  }
+  else return (
     <div className="flex max-md:flex-col">
       <div className="flex w-full items-center gap-[2%] bg-blue-100 px-4 py-3 text-blue-200 md:hidden">
         <button onClick={() => setHide(!hide)} className="text-lg">
