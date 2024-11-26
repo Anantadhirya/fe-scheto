@@ -12,12 +12,10 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { onError } from "@/components/query/errorHandler";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { BsCameraFill } from "react-icons/bs";
 
 export default function ProfilePage() {
-  const pathname = usePathname();
-  const fileInputRef = useRef(null); // Reference to the hidden input
-
-  const isActive = (targetPath) => pathname === targetPath;
+  const fileInputRef = useRef(null);
 
   const [profile, setProfile] = useState({
     firstName: "First Name",
@@ -26,7 +24,7 @@ export default function ProfilePage() {
     gender: "Female",
     phone: "Phone Number",
     address: "Address",
-    profile_image_url: undefined
+    profile_image_url: undefined,
   });
 
   const [profileChanged, SetProfileChanged] = useState({
@@ -36,7 +34,7 @@ export default function ProfilePage() {
     gender: false,
     phone: false,
     address: false,
-    profile_image_url: false
+    profile_image_url: false,
   });
 
   const GetProfileQuery = useQuery({
@@ -51,8 +49,8 @@ export default function ProfilePage() {
           phone: data.phoneNumber,
           address: data.address,
           _id: data._id,
-          profile_image_url: data.profile_image_url
-        })
+          profile_image_url: data.profile_image_url,
+        });
       });
     },
     refetchOnWindowFocus: false,
@@ -62,7 +60,7 @@ export default function ProfilePage() {
   const ChangeProfileQuery = useMutation({
     mutationFn: (props) => {
       toast.loading("Updating profile");
-      return EditProfile(profile,profileChanged)
+      return EditProfile(profile, profileChanged);
     },
     retry: 2,
     onError: (error) => {
@@ -81,16 +79,11 @@ export default function ProfilePage() {
     }));
     SetProfileChanged((prev) => ({
       ...prev,
-      [name] : true
-    }))
+      [name]: true,
+    }));
   };
 
-  // Trigger the hidden file input click
-  const handleButtonClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click(); // Programmatically trigger the file input
-    }
-  };
+  const handleButtonClick = () => fileInputRef.current?.click();
 
   // Handle file selection
   const handleFileChange = async (event) => {
@@ -98,32 +91,33 @@ export default function ProfilePage() {
 
     if (file) {
       const formPost = new FormData();
-      formPost.append('file', file)
-      formPost.append('user_id', profile._id)
+      formPost.append("file", file);
+      formPost.append("user_id", profile._id);
       try {
         toast.loading("Updating image");
-        const response = await axios.post("/api/upload", formPost)
+        const response = await axios.post("/api/upload", formPost);
         await axios.patch(
           apiProfileDetail,
           {
-            profile_image_url : response.data.url
+            profile_image_url: response.data.url,
           },
           {
             withCredentials: true,
           },
         );
-        toast.dismiss()
-        toast.success("image berhasil diupload")
-        handleChange('profile_image_url', response.data.url)
+        toast.dismiss();
+        toast.success("image berhasil diupload");
+        handleChange("profile_image_url", response.data.url);
+        fileInputRef.value = "";
       } catch (error) {
-        onError(error, 'profile_upload')
+        onError(error, "profile_upload");
       }
     }
   };
 
   const handleButtonSave = async (e) => {
     try {
-      toast.loading("update profile")
+      toast.loading("update profile");
       const response = await axios.patch(
         apiProfileDetail,
         {
@@ -132,20 +126,22 @@ export default function ProfilePage() {
           email: profileChanged.email ? profile.email : undefined,
           phoneNumber: profileChanged.phone ? profile.phone : undefined,
           address: profileChanged.address ? profile.address : undefined,
-          profile_image_url : profileChanged.profile_image_url ? profile.profile_image_url : undefined
+          profile_image_url: profileChanged.profile_image_url
+            ? profile.profile_image_url
+            : undefined,
         },
         {
           withCredentials: true,
         },
       );
-      toast.dismiss()
-      toast.success(response.data.message)
+      toast.dismiss();
+      toast.success(response.data.message);
       GetProfileQuery.refetch();
     } catch (error) {
-      console.log(error)
-      onError(error)
+      console.log(error);
+      onError(error);
     }
-  }
+  };
 
   return (
     <div className="flex h-screen w-full flex-col bg-white">
@@ -158,40 +154,32 @@ export default function ProfilePage() {
 
       {/* Content */}
       <div className="flex-grow p-10">
-        <div className="flex gap-10">
+        <div className="flex gap-10 max-md:flex-col">
           {/* Profile Picture Section */}
-          <div className="relative flex items-center justify-center">
-            <div className="w-[350px] h-[350px] rounded-full border-[10px] border-primary overflow-hidden shadow-md">
-              {
-                profile.profile_image_url ?
-                <Image
-                  src={profile.profile_image_url}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                  width={2000}
-                  height={2000}
-                />
-                :
-                <Image
-                  src="/default_profile.webp"
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                  width={2000}
-                  height={2000}
-                />
-              }
-            </div>
-            <button type="button" onClick={handleButtonClick} className="absolute bottom-20 right-3 bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-blue-300">
-              <img
-                src="/images/camera-icon.png" // Ganti dengan path ikon kamera
-                alt="Edit"
-                className="w-30 h-30"
+          <div className="relative flex h-fit w-fit items-center justify-center max-md:self-center">
+            <button
+              className="aspect-square w-[350px] max-w-[90vw] overflow-hidden rounded-full border-[10px] border-primary shadow-md outline-0"
+              onClick={handleButtonClick}
+            >
+              <Image
+                src={profile.profile_image_url ?? "/default_profile.webp"}
+                alt="Profile"
+                className="h-full w-full object-cover"
+                width={2000}
+                height={2000}
               />
+            </button>
+            <button
+              type="button"
+              onClick={handleButtonClick}
+              className="absolute bottom-[12%] right-[5%] flex h-10 w-10 items-center justify-center rounded-full bg-primary text-xl text-white shadow-md outline-0 hover:bg-blue-300"
+            >
+              <BsCameraFill />
             </button>
           </div>
 
           {/* Form Section */}
-          <div className="flex-grow grid grid-cols-1 gap-4">
+          <div className="grid flex-grow grid-cols-1 gap-4">
             <InputWithIcon
               type="text"
               placeholder="First Name"
@@ -227,7 +215,6 @@ export default function ProfilePage() {
               onChageFunc={(e) => handleChange("email", e.target.value)}
             />
 
-
             <InputWithIcon
               type="text"
               placeholder="Phone Number"
@@ -247,19 +234,17 @@ export default function ProfilePage() {
             />
 
             {/* Save Changes Button */}
-            <div className="flex  mt-10 w-full">
+            <div className="mt-10 flex w-full">
               <button
-                type='button'
+                type="button"
                 onClick={handleButtonSave}
-                className="w-full h-[45px] rounded-2xl bg-primary font-bold text-white shadow-lg transition-shadow duration-300 hover:shadow-x2"
+                className="hover:shadow-x2 h-[45px] w-full rounded-2xl bg-primary font-bold text-white shadow-lg transition-shadow duration-300"
               >
                 Save Changes
               </button>
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
   );
