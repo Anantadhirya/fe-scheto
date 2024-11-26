@@ -5,10 +5,15 @@ export async function POST(request) {
   try {
     const formData = await request.formData();
     const file = formData.get("file");
+    const user_id = formData.get("user_id");
 
-    if (!file) {
+    if (!file)
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
-    }
+    if (!user_id)
+      return NextResponse.json(
+        { error: "User id is required" },
+        { status: 400 },
+      );
 
     const buffer = Buffer.from(await file.arrayBuffer());
 
@@ -18,6 +23,7 @@ export async function POST(request) {
           {
             folder: "scheto-profile-picture",
             resource_type: "auto",
+            public_id: `profile-picture-${user_id}`,
           },
           (error, result) => {
             if (error) reject(error);
