@@ -8,15 +8,16 @@ export async function EditProfile(
   callback = (data) => {},
 ) {
   try {
+    console.log("MASUK")
     const response = await axios.patch(
       apiProfileDetail,
       {
         firstName: propsChanged.firstName ? props.firstName : undefined,
         lastName: propsChanged.lastName ? props.lastName : undefined,
         email: propsChanged.email ? props.email : undefined,
-        gender: propsChanged.gender ? props.gender : undefined,
         phone: propsChanged.phone ? props.phone : undefined,
         address: propsChanged.address ? props.address : undefined,
+        profile_image_url : propsChanged.profile_image_url ? props.profile_image_url : und
       },
       {
         withCredentials: true,
@@ -25,7 +26,7 @@ export async function EditProfile(
     callback(response.data);
     return response.data;
   } catch (error) {
-    onError(error, "inbox");
+    console.log(error)
     throw error;
   }
 }

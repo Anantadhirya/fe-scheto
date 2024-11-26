@@ -6,10 +6,12 @@ import { InputWithIcon } from "@/components/elements/input";
 import { Button2 } from "@/components/elements/button1";
 import Image from "next/image";
 
-import { FetchProfile } from "@/components/query/profileUser";
+import { FetchProfile, EditProfile } from "@/components/query/profileUser";
+import { apiProfileDetail } from "@/lib/apiRoutes";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { onError } from "@/components/query/errorHandler";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function ProfilePage() {
   const pathname = usePathname();
@@ -25,6 +27,16 @@ export default function ProfilePage() {
     phone: "Phone Number",
     address: "Address",
     profile_image_url: undefined
+  });
+
+  const [profileChanged, SetProfileChanged] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    gender: false,
+    phone: false,
+    address: false,
+    profile_image_url: false
   });
 
   const GetProfileQuery = useQuery({
@@ -50,7 +62,7 @@ export default function ProfilePage() {
   const ChangeProfileQuery = useMutation({
     mutationFn: (props) => {
       toast.loading("Updating profile");
-
+      return EditProfile(profile,profileChanged)
     },
     retry: 2,
     onError: (error) => {
@@ -67,6 +79,10 @@ export default function ProfilePage() {
       ...prevProfile,
       [name]: value,
     }));
+    SetProfileChanged((prev) => ({
+      ...prev,
+      [name] : true
+    }))
   };
 
   // Trigger the hidden file input click
@@ -85,13 +101,42 @@ export default function ProfilePage() {
       formPost.append('file', file)
       formPost.append('user_id', profile._id)
       try {
+        toast.loading("Updating image");
         const response = await axios.post("/api/upload", formPost)
+        toast.dismiss()
+        toast.success("image berhasil diupload")
         handleChange('profile_image_url', response.data.url)
       } catch (error) {
         onError(error, 'profile_upload')
       }
     }
   };
+
+  const handleButtonSave = async (e) => {
+    try {
+      toast.loading("update profile")
+      const response = await axios.patch(
+        apiProfileDetail,
+        {
+          firstName: profileChanged.firstName ? profile.firstName : undefined,
+          lastName: profileChanged.lastName ? profile.lastName : undefined,
+          email: profileChanged.email ? profile.email : undefined,
+          phoneNumber: profileChanged.phone ? profile.phone : undefined,
+          address: profileChanged.address ? profile.address : undefined,
+          profile_image_url : profileChanged.profile_image_url ? profile.profile_image_url : undefined
+        },
+        {
+          withCredentials: true,
+        },
+      );
+      toast.dismiss()
+      toast.success(response.data.message)
+      GetProfileQuery.refetch();
+    } catch (error) {
+      console.log(error)
+      onError(error)
+    }
+  }
 
   return (
     <div className="flex h-screen w-full flex-col bg-white">
@@ -196,7 +241,7 @@ export default function ProfilePage() {
             <div className="flex  mt-10 w-full">
               <button
                 type='button'
-                onClick={(e) => { }}
+                onClick={handleButtonSave}
                 className="w-full h-[45px] rounded-2xl bg-primary font-bold text-white shadow-lg transition-shadow duration-300 hover:shadow-x2"
               >
                 Save Changes
