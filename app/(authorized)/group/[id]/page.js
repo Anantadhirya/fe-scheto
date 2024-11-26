@@ -7,14 +7,18 @@ import {
   GroupPageDetails,
 } from "@/components/pages/group";
 import { groups, schedules } from "@/components/pages/group/dummy_group";
-import { endOfWeek, startOfWeek } from "date-fns";
+import { endOfWeek, startOfWeek, getMonth } from "date-fns";
 import Link from "next/link";
 import { useState, use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { BiChevronLeft } from "react-icons/bi";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { GetGroupDetail } from "@/components/query/detailGroup";
+import { GetScheduleMonth, AddGroupSchedule, DeleteGroupSchedule } from "@/components/query/groupCalendar";
+import { ReformatGroupSchedule, ReformatScheduleBaru } from "@/lib/apiUtils";
+import { onError } from "@/components/query/errorHandler";
+import toast from "react-hot-toast";
 
 const getGroup = (id) => {
   return groups.find((group) => group.id === id);
@@ -24,11 +28,19 @@ export default function GroupPage({ params }) {
   const { id } = use(params);
   const group = getGroup(id);
   const [page, setPage] = useState("calendar");
+  
   const router = useRouter();
   const [selectedWeek, setSelectedWeek] = useState({
     from: startOfWeek(new Date()),
     to: endOfWeek(new Date()),
   });
+  const [selectedMonth, SetSelectedMonth] = useState(getMonth(selectedWeek.from) || getMonth(new Date()))
+
+  const [groupSchedule, setGroupSchedule] = useState([])
+
+  useEffect(() =>{
+    SetSelectedMonth(getMonth(selectedWeek.from))
+  }, [selectedWeek])
 
   const FetchGroupDetailQuery = useQuery({
     queryKey: ["detail"],
@@ -38,6 +50,76 @@ export default function GroupPage({ params }) {
     refetchOnWindowFocus: false,
     retry: 2,
   });
+
+  const GetAllScheduleWithinTheMonth = useQuery({
+    queryKey: [selectedMonth, id],
+    queryFn: (props) => {
+      return GetScheduleMonth({
+        ...props,
+        callback : (data) => {
+          ReformatGroupSchedule(data)
+          setGroupSchedule(data.schedules)
+          return data
+        },
+      })
+    },
+    refetchOnWindowFocus : false,
+    retry : 2,
+  })
+
+  const AddScheduleQuery = useMutation({
+    mutationFn: (props) => {
+      toast.loading("Processing schedule")
+      return AddGroupSchedule({
+        props,
+        callback : (data) => {
+          ReformatScheduleBaru(data.schedule)
+          setGroupSchedule([...groupSchedule, data.schedule])
+          return data
+        }
+      })
+    },
+    retry : 2,
+    onError : (error) => {
+      toast.dismiss()
+      onError(error)
+    },
+    onSuccess : (data) => {
+      toast.dismiss()
+      toast.success(data.message)
+      setPage("calendar")
+    },
+  })
+
+  const DeleteScheduleQuery = useMutation({
+    mutationFn: (props) => {
+      toast.loading("Deleting schedule")
+      return DeleteGroupSchedule({
+        props,
+        callback : (data) => {
+          //console.log(groupSchedule)
+          //console.log(props.schedule_id)
+          const newSchedulesFiltered = groupSchedule.filter((value) => {
+            return value._id !== props.schedule_id
+          })
+          //console.log(newSchedulesFiltered)
+          setGroupSchedule([...newSchedulesFiltered])
+          return data
+        }
+      })
+    },
+    retry : 0,
+    onError : (error) => {
+      //console.log(error)
+      onError(error)
+    },
+    onSuccess : (data) => {
+      toast.dismiss()
+      toast.success(data.message)
+    },
+  })
+
+
 
   useEffect(() => {
     if (FetchGroupDetailQuery.isError) {
@@ -49,6 +131,8 @@ export default function GroupPage({ params }) {
   const handleDelete = (schedule) => {
     // TODO: Integrate group schedule deletion
     console.log(`Delete group schedule with id ${schedule._id}`);
+    console.log("JALAN")
+    DeleteScheduleQuery.mutate({schedule_id : schedule._id, group_id : id})
   };
 
   if (FetchGroupDetailQuery.isLoading) {
@@ -66,7 +150,7 @@ export default function GroupPage({ params }) {
       <CalendarSidebar
         selectedWeek={selectedWeek}
         setSelectedWeek={setSelectedWeek}
-        schedules={schedules.filter((schedule) => !schedule.is_user_owned)}
+        schedules={groupSchedule.filter((schedule) => !schedule.is_user_owned)}
         className={page !== "calendar" ? "max-md:hidden" : ""}
       >
         {/* Back Button */}
@@ -100,7 +184,7 @@ export default function GroupPage({ params }) {
           <GroupPageCalendar
             group={FetchGroupDetailQuery.data}
             setPage={setPage}
-            schedules={schedules}
+            schedules={groupSchedule}
             start_date={selectedWeek.from}
             onDelete={handleDelete}
           />
@@ -114,7 +198,7 @@ export default function GroupPage({ params }) {
         {page === "add" && (
           <GroupPageAdd
             group={FetchGroupDetailQuery.data}
-            schedules={schedules}
+            schedules={groupSchedule} AddSchedule={AddScheduleQuery}
           />
         )}
       </CalendarSidebar>

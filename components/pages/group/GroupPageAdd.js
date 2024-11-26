@@ -22,7 +22,7 @@ import {
 } from "react-icons/bs";
 import { twMerge } from "tailwind-merge";
 
-export function GroupPageAdd({ group, schedules }) {
+export function GroupPageAdd({ group, schedules, AddSchedule }) {
   const [title, setTitle] = useState("");
   const [selectedDate, setSelectedDate] = useState();
   const [selectedDuration, setSelectedDuration] = useState();
@@ -71,6 +71,14 @@ export function GroupPageAdd({ group, schedules }) {
 
     // TODO: Integrate create group schedule
     console.log(data);
+    AddSchedule.mutate({
+      title : title,
+      description : "",
+      startDate : availableSchedules[selectedSchedule].start_time,
+      endDate : availableSchedules[selectedSchedule].end_time,
+      member_ids : selectedMembers.map((member) => member.value),
+      _id : group._id
+    })
   };
   return (
     <div className="scroll-container h-0 grow overflow-auto max-md:h-fit md:p-10">

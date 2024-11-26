@@ -310,7 +310,7 @@ export function Calendar({
                     <BsPersonFill className="flex-none text-xl" />
                     <span>
                       {group?.members?.find(
-                        (member) => member.id_user === schedule.id_creator,
+                        (member) => member.id_user === schedule.id_creator?._id,
                       )?.name ?? ""}
                     </span>
                   </div>

@@ -17,6 +17,8 @@ import toast from "react-hot-toast";
 import {
   GetScheduleMonth,
   AddSchedule,
+  DeleteSchedule,
+  EditSchedule
 } from "@/components/query/kalenderPribadi";
 import { ReformatData } from "@/lib/apiUtils";
 import { onError } from "@/components/query/errorHandler";
@@ -83,14 +85,66 @@ export default function Home() {
     },
   });
 
+  const DeleteScheduleQuery = useMutation({
+    mutationFn: (props) => {
+      toast.loading("Deleting schedule");
+      return DeleteSchedule({
+        props,
+        callback: (data) => {
+          toast.dismiss();
+          toast.success(data.message);
+          return data;
+        },
+      });
+    },
+    retry: 2,
+    onError: (error) => {
+      toast.dismiss();
+      onError(error, "schedule")
+    },
+    onSuccess: (data) => {
+      GetAllScheduleWithinTheMonth.refetch();
+    },
+  });
+
+  const EditScheduleQuery = useMutation({
+    mutationFn: (props) => {
+      toast.loading("Editting schedule");
+      return EditSchedule({
+        props,
+        callback: (data) => {
+          toast.dismiss();
+          toast.success(data.message);
+          return data;
+        },
+      });
+    },
+    retry: 2,
+    onError: (error) => {
+      onError(error, "schedule")
+    },
+    onSuccess: (data) => {
+      GetAllScheduleWithinTheMonth.refetch();
+    },
+  });
+
   const handleDelete = (schedule, type) => {
     // TODO: Integrate individual schedule deletion
     if (type === "all") {
       console.log(`Delete all occurences of schedule with id ${schedule._id}`);
+      DeleteScheduleQuery.mutate({
+        _id : schedule._id,
+        is_repeat_until : false,
+      })
     } else if (type === "following") {
       console.log(
         `Set the repeat_until of schedule with id ${schedule._id} to ${schedule.actual_start_time}`,
       );
+      DeleteScheduleQuery.mutate({
+        _id : schedule._id,
+        is_repeat_until : true,
+        repeat_until : schedule.actual_start_time
+      })
     }
   };
 
@@ -219,7 +273,7 @@ export default function Home() {
         />
       )}
       {page === "edit" && (
-        <HomePageAdd type="edit" editingSchedule={editingSchedule} />
+        <HomePageAdd type="edit" editingSchedule={editingSchedule} EditSchedule={EditScheduleQuery} setPage={setPage}/>
       )}
     </CalendarSidebar>
   );
