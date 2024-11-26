@@ -18,9 +18,10 @@ import { GetGroupDetail } from "@/components/query/detailGroup";
 import {
   GetScheduleMonth,
   AddGroupSchedule,
-  DeleteGroupSchedule,
+  DeleteGroupSchedule, RejectGroupSchedule,
 } from "@/components/query/groupCalendar";
 import { ReformatGroupSchedule, ReformatScheduleBaru } from "@/lib/apiUtils";
+import { FetchProfile } from "@/components/query/profileUser";
 import { onError } from "@/components/query/errorHandler";
 import toast from "react-hot-toast";
 
@@ -68,6 +69,15 @@ export default function GroupPage({ params }) {
           return data;
         },
       });
+    },
+    refetchOnWindowFocus: false,
+    retry: 2,
+  });
+
+  const GetProfileQuery = useQuery({
+    queryKey: ["profile_data"],
+    queryFn: (props) => {
+      return FetchProfile();
     },
     refetchOnWindowFocus: false,
     retry: 2,
@@ -123,7 +133,36 @@ export default function GroupPage({ params }) {
       toast.dismiss();
       toast.success(data.message);
     },
-  });
+  });  const RejectScheduleQuery = useMutation({
+    mutationFn: (props) => {
+      toast.loading("Rejecting schedule")
+      return RejectGroupSchedule({
+        props,
+        callback : (data) => {
+          const findInState = groupSchedule.findIndex((value) => {
+            value._id == data.schedule._id
+          })
+          if(findInState != -1) {
+            const newSchedulesFiltered = [...groupSchedule]
+            newSchedulesFiltered[findInState].group_data.member_joining = newSchedulesFiltered[findInState].group_data.member_joining.filter((value)=> value._id != GetProfileQuery?.data?._id  )
+            setGroupSchedule([...newSchedulesFiltered])
+          }
+          return data
+        }
+      })
+    },
+    retry : 0,
+    onError : (error) => {
+      //console.log(error)
+      onError(error)
+    },
+    onSuccess : (data) => {
+      toast.dismiss()
+      toast.success(data.message)
+    },
+  })
+
+
 
   useEffect(() => {
     if (FetchGroupDetailQuery.isError) {
@@ -134,9 +173,16 @@ export default function GroupPage({ params }) {
 
   const handleDelete = (schedule) => {
     // TODO: Integrate group schedule deletion
-    console.log(`Delete group schedule with id ${schedule._id}`);
-    console.log("JALAN");
-    DeleteScheduleQuery.mutate({ schedule_id: schedule._id, group_id: id });
+    //console.log(`Delete group schedule with id ${schedule._id}`);
+    console.log("JALAN", schedule)
+    DeleteScheduleQuery.mutate({schedule_id : schedule._id, group_id : id})
+  };
+
+  const handleReject = (schedule) => {
+    // TODO: Integrate group schedule deletion
+    //console.log(`Delete group schedule with id ${schedule._id}`);
+    console.log("JALAN")
+    RejectScheduleQuery.mutate({schedule_id : schedule._id, group_id : id})
   };
 
   if (FetchGroupDetailQuery.isLoading) {
@@ -191,6 +237,8 @@ export default function GroupPage({ params }) {
             schedules={groupSchedule}
             start_date={selectedWeek.from}
             onDelete={handleDelete}
+            onReject={handleReject}
+            ProfileUser={GetProfileQuery.data}
           />
         )}
         {page === "details" && (

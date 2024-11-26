@@ -47,6 +47,8 @@ export function Calendar({
   group,
   onEdit,
   onDelete,
+  onReject,
+  ProfileUser
 }) {
   const formatNumberWithSign = (number) => {
     const sign = number >= 0 ? "+" : "-";
@@ -316,7 +318,7 @@ export function Calendar({
                   </div>
                 )}
                 <div className="flex gap-2 self-end">
-                  {!isGroup && (
+                  {((!isGroup && schedule.is_user_owned)) && (
                     <Button
                       variant="black"
                       size="sm"
@@ -326,7 +328,7 @@ export function Calendar({
                       Edit
                     </Button>
                   )}
-                  {(!isGroup || !schedule.is_user_owned) && (
+                  {((!isGroup && schedule.is_user_owned) || (isGroup && !schedule.is_user_owned)) && (
                     <Dialog
                       onOpenChange={(open) => {
                         if (open) setSelectedDelete(deleteOptions[0]);
@@ -370,6 +372,47 @@ export function Calendar({
                               variant="destructive"
                               onClick={() =>
                                 onDelete(schedule, selectedDelete.value)
+                              }
+                            >
+                              Confirm
+                            </Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                  {((schedule.group_data?.member_joining?.findIndex((value) => value._id == ProfileUser?._id) != -1 && isGroup ) && !schedule.is_user_owned) && (
+                    <Dialog
+                      onOpenChange={(open) => {
+                        if (open) setSelectedDelete(deleteOptions[0]);
+                      }}
+                    >
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="black"
+                          size="sm"
+                          className="w-fit text-xs"
+                        >
+                          Reject
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Reject Group Schedule</DialogTitle>
+                        </DialogHeader>
+                        <DialogDescription>
+                          Are you sure you want to reject this schedule? This
+                          action cannot be undone.
+                        </DialogDescription>
+                        <DialogFooter>
+                          <DialogClose asChild>
+                            <Button>Cancel</Button>
+                          </DialogClose>
+                          <DialogClose asChild>
+                            <Button
+                              variant="destructive"
+                              onClick={() =>
+                                onReject(schedule, selectedDelete.value)
                               }
                             >
                               Confirm

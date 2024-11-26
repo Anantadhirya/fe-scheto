@@ -19,7 +19,7 @@ export async function GetScheduleMonth({queryKey, callback = (data) => {}}) {
         })
         return callback(response.data)
     } catch (error) {
-        onError(error, "schedule")
+        throw error
     }
 }
 
@@ -44,6 +44,24 @@ export async function DeleteGroupSchedule({props, callback = (data) => {}}) {
     try {
         console.log("JALAN G SIH")
         const response = await axios.delete(`${process.env.NEXT_PUBLIC_DOMAIN_BE}` + `/group/id/${props.group_id}/schedule/${props.schedule_id}`,
+            {
+                withCredentials :true
+            }
+        )
+        return callback(response.data)
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export async function RejectGroupSchedule({props, callback = (data) => {}}) {
+    try {
+        console.log("JALAN G SIH")
+        const response = await axios.patch(`${process.env.NEXT_PUBLIC_DOMAIN_BE}` + `/group/id/${props.group_id}/schedule/reject/${props.schedule_id}`,
+            {
+                empty :true
+            },
             {
                 withCredentials :true
             }
