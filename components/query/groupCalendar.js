@@ -54,3 +54,21 @@ export async function DeleteGroupSchedule({props, callback = (data) => {}}) {
         throw error
     }
 }
+
+export async function RejectGroupSchedule({props, callback = (data) => {}}) {
+    try {
+        console.log("JALAN G SIH")
+        const response = await axios.patch(`${process.env.NEXT_PUBLIC_DOMAIN_BE}` + `/group/id/${props.group_id}/schedule/reject/${props.schedule_id}`,
+            {
+                empty :true
+            },
+            {
+                withCredentials :true
+            }
+        )
+        return callback(response.data)
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}

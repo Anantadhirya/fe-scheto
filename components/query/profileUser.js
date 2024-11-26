@@ -36,7 +36,7 @@ export async function FetchProfile(callback = (data) => {}) {
       withCredentials: true,
     });
     callback(response.data);
-    return true;
+    return response.data;
   } catch (error) {
     onError(error, "inbox");
     throw error;

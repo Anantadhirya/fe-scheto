@@ -7,6 +7,8 @@ export function GroupPageCalendar({
   schedules,
   start_date,
   onDelete,
+  onReject,
+  ProfileUser
 }) {
   return (
     <div className="flex h-full flex-col">
@@ -19,6 +21,8 @@ export function GroupPageCalendar({
         isGroup
         group={group}
         onDelete={onDelete}
+        onReject={onReject}
+        ProfileUser={ProfileUser}
       />
     </div>
   );
