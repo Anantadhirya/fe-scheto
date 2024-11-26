@@ -16,7 +16,7 @@ export const InputWithIcon = ({
       <input
         type={type}
         placeholder={placeholder}
-        className="w-full border-none focus:outline-none"
+        className="w-full bg-transparent border-none focus:outline-none"
         onChange={onChageFunc}
         value={value}
       />
