@@ -1,11 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { InputWithIcon } from "@/components/elements/input";
 import { Button2 } from "@/components/elements/button1";
+import Image from "next/image";
+
+import { FetchProfile } from "@/components/query/profileUser";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { onError } from "@/components/query/errorHandler";
+import axios from "axios";
+
 export default function ProfilePage() {
   const pathname = usePathname();
+  const fileInputRef = useRef(null); // Reference to the hidden input
 
   const isActive = (targetPath) => pathname === targetPath;
 
@@ -16,6 +24,42 @@ export default function ProfilePage() {
     gender: "Female",
     phone: "Phone Number",
     address: "Address",
+    profile_image_url: undefined
+  });
+
+  const GetProfileQuery = useQuery({
+    queryKey: ["profile_data"],
+    queryFn: (props) => {
+      return FetchProfile((data) => {
+        setProfile({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          gender: data.gender,
+          phone: data.phoneNumber,
+          address: data.address,
+          _id: data._id,
+          profile_image_url: data.profile_image_url
+        })
+      });
+    },
+    refetchOnWindowFocus: false,
+    retry: 2,
+  });
+
+  const ChangeProfileQuery = useMutation({
+    mutationFn: (props) => {
+      toast.loading("Updating profile");
+
+    },
+    retry: 2,
+    onError: (error) => {
+      toast.dismiss();
+      onError(error, "profile");
+    },
+    onSuccess: (data) => {
+      GetProfileQuery.refetch();
+    },
   });
 
   const handleChange = (name, value) => {
@@ -23,6 +67,30 @@ export default function ProfilePage() {
       ...prevProfile,
       [name]: value,
     }));
+  };
+
+  // Trigger the hidden file input click
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // Programmatically trigger the file input
+    }
+  };
+
+  // Handle file selection
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      const formPost = new FormData();
+      formPost.append('file', file)
+      formPost.append('user_id', profile._id)
+      try {
+        const response = await axios.post("/api/upload", formPost)
+        handleChange('profile_image_url', response.data.url)
+      } catch (error) {
+        onError(error, 'profile_upload')
+      }
+    }
   };
 
   return (
@@ -40,13 +108,26 @@ export default function ProfilePage() {
           {/* Profile Picture Section */}
           <div className="relative flex items-center justify-center">
             <div className="w-[350px] h-[350px] rounded-full border-[10px] border-primary overflow-hidden shadow-md">
-              <img
-                src="/images/default-profile.jpg"
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
+              {
+                profile.profile_image_url ?
+                <Image
+                  src={profile.profile_image_url}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                  width={2000}
+                  height={2000}
+                />
+                :
+                <Image
+                  src="/default_profile.webp"
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                  width={2000}
+                  height={2000}
+                />
+              }
             </div>
-            <button className="absolute bottom-20 right-3 bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-blue-300">
+            <button type="button" onClick={handleButtonClick} className="absolute bottom-20 right-3 bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-blue-300">
               <img
                 src="/images/camera-icon.png" // Ganti dengan path ikon kamera
                 alt="Edit"
@@ -55,7 +136,7 @@ export default function ProfilePage() {
             </button>
           </div>
 
-           {/* Form Section */}
+          {/* Form Section */}
           <div className="flex-grow grid grid-cols-1 gap-4">
             <InputWithIcon
               type="text"
@@ -64,6 +145,14 @@ export default function ProfilePage() {
               altText="First Name Icon"
               value={profile.firstName}
               onChageFunc={(e) => handleChange("firstName", e.target.value)}
+            />
+
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+              ref={fileInputRef}
             />
 
             <InputWithIcon
@@ -84,7 +173,7 @@ export default function ProfilePage() {
               onChageFunc={(e) => handleChange("email", e.target.value)}
             />
 
-          
+
             <InputWithIcon
               type="text"
               placeholder="Phone Number"
@@ -102,15 +191,21 @@ export default function ProfilePage() {
               value={profile.address}
               onChageFunc={(e) => handleChange("address", e.target.value)}
             />
+
+            {/* Save Changes Button */}
+            <div className="flex  mt-10 w-full">
+              <button
+                type='button'
+                onClick={(e) => { }}
+                className="w-full h-[45px] rounded-2xl bg-primary font-bold text-white shadow-lg transition-shadow duration-300 hover:shadow-x2"
+              >
+                Save Changes
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Save Changes Button */}
-        <div className="flex justify-end mt-10">
-          <Button2 className="w-[100px] bg-primary text-white py-4 rounded-lg text-lg font-medium hover:bg-blue-600">
-            Save Changes
-          </Button2>
-        </div>
+
       </div>
     </div>
   );

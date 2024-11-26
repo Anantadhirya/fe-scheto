@@ -19,7 +19,7 @@ export async function GetScheduleMonth({queryKey, callback = (data) => {}}) {
         })
         return callback(response.data)
     } catch (error) {
-        onError(error, "schedule")
+        throw error
     }
 }
 
