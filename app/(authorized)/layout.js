@@ -32,7 +32,7 @@ async function EnsureUser() {
 export default async function NavbarLayout({ children }) {
   const isUser = await EnsureUser();
   if (isUser.ok == false) {
-    redirect("sign-in", "replace");
+    //redirect("sign-in", "replace");
   }
 
   return <Navbar>{children}</Navbar>;
