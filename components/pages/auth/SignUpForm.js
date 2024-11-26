@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-import { onError } from "@/components/query/errorHandler";
+import { getErrorMessage, onError } from "@/components/query/errorHandler";
 import { apiRegister, apiVerify } from "@/lib/apiRoutes";
 
 import { InputWithIcon } from "@/components/elements/input";
@@ -45,23 +45,28 @@ function SignUpForm() {
       ) {
         throw new Error("Fill out all of the form");
       }
-      toast.loading("Registering account");
-      const response = await axios.post(
-        apiRegister,
+      toast.promise(
+        axios
+          .post(
+            apiRegister,
+            {
+              firstName: registerForm.firstName,
+              lastName: registerForm.lastName,
+              email: registerForm.email,
+              password: registerForm.password,
+              username: registerForm.username,
+            },
+            {
+              withCredentials: true,
+            },
+          )
+          .then(() => router.push("/sign-in")),
         {
-          firstName: registerForm.firstName,
-          lastName: registerForm.lastName,
-          email: registerForm.email,
-          password: registerForm.password,
-          username: registerForm.username,
-        },
-        {
-          withCredentials: true,
+          loading: "Signing up account...",
+          success: "Account successfully created.",
+          error: (err) => getErrorMessage(err),
         },
       );
-      toast.dismiss();
-      toast.success(response.data.message || "Process is successful");
-      router.push("/sign-in");
     } catch (error) {
       onError(error, toastRegister);
     }

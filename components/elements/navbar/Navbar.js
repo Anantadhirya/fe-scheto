@@ -20,6 +20,17 @@ import axios from "axios";
 import { onError } from "@/components/query/errorHandler";
 import { apiLogout } from "@/lib/apiRoutes";
 import toast from "react-hot-toast";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../dialog";
+import { Button } from "../button";
 
 export function Navbar({ children }) {
   const routes = [
@@ -106,16 +117,37 @@ export function Navbar({ children }) {
           );
         })}
         <div className="h-[5vh] grow" />
-        <button
-          type="button"
-          className="flex w-full items-center justify-center gap-2 self-center text-blue-200 outline-0 md:w-[5vw] md:rounded-full"
-          onClick={(e) => Logout()}
-        >
-          <div className="flex aspect-[1/1] w-8 items-center justify-center rounded-full bg-white pr-1 text-xl shadow-xl md:w-full md:pr-[5%] md:text-[2.7vw]">
-            <BiLogOut />
-          </div>
-          <div className="text-sm md:hidden">Logout</div>
-        </button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <button
+              type="button"
+              className="flex w-full items-center justify-center gap-2 self-center text-blue-200 outline-0 md:w-[5vw] md:rounded-full"
+            >
+              <div className="flex aspect-[1/1] w-8 items-center justify-center rounded-full bg-white pr-1 text-xl shadow-xl md:w-full md:pr-[5%] md:text-[2.7vw]">
+                <BiLogOut />
+              </div>
+              <div className="text-sm md:hidden">Logout</div>
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Logging Out</DialogTitle>
+            </DialogHeader>
+            <DialogDescription>
+              Are you sure you want to log out?
+            </DialogDescription>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button>Cancel</Button>
+              </DialogClose>
+              <DialogClose asChild>
+                <Button variant="destructive" onClick={() => Logout()}>
+                  Confirm
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </nav>
       {children}
     </div>

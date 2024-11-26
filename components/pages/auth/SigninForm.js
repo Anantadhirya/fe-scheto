@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-import { onError } from "@/components/query/errorHandler";
+import { getErrorMessage, onError } from "@/components/query/errorHandler";
 import { apiLogin, apiVerify } from "@/lib/apiRoutes";
 
 import { InputWithIcon } from "@/components/elements/input";
@@ -18,24 +18,25 @@ function SigninForm() {
 
   async function LoginSubmit(e) {
     e.preventDefault();
-    try {
-      toast.loading("checking account");
-      await axios.post(
-        apiLogin,
-        {
-          login_detail: email,
-          password: password,
-        },
-        {
-          withCredentials: true,
-        },
-      );
-      toast.dismiss();
-      toast.success("account is verified", { id: toastLogin });
-      router.push("/");
-    } catch (error) {
-      onError(error, toastLogin);
-    }
+    toast.promise(
+      axios
+        .post(
+          apiLogin,
+          {
+            login_detail: email,
+            password: password,
+          },
+          {
+            withCredentials: true,
+          },
+        )
+        .then(() => router.push("/")),
+      {
+        loading: "Signing in...",
+        success: "Sign in successful.",
+        error: (err) => getErrorMessage(err),
+      },
+    );
   }
 
   useEffect(() => {
