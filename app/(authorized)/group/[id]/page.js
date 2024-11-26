@@ -18,6 +18,7 @@ import { GetGroupDetail } from "@/components/query/detailGroup";
 import { GetScheduleMonth, AddGroupSchedule, DeleteGroupSchedule } from "@/components/query/groupCalendar";
 import { ReformatGroupSchedule, ReformatScheduleBaru } from "@/lib/apiUtils";
 import { onError } from "@/components/query/errorHandler";
+import toast from "react-hot-toast";
 
 const getGroup = (id) => {
   return groups.find((group) => group.id === id);
@@ -86,26 +87,30 @@ export default function GroupPage({ params }) {
     onSuccess : (data) => {
       toast.dismiss()
       toast.success(data.message)
+      setPage("calendar")
     },
   })
 
   const DeleteScheduleQuery = useMutation({
     mutationFn: (props) => {
-      toast.loading("Processing schedule")
+      toast.loading("Deleting schedule")
       return DeleteGroupSchedule({
         props,
         callback : (data) => {
+          //console.log(groupSchedule)
+          //console.log(props.schedule_id)
           const newSchedulesFiltered = groupSchedule.filter((value) => {
-            value._id != props.schedule_id
+            return value._id !== props.schedule_id
           })
+          //console.log(newSchedulesFiltered)
           setGroupSchedule([...newSchedulesFiltered])
           return data
         }
       })
     },
-    retry : 2,
+    retry : 0,
     onError : (error) => {
-      toast.dismiss()
+      //console.log(error)
       onError(error)
     },
     onSuccess : (data) => {
@@ -126,6 +131,8 @@ export default function GroupPage({ params }) {
   const handleDelete = (schedule) => {
     // TODO: Integrate group schedule deletion
     console.log(`Delete group schedule with id ${schedule._id}`);
+    console.log("JALAN")
+    DeleteScheduleQuery.mutate({schedule_id : schedule._id, group_id : id})
   };
 
   if (FetchGroupDetailQuery.isLoading) {

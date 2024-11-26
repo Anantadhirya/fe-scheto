@@ -36,12 +36,13 @@ export async function AddGroupSchedule({props, callback = (data) => {}}) {
         })
         return callback(response.data)
     } catch (error) {
-        onError(error, "schedule")
+        throw error
     }
 }
 
 export async function DeleteGroupSchedule({props, callback = (data) => {}}) {
     try {
+        console.log("JALAN G SIH")
         const response = await axios.delete(`${process.env.NEXT_PUBLIC_DOMAIN_BE}` + `/group/id/${props.group_id}/schedule/${props.schedule_id}`,
             {
                 withCredentials :true
@@ -49,6 +50,7 @@ export async function DeleteGroupSchedule({props, callback = (data) => {}}) {
         )
         return callback(response.data)
     } catch (error) {
-        onError(error, "schedule")
+        console.log(error)
+        throw error
     }
 }
