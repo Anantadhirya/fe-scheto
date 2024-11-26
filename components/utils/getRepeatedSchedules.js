@@ -71,6 +71,7 @@ export const getRepeatedSchedules = (schedules, start_time, end_time) =>
               : []
       ).map((start_time) => ({
         ...schedule,
+        start_repeat_time: schedule.start_time,
         start_time,
         end_time: addMilliseconds(start_time, duration),
       }));

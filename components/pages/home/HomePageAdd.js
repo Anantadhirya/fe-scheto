@@ -7,7 +7,7 @@ import {
   PopoverTrigger,
 } from "@/components/elements/popover";
 import { Select, SelectTime } from "@/components/elements/select";
-import { format, isAfter } from "date-fns";
+import { format, getHours, getMinutes, isAfter, set } from "date-fns";
 import { useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
@@ -36,8 +36,21 @@ export function HomePageAdd({
   const [selectedStart, setSelectedStart] = useState();
   const [selectedEnd, setSelectedEnd] = useState();
   const selectedTime = useMemo(
-    () => ({ from: selectedStart?.value, to: selectedEnd?.value }),
-    [selectedEnd, selectedStart],
+    () => ({
+      from: selectedStart?.value
+        ? set(selectedDate ?? new Date(), {
+            hours: getHours(selectedStart?.value),
+            minutes: getMinutes(selectedStart?.value),
+          })
+        : undefined,
+      to: selectedEnd?.value
+        ? set(selectedDate ?? new Date(), {
+            hours: getHours(selectedEnd?.value),
+            minutes: getMinutes(selectedEnd?.value),
+          })
+        : undefined,
+    }),
+    [selectedDate, selectedEnd?.value, selectedStart?.value],
   );
   const endTimeSelector = useRef();
   useEffect(() => {
@@ -99,9 +112,10 @@ export function HomePageAdd({
   // Set initial value for editing
   useEffect(() => {
     if (type != "edit") return;
-    // TODO: Change the editingSchedule to pass id instead of the entire object (to handle repeat schedules)
     setTitle(editingSchedule.title);
-    setSelectedDate(editingSchedule.actual_start_time);
+    setSelectedDate(
+      editingSchedule.start_repeat_time ?? editingSchedule.actual_start_time,
+    );
     setSelectedStart({
       value: editingSchedule.actual_start_time,
       label: format(editingSchedule.actual_start_time, "HH:mm"),
@@ -126,47 +140,26 @@ export function HomePageAdd({
     if (!selectedDate) return toast.error("Please select the date");
     if (!selectedTime?.from) return toast.error("Please select the start time");
     if (!selectedTime?.to) return toast.error("Please select the end time");
-    const data = {
-      is_user_owned: true,
-      title: title,
-      description: description,
-      start_time: selectedTime.from,
-      end_time: selectedTime.to,
-      is_private: selectedPrivate,
-      schedule_type: repeat_options[selectedRepeat].value,
-    };
 
-    // TODO: Integrate edit & create individual schedule
     if (type === "edit") {
-      console.log("Editing schedule: ", {
-        selectedTime,
-        selectedRepeat,
-        repeat_options
-      })
       EditSchedule.mutate({
-        description : description,
-        title : title,
-        start_date : selectedTime.from,
-        end_date : selectedTime.to,
-        recurrence : repeat_options[selectedRepeat].value,
-        is_private : selectedPrivate,
-        _id : editingSchedule._id
-      })
-    }
-    else if (type === "add") {
-      console.log("Creating schedule: ", {
-        selectedTime,
-        selectedRepeat,
-        repeat_options
+        description: description,
+        title: title,
+        start_date: selectedTime.from,
+        end_date: selectedTime.to,
+        recurrence: repeat_options[selectedRepeat].value,
+        is_private: selectedPrivate,
+        _id: editingSchedule._id,
       });
+    } else if (type === "add") {
       AddSchedule.mutate({
-        description : description,
-        title : title,
-        startDate : selectedTime.from,
-        endDate : selectedTime.to,
-        recurrence : repeat_options[selectedRepeat].value,
-        is_private : selectedPrivate
-      })
+        description: description,
+        title: title,
+        startDate: selectedTime.from,
+        endDate: selectedTime.to,
+        recurrence: repeat_options[selectedRepeat].value,
+        is_private: selectedPrivate,
+      });
     }
     setPage("calendar");
   };

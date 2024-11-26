@@ -18,7 +18,7 @@ import {
   GetScheduleMonth,
   AddSchedule,
   DeleteSchedule,
-  EditSchedule
+  EditSchedule,
 } from "@/components/query/kalenderPribadi";
 import { ReformatData } from "@/lib/apiUtils";
 import { onError } from "@/components/query/errorHandler";
@@ -44,7 +44,6 @@ export default function Home() {
         ...props,
         callback: (data) => {
           ReformatData(data.schedules);
-          console.log(data);
           return data.schedules;
         },
       });
@@ -100,7 +99,7 @@ export default function Home() {
     retry: 2,
     onError: (error) => {
       toast.dismiss();
-      onError(error, "schedule")
+      onError(error, "schedule");
     },
     onSuccess: (data) => {
       GetAllScheduleWithinTheMonth.refetch();
@@ -121,7 +120,7 @@ export default function Home() {
     },
     retry: 2,
     onError: (error) => {
-      onError(error, "schedule")
+      onError(error, "schedule");
     },
     onSuccess: (data) => {
       GetAllScheduleWithinTheMonth.refetch();
@@ -129,22 +128,17 @@ export default function Home() {
   });
 
   const handleDelete = (schedule, type) => {
-    // TODO: Integrate individual schedule deletion
     if (type === "all") {
-      console.log(`Delete all occurences of schedule with id ${schedule._id}`);
       DeleteScheduleQuery.mutate({
-        _id : schedule._id,
-        is_repeat_until : false,
-      })
+        _id: schedule._id,
+        is_repeat_until: false,
+      });
     } else if (type === "following") {
-      console.log(
-        `Set the repeat_until of schedule with id ${schedule._id} to ${schedule.actual_start_time}`,
-      );
       DeleteScheduleQuery.mutate({
-        _id : schedule._id,
-        is_repeat_until : true,
-        repeat_until : schedule.actual_start_time
-      })
+        _id: schedule._id,
+        is_repeat_until: true,
+        repeat_until: schedule.actual_start_time,
+      });
     }
   };
 
@@ -273,7 +267,12 @@ export default function Home() {
         />
       )}
       {page === "edit" && (
-        <HomePageAdd type="edit" editingSchedule={editingSchedule} EditSchedule={EditScheduleQuery} setPage={setPage}/>
+        <HomePageAdd
+          type="edit"
+          editingSchedule={editingSchedule}
+          EditSchedule={EditScheduleQuery}
+          setPage={setPage}
+        />
       )}
     </CalendarSidebar>
   );
