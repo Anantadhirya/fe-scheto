@@ -31,5 +31,5 @@
   - Frontend: [https://github.com/Anantadhirya/fe-scheto](https://github.com/Anantadhirya/fe-scheto)
   - Backend: [https://github.com/Anantadhirya/be-scheto](https://github.com/Anantadhirya/be-scheto)
 - Deployment: [https://scheto.vercel.app](https://scheto.vercel.app)
-- Presentation video:
+- Presentation video: https://drive.google.com/file/d/1yKdXYiZp9EXm_Rp2xUWfVbx3E9C-w3In/view?usp=sharing
 - Presentation file: https://www.canva.com/design/DAGXh_0lzmo/GNoiUhneZNfjdh3o3-iKWA/edit?utm_content=DAGXh_0lzmo&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
