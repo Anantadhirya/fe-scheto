@@ -15,7 +15,11 @@ import { BiChevronLeft } from "react-icons/bi";
 
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { GetGroupDetail } from "@/components/query/detailGroup";
-import { GetScheduleMonth, AddGroupSchedule, DeleteGroupSchedule, RejectGroupSchedule } from "@/components/query/groupCalendar";
+import {
+  GetScheduleMonth,
+  AddGroupSchedule,
+  DeleteGroupSchedule, RejectGroupSchedule,
+} from "@/components/query/groupCalendar";
 import { ReformatGroupSchedule, ReformatScheduleBaru } from "@/lib/apiUtils";
 import { FetchProfile } from "@/components/query/profileUser";
 import { onError } from "@/components/query/errorHandler";
@@ -29,19 +33,21 @@ export default function GroupPage({ params }) {
   const { id } = use(params);
   const group = getGroup(id);
   const [page, setPage] = useState("calendar");
-  
+
   const router = useRouter();
   const [selectedWeek, setSelectedWeek] = useState({
     from: startOfWeek(new Date()),
     to: endOfWeek(new Date()),
   });
-  const [selectedMonth, SetSelectedMonth] = useState(getMonth(selectedWeek.from) || getMonth(new Date()))
+  const [selectedMonth, SetSelectedMonth] = useState(
+    getMonth(selectedWeek.from) || getMonth(new Date()),
+  );
 
-  const [groupSchedule, setGroupSchedule] = useState([])
+  const [groupSchedule, setGroupSchedule] = useState([]);
 
-  useEffect(() =>{
-    SetSelectedMonth(getMonth(selectedWeek.from))
-  }, [selectedWeek])
+  useEffect(() => {
+    SetSelectedMonth(getMonth(selectedWeek.from));
+  }, [selectedWeek]);
 
   const FetchGroupDetailQuery = useQuery({
     queryKey: ["detail"],
@@ -57,16 +63,16 @@ export default function GroupPage({ params }) {
     queryFn: (props) => {
       return GetScheduleMonth({
         ...props,
-        callback : (data) => {
-          ReformatGroupSchedule(data)
-          setGroupSchedule(data.schedules)
-          return data
+        callback: (data) => {
+          ReformatGroupSchedule(data);
+          setGroupSchedule(data.schedules);
+          return data;
         },
-      })
+      });
     },
-    refetchOnWindowFocus : false,
-    retry : 2,
-  })
+    refetchOnWindowFocus: false,
+    retry: 2,
+  });
 
   const GetProfileQuery = useQuery({
     queryKey: ["profile_data"],
@@ -79,57 +85,55 @@ export default function GroupPage({ params }) {
 
   const AddScheduleQuery = useMutation({
     mutationFn: (props) => {
-      toast.loading("Processing schedule")
+      toast.loading("Processing schedule");
       return AddGroupSchedule({
         props,
-        callback : (data) => {
-          ReformatScheduleBaru(data.schedule)
-          setGroupSchedule([...groupSchedule, data.schedule])
-          return data
-        }
-      })
+        callback: (data) => {
+          ReformatScheduleBaru(data.schedule);
+          setGroupSchedule([...groupSchedule, data.schedule]);
+          return data;
+        },
+      });
     },
-    retry : 2,
-    onError : (error) => {
-      toast.dismiss()
-      onError(error)
+    retry: 2,
+    onError: (error) => {
+      toast.dismiss();
+      onError(error);
     },
-    onSuccess : (data) => {
-      toast.dismiss()
-      toast.success(data.message)
-      setPage("calendar")
+    onSuccess: (data) => {
+      toast.dismiss();
+      toast.success(data.message);
+      setPage("calendar");
     },
-  })
+  });
 
   const DeleteScheduleQuery = useMutation({
     mutationFn: (props) => {
-      toast.loading("Deleting schedule")
+      toast.loading("Deleting schedule");
       return DeleteGroupSchedule({
         props,
-        callback : (data) => {
+        callback: (data) => {
           //console.log(groupSchedule)
           //console.log(props.schedule_id)
           const newSchedulesFiltered = groupSchedule.filter((value) => {
-            return value._id !== props.schedule_id
-          })
+            return value._id !== props.schedule_id;
+          });
           //console.log(newSchedulesFiltered)
-          setGroupSchedule([...newSchedulesFiltered])
-          return data
-        }
-      })
+          setGroupSchedule([...newSchedulesFiltered]);
+          return data;
+        },
+      });
     },
-    retry : 0,
-    onError : (error) => {
+    retry: 0,
+    onError: (error) => {
       //console.log(error)
-      onError(error)
+      onError(error);
     },
-    onSuccess : (data) => {
-      toast.dismiss()
-      toast.success(data.message)
+    onSuccess: (data) => {
+      toast.dismiss();
+      toast.success(data.message);
     },
-  })
-
-  const RejectScheduleQuery = useMutation({
+  });  const RejectScheduleQuery = useMutation({
     mutationFn: (props) => {
       toast.loading("Rejecting schedule")
       return RejectGroupSchedule({
@@ -246,7 +250,8 @@ export default function GroupPage({ params }) {
         {page === "add" && (
           <GroupPageAdd
             group={FetchGroupDetailQuery.data}
-            schedules={groupSchedule} AddSchedule={AddScheduleQuery}
+            schedules={groupSchedule}
+            AddSchedule={AddScheduleQuery}
           />
         )}
       </CalendarSidebar>

@@ -68,7 +68,6 @@ export default function Group() {
     },
     onSuccess: (data) => {
       toast.dismiss();
-      console.log(data);
       toast.success("Group have been created");
       setCreateModalOpen(false);
       FetchGroupsQuery.refetch();
@@ -96,13 +95,9 @@ export default function Group() {
     searchText,
   ]);
   const handleJoinGroup = (code) => {
-    // TODO: Integrate Join Group
-    console.log("Join group with invite code: ", code);
     JoiningGroup.mutate({ code: code });
   };
   const handleCreateGroup = (name) => {
-    // TODO: Integrate Create Group
-    console.log("Create group with name: ", name);
     CreateGroup.mutate({ name: name });
   };
   return (

@@ -1,164 +1,115 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-
-import { FetchProfile } from "@/components/query/profileUser";
-import Image from "next/image";
-
+import { InputWithIcon } from "@/components/elements/input";
+import { Button2 } from "@/components/elements/button1";
 export default function ProfilePage() {
   const pathname = usePathname();
 
   const isActive = (targetPath) => pathname === targetPath;
 
   const [profile, setProfile] = useState({
-    firstName: "Jane",
-    lastName: "Kim",
-    email: "Janerubyjane@mail.ugm.ac.id",
+    firstName: "First Name",
+    lastName: "Last Name",
+    email: "Email",
     gender: "Female",
-    phone: "08578689763978",
-    address: "Kalasan, Sleman, Daerah Istimewa Yogyakarta",
+    phone: "Phone Number",
+    address: "Address",
   });
 
-  const [profileChanged, setProfileChanged] = useState({
-    firstName: false,
-    lastName: false,
-    email: false,
-    gender: false,
-    phone: false,
-    address: false,
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (name, value) => {
     setProfile((prevProfile) => ({
       ...prevProfile,
       [name]: value,
     }));
-    setProfileChanged((prev) => ({
-      ...prev,
-      [name]: true,
-    }));
   };
 
-  const GetProfileQuery = useQuery({
-    queryKey: ["profile"],
-    queryFn: (props) => {
-      return FetchProfile((data) => {
-        setProfile({
-          firstName: data.firstName ?? "",
-          lastName: data.lastName ?? "",
-          email: data.email,
-          gender: data.gender ?? "other",
-          phone: data.phoneNumber ?? "",
-          address: data.address ?? "",
-        });
-      });
-    },
-    refetchOnWindowFocus: false,
-    retry: 2,
-  });
-
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-gray-100">
-      <div className="flex flex-grow items-start justify-center p-10">
-        <div className="mx-auto w-full max-w-2xl rounded-lg bg-white p-6 shadow-lg">
-          <div className="flex space-x-6">
-            <div className="relative h-28 w-28">
-              <Image
-                src="/default_profile.webp" //Profile picture goes here
+    <div className="flex h-screen w-full flex-col bg-white">
+      {/* Header */}
+      <div className="sticky top-0 z-10 bg-white p-4 shadow-md">
+        <h1 className="mr-4 flex-shrink-0 pl-4 text-2xl font-bold text-primary">
+          Edit Profile
+        </h1>
+      </div>
+
+      {/* Content */}
+      <div className="flex-grow p-10">
+        <div className="flex gap-10">
+          {/* Profile Picture Section */}
+          <div className="relative flex items-center justify-center">
+            <div className="w-[350px] h-[350px] rounded-full border-[10px] border-primary overflow-hidden shadow-md">
+              <img
+                src="/images/default-profile.jpg"
                 alt="Profile"
-                className="rounded-full"
-                fill
+                className="w-full h-full object-cover"
               />
             </div>
-            <div className="flex-grow">
-              <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <label className="text-gray-700 block text-sm font-medium">
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    className="mt-1 w-full rounded border p-2"
-                    value={profile.firstName}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <label className="text-gray-700 block text-sm font-medium">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    className="mt-1 w-full rounded border p-2"
-                    value={profile.lastName}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <label className="text-gray-700 block text-sm font-medium">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    className="mt-1 w-full rounded border p-2"
-                    value={profile.email}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <label className="text-gray-700 block text-sm font-medium">
-                    Gender
-                  </label>
-                  <select
-                    name="gender"
-                    className="mt-1 w-full rounded border p-2"
-                    value={profile.gender}
-                    onChange={handleChange}
-                  >
-                    <option value="female" className="capitalize">
-                      Female
-                    </option>
-                    <option value="male" className="capitalize">
-                      Male
-                    </option>
-                    <option value="other" className="capitalize">
-                      Other
-                    </option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-gray-700 block text-sm font-medium">
-                    Phone
-                  </label>
-                  <input
-                    type="text"
-                    name="phone"
-                    className="mt-1 w-full rounded border p-2"
-                    value={profile.phone}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <label className="text-gray-700 block text-sm font-medium">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    name="address"
-                    className="mt-1 w-full rounded border p-2"
-                    value={profile.address}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </div>
+            <button className="absolute bottom-20 right-3 bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-blue-300">
+              <img
+                src="/images/camera-icon.png" // Ganti dengan path ikon kamera
+                alt="Edit"
+                className="w-30 h-30"
+              />
+            </button>
           </div>
+
+           {/* Form Section */}
+          <div className="flex-grow grid grid-cols-1 gap-4">
+            <InputWithIcon
+              type="text"
+              placeholder="First Name"
+              iconSrc="/images/user-icon.png"
+              altText="First Name Icon"
+              value={profile.firstName}
+              onChageFunc={(e) => handleChange("firstName", e.target.value)}
+            />
+
+            <InputWithIcon
+              type="text"
+              placeholder="Last Name"
+              iconSrc="/images/user-icon.png"
+              altText="Last Name Icon"
+              value={profile.lastName}
+              onChageFunc={(e) => handleChange("lastName", e.target.value)}
+            />
+
+            <InputWithIcon
+              type="email"
+              placeholder="Email"
+              iconSrc="/images/email-icon.png"
+              altText="Email Icon"
+              value={profile.email}
+              onChageFunc={(e) => handleChange("email", e.target.value)}
+            />
+
+          
+            <InputWithIcon
+              type="text"
+              placeholder="Phone Number"
+              iconSrc="/images/phone.png"
+              altText="Phone Icon"
+              value={profile.phone}
+              onChageFunc={(e) => handleChange("phone", e.target.value)}
+            />
+
+            <InputWithIcon
+              type="text"
+              placeholder="Address"
+              iconSrc="/images/address.png"
+              altText="Address Icon"
+              value={profile.address}
+              onChageFunc={(e) => handleChange("address", e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* Save Changes Button */}
+        <div className="flex justify-end mt-10">
+          <Button2 className="w-[100px] bg-primary text-white py-4 rounded-lg text-lg font-medium hover:bg-blue-600">
+            Save Changes
+          </Button2>
         </div>
       </div>
     </div>
