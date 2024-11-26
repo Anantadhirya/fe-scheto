@@ -6,6 +6,7 @@ import {
   isBefore,
   isWithinInterval,
 } from "date-fns";
+import { getProperDateSchedules } from "./getProperDateSchedules";
 
 export const getAvailableGroupSchedules = (
   schedules,
@@ -14,6 +15,7 @@ export const getAvailableGroupSchedules = (
   duration_hour,
   members,
 ) => {
+  schedules = getProperDateSchedules(schedules);
   const query_interval = { start: start_time, end: end_time };
 
   // Group schedules for each member
@@ -26,9 +28,9 @@ export const getAvailableGroupSchedules = (
         query_interval,
       )
     ) {
-      if (!member_schedules[schedule.id_creator])
-        member_schedules[schedule.id_creator] = [];
-      member_schedules[schedule.id_creator].push(schedule);
+      if (!member_schedules[schedule.id_creator._id])
+        member_schedules[schedule.id_creator._id] = [];
+      member_schedules[schedule.id_creator._id].push(schedule);
     }
   });
 
