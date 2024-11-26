@@ -11,6 +11,7 @@ import { onError } from "@/components/query/errorHandler";
 import toast from "react-hot-toast";
 
 export function GroupPageDetails({ group, setPage }) {
+  console.log(group)
   // Description Edit
   const [description, setDescription] = useState(group.description);
   const [edit, setEdit] = useState(false);
@@ -124,7 +125,7 @@ export function GroupPageDetails({ group, setPage }) {
               <div key={member.name + idx} className="flex items-center gap-5">
                 <div className="relative aspect-square w-[60px] flex-none overflow-hidden rounded-[20px]">
                   <Image
-                    src={member.image || "/default_profile.webp"}
+                    src={member?.profile_image_url || "/default_profile.webp"}
                     alt=""
                     fill
                   />
@@ -133,7 +134,7 @@ export function GroupPageDetails({ group, setPage }) {
                   <div className="truncate text-nowrap font-medium text-blue-200">
                     {member.name}
                   </div>
-                  <div className="text-black/60">{member.role || "Member"}</div>
+                  <div className="text-black/60">{member.id_user == group.id_leader?._id ? "Leader" : "Member"}</div>
                 </div>
               </div>
             ))}

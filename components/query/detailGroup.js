@@ -21,12 +21,14 @@ function ReformatGroupDetail(data) {
   data.id_leader.name = data.id_leader.username;
   data.members = data.member_id.map((value) => {
     value.name = value.id_user.username;
+    value.profile_image_url = value.id_user.profile_image_url;
     value.id_user = value.id_user._id;
     return value;
   });
   data.members.push({
     name: data.id_leader.name,
     id_user: data.id_leader._id,
+    profile_image_url : data.id_leader.profile_image_url
   });
 }
 
