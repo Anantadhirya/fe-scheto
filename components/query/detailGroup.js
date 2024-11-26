@@ -5,13 +5,12 @@ import { onError } from "./errorHandler";
 function ReformatGroupList(data) {
   data.forEach((value) => {
     value.name = value.group_name;
-    value.members = value.member_id.map((member) => {
+    value.members = [
+      ...value.member_id.map((member) => member.id_user),
+      value.id_leader,
+    ].map((member) => {
       member.name = member.username;
       return member;
-    });
-    value.members.push({
-      _id: value.id_leader._id,
-      name: value.id_leader.username,
     });
   });
 }
@@ -28,7 +27,7 @@ function ReformatGroupDetail(data) {
   data.members.push({
     name: data.id_leader.name,
     id_user: data.id_leader._id,
-    profile_image_url : data.id_leader.profile_image_url
+    profile_image_url: data.id_leader.profile_image_url,
   });
 }
 

@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 export function GroupList({ groups }) {
-  //console.log(groups)
   return (
     <div className="grid grid-cols-1 content-start gap-x-11 gap-y-12 px-14 pb-10 md:grid-cols-2 lg:grid-cols-3">
       {groups.map((group, idx) => (
@@ -23,7 +22,7 @@ export function GroupList({ groups }) {
                 className="relative aspect-[1/1] w-8 overflow-hidden rounded-full"
               >
                 <Image
-                  src={member.id_user?.profile_image_url || "/default_profile.webp"}
+                  src={member?.profile_image_url || "/default_profile.webp"}
                   alt=""
                   fill
                 />
