@@ -112,9 +112,10 @@ export function HomePageAdd({
   // Set initial value for editing
   useEffect(() => {
     if (type != "edit") return;
-    // TODO: Change the editingSchedule to pass id instead of the entire object (to handle repeat schedules)
     setTitle(editingSchedule.title);
-    setSelectedDate(editingSchedule.actual_start_time);
+    setSelectedDate(
+      editingSchedule.start_repeat_time ?? editingSchedule.actual_start_time,
+    );
     setSelectedStart({
       value: editingSchedule.actual_start_time,
       label: format(editingSchedule.actual_start_time, "HH:mm"),
